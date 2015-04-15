@@ -3,39 +3,27 @@ Created on 15.04.2015
 
 @author: crimsen
 '''
+from Tkinter import Frame
 import Tkinter as tk
-from gui.unlockframe import UnlockFrame
-from gui.lockframe import LockFrame
-from curses.ascii import ESC
 
-class MainWindow(object):
+class UnlockFrame(Frame):
     '''
     classdocs
     '''
 
-    
-    def __init__(self):
-            
-        self.mainWindow = tk.Tk()
-        self.mainWindow.title('Passwordsafe')
-        self.mainWindow.geometry('900x500')
-        
-        self.lockframe = None
-        self.unlockframe = None
-        
-        self.showlockframe()
-        
-    def __initUnlockFrame__(self, parent):
+
+    def __init__(self, parent, mainwindow):
         '''
         Constructor
         '''
         
-        self.unlockframe = tk.Frame(master=parent)
-        self.unlockframe.pack(fill='both', expand=True)
-        self.__buildTitleBoxFrame__(self.unlockframe)
-        self.__buildFrameData__(self.unlockframe)
-        self.__buildFramePic__(self.unlockframe)
-        self.__buildMenuBar__(self.unlockframe)
+        self.mainwindow = mainwindow
+        Frame.__init__(self, parent)
+        self.parent = parent
+        self.__buildTitleBoxFrame__(self.parent)
+        self.__buildFrameData__(self.parent)
+        self.__buildFramePic__(self.parent)
+        self.__buildMenuBar__(self.parent)
         
         
     def __buildTitleBoxFrame__(self, parent):
@@ -94,7 +82,7 @@ class MainWindow(object):
         self.labelNoteFill = tk.Label(master=self.framePic, text='', bg='white', justify='left', relief='raised', font='Arial')
         self.labelLocationLink = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 20 bold')
         self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16')
-        self.buttonLock = tk.Button(master=self.framePic, text='Lock', command=self.showlockframe)
+        self.buttonLock = tk.Button(master=self.framePic, text='Lock', command=self.onExit)
         
         self.labelLocationLink.pack(side='top', fill='both', padx=5, pady=5)
         self.labelLocationLinkFill.pack(side='top', fill='both', padx=5, pady=5)
@@ -119,59 +107,4 @@ class MainWindow(object):
         self.passMenu.add_command(label='Change Password')
         self.menuBar.add_cascade(label='Password', menu=self.passMenu)
         
-        self.mainWindow.config(menu=self.menuBar) 
-        
-    def __initLockFrame__(self, parent):
-        '''
-        Constructor
-        '''
-        
-        self.lockframe = tk.Frame(master=parent)
-        self.lockframe.pack(fill='both', expand=True)
-        self.__buildLockFrame(self.lockframe)
-
-    def __buildLockFrame(self, parent):
-        self.frameLock = tk.Frame(master=parent)
-        self.labelFunny = tk.Label(master=self.frameLock,fg='red', text='YOU\nSHALL\nNOT\nPASS!', font='Arial 72 bold')
-#         self.framePassphrase = tk.Frame(master=self.frameLock, bg='green')
-#         self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:')
-#         self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center')
-#         self.labelFalse = tk.Label(master=self.framePassphrase, text='')
-        self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock', command=self.showunlockframe)
-        
-        
-        
-        self.frameLock.pack(side='top', fill='both', expand=True)
-        self.labelFunny.pack(expand=True)
-#         self.framePassphrase.place(relx=0.4, rely=0.4)
-#         self.labelPassphrase.pack(side='top', padx=5, pady=5, fill='both')
-#         self.entryPassphrase.pack(side='top', fill='both', padx=5, pady=5)
-#         self.labelFalse.pack(side='top', fill='both', padx=5, pady=5)
-        self.buttonUnlock.pack(side='bottom', anchor='se')   
-        
-    def __buildMenuBarLock__(self, parent):
-        '''
-        Build the MenuBar if the window is locked
-        '''
-        
-        self.menuBarLocked = tk.Menu(master=parent)
-        
-        self.fileMenu = tk.Menu(master=self.menuBarLocked, tearoff=0)
-        self.fileMenu.add_command(label='Options', command=self.optionWindow)
-        self.menuBarLocked.add_cascade(label='File', menu=self.fileMenu)
-        
-        self.mainWindow.config(menu=self.menuBarLocked) 
-
-        
-    def showunlockframe(self):
-        if self.lockframe != None:
-            self.lockframe.quit()
-        self.__initUnlockFrame__(self.mainWindow)
-        
-    def showlockframe(self):
-        if self.unlockframe != None:
-            self.unlockframe.quit()
-        self.__initUnlockFrame__(self.mainWindow)
-        
-    def show(self):
-        self.mainWindow.mainloop()   
+        self.parent.config(menu=self.menuBar)    

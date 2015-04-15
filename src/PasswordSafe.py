@@ -4,7 +4,7 @@ Created on 27.03.2015
 
 @author: crimsen
 '''
-from gui.mainWindow import MainWindow
+from guiold.mainWindow import MainWindow
 
 if __name__ == '__main__':
     
