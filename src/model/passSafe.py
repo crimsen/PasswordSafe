@@ -16,7 +16,7 @@ class PasswordSafe(object):
         self.passwordSafe = []
         self.filename = filename
         self.account = account
-        self.gpg = gnupg.GPG(use_agent=False)
+        self.gpg = gnupg.GPG()
         self.load(self.filename)
         self.passwordSafe = self.sort(self.passwordSafe)
                  
@@ -47,7 +47,7 @@ class PasswordSafe(object):
         
         try:
             datei = open(filename, "rb")
-            decrypt_data = self.gpg.decrypt_file(datei, always_trust=False)
+            decrypt_data = self.gpg.decrypt_file(datei, always_trust=True)
             decrypt = str(decrypt_data)
             dom = xml.dom.minidom.parseString(decrypt)
             datei.close()
@@ -120,7 +120,7 @@ class PasswordSafe(object):
         noneencrypt = StringStream.StringIO()
         doc.writexml(noneencrypt, '\n', ' ')
         s = noneencrypt.getvalue()
-        encrypt = self.gpg.encrypt(s, str(account))
+        encrypt = self.gpg.encrypt(s, str(account), always_trust=True)
         datei.write(str(encrypt))
         datei.close()
         
