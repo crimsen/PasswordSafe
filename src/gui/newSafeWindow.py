@@ -1,7 +1,7 @@
 '''
 Created on 28.03.2015
 
-@author: timgroger
+@author: crimsen
 '''
 import Tkinter as tk
 
