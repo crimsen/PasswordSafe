@@ -133,7 +133,3 @@ class MainController(object):
        
     def show(self):
         self.mainWindow.show()
-        
-if __name__=='__main__':
-    App= MainController()
-    App.show()
