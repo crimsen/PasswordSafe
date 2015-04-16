@@ -39,7 +39,7 @@ install_prerequisites()
     PM=$( command -v pacman || command -v zypper )
 
     # assume all arch systems have same prerequisites
-    if [ "$(expr match "$PM" '.*\(pacman\)')" == "apt-get" ]; then
+    if [ "$(expr match "$PM" '.*\(pacman\)')" == "pacman" ]; then
         #echo "debian compatible system"
         prerequisite_list="
             python2
