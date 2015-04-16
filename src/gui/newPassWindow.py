@@ -5,11 +5,11 @@ Created on 28.03.2015
 '''
 import Tkinter as tk
 
-class NewSafeWindow(object):
+class NewPassWindow(object):
     #Build a new Window for a new PasswordObject
 
 
-    def __init__(self, passwordsafe, test, title='', username='', password='', email='', location='', note=''):
+    def __init__(self, controller, title='', username='', password='', email='', location='', note=''):
         
         self.newPassWindow = tk.Tk()
         self.newPassWindow.title('New Password')
@@ -18,9 +18,7 @@ class NewSafeWindow(object):
         self.__buildFrameData()
         self.__buildFramePic()
         
-        self.gui = test
-        
-        self.passSafe = passwordsafe
+        self.maincontroller = controller
         
     def __buildFrameData(self):
         '''
@@ -85,26 +83,23 @@ class NewSafeWindow(object):
         And destroy the widget
         '''
         
-        etitle = self.entryTitle.get()
-        eusername = self.entryUsername.get()
-        epassword = self.entryPassword.get()
-        eemail = self.entryEMail.get()
-        elocation = self.entryLocation.get()
-        enote = self.textNote.get('1.0', 'end')
+        title = self.entryTitle.get()
+        username = self.entryUsername.get()
+        password = self.entryPassword.get()
+        email = self.entryEMail.get()
+        location = self.entryLocation.get()
+        note = self.textNote.get('1.0', 'end')
         
-        self.passSafe.newPassObject(title=etitle, username=eusername, password=epassword, email=eemail, location=elocation, note=enote)
-        
-        print('title: '+ str(etitle))
-        print('username: '+str(eusername))
-        print('password: '+str(epassword))
-        print('email: '+str(eemail))
-        print('location: '+str(elocation))
-        print('note: '+str(enote))
-        
-        self.gui.insertTitleBox()
+        self.maincontroller.pressnewpasssave(title, username, password, email, location, note)
                 
-        self.close()
-        
+        print('title: '+ str(title))
+        print('username: '+str(username))
+        print('password: '+str(password))
+        print('email: '+str(email))
+        print('location: '+str(location))
+        print('note: '+str(note))
+                
+        self.close()      
    
     def show(self):
         self.newPassWindow.mainloop()

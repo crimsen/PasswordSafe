@@ -4,9 +4,7 @@ Created on 15.04.2015
 @author: crimsen
 '''
 import Tkinter as tk
-from gui.unlockframe import UnlockFrame
-from gui.lockframe import LockFrame
-from curses.ascii import ESC
+from tkMessageBox import showerror
 
 class MainWindow(object):
     '''
@@ -14,11 +12,13 @@ class MainWindow(object):
     '''
 
     
-    def __init__(self):
+    def __init__(self, controller):
             
         self.mainWindow = tk.Tk()
         self.mainWindow.title('Passwordsafe')
         self.mainWindow.geometry('900x500')
+        
+        self.maincontroller = controller
         
         self.lockframe = None
         self.unlockframe = None
@@ -46,13 +46,8 @@ class MainWindow(object):
         
         self.titleBox = tk.Listbox(master=parent, selectmode='single', width=30)
         self.titleBox.pack(side='left', fill='both', padx=5 ,pady=5)
-        
-        self.titleBox.delete(0, 'end')
-        
-#         for i in self.passSafe.getSafe():
-#             self.titleBox.insert('end', str(i.getTitle()))
-#             
-#         self.titleBox.bind('<Button-1>', self.selectedTitle)
+        self.titleBox.delete(0, 'end')           
+        self.titleBox.bind('<Button-1>', self.selectedTitle)
 
     def __buildFrameData__(self, parent):
         '''
@@ -94,7 +89,7 @@ class MainWindow(object):
         self.labelNoteFill = tk.Label(master=self.framePic, text='', bg='white', justify='left', relief='raised', font='Arial')
         self.labelLocationLink = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 20 bold')
         self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16')
-        self.buttonLock = tk.Button(master=self.framePic, text='Lock', command=self.showlockframe)
+        self.buttonLock = tk.Button(master=self.framePic, text='Lock', command=self.presslock)
         
         self.labelLocationLink.pack(side='top', fill='both', padx=5, pady=5)
         self.labelLocationLinkFill.pack(side='top', fill='both', padx=5, pady=5)
@@ -110,13 +105,13 @@ class MainWindow(object):
         self.menuBar = tk.Menu(master=parent)
         
         self.fileMenu = tk.Menu(master=self.menuBar, tearoff=0)
-        self.fileMenu.add_command(label='Options')
+        self.fileMenu.add_command(label='Options', command=self.pressoptions)
         self.menuBar.add_cascade(label='File', menu=self.fileMenu)
         
         self.passMenu = tk.Menu(master=self.menuBar, tearoff=0)      
-        self.passMenu.add_command(label='New Password')
-        self.passMenu.add_command(label='Delete Password')
-        self.passMenu.add_command(label='Change Password')
+        self.passMenu.add_command(label='New Password', command=self.pressnewpass)
+        self.passMenu.add_command(label='Delete Password', command=self.pressremovepass)
+        self.passMenu.add_command(label='Change Password', command=self.presschangepass)
         self.menuBar.add_cascade(label='Password', menu=self.passMenu)
         
         self.mainWindow.config(menu=self.menuBar) 
@@ -129,6 +124,7 @@ class MainWindow(object):
         self.lockframe = tk.Frame(master=parent)
         self.lockframe.pack(fill='both', expand=True)
         self.__buildLockFrame(self.lockframe)
+        self.__buildMenuBarLock__(self.lockframe)
 
     def __buildLockFrame(self, parent):
         self.frameLock = tk.Frame(master=parent)
@@ -137,7 +133,7 @@ class MainWindow(object):
 #         self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:')
 #         self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center')
 #         self.labelFalse = tk.Label(master=self.framePassphrase, text='')
-        self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock', command=self.showunlockframe)
+        self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock', command=self.pressunlock)
         
         
         
@@ -157,21 +153,101 @@ class MainWindow(object):
         self.menuBarLocked = tk.Menu(master=parent)
         
         self.fileMenu = tk.Menu(master=self.menuBarLocked, tearoff=0)
-        self.fileMenu.add_command(label='Options', command=self.optionWindow)
+        self.fileMenu.add_command(label='Options', command=self.pressoptions)
         self.menuBarLocked.add_cascade(label='File', menu=self.fileMenu)
         
         self.mainWindow.config(menu=self.menuBarLocked) 
+        
+    def insertTitleBox(self, passSafe):
+        '''
+        Reloaded the TitleBox if some Objects will be removed or changed
+        '''
+        self.titleBox.delete(0, 'end')
+        
+        for passOb in passSafe:
+            self.titleBox.insert('end', str(passOb.getTitle()))
+    
+    def selectedTitle(self, event):
+        try:
+            index = self.getTitleBoxIndex()    
+            self.maincontroller.loadPassOb(int(index))
+        except:
+            pass
+        
+    def getTitleBoxIndex(self):
 
+        index = self.titleBox.curselection()
+        index = index[0]
+            
+        return int(index)
+
+        
+    def setfills(self, title, username, password, email, location, note):
+        self.labelTitleFill.config(text=str(title))
+        self.labelUsernameFill.config(text=str(username))
+        self.labelPasswordFill.config(state='normal')
+        self.labelPasswordFill.delete(0, 'end')
+        self.labelPasswordFill.insert('end', str(password))
+        self.labelPasswordFill.config(state='readonly')
+        self.labelEMailFill.config(text=str(email))
+        self.labelLocationLinkFill.config(text=str(location))
+        self.labelNoteFill.config(text=str(note))
+            
+    def getlockframe(self):
+        return self.lockframe
+    
+    def getunlockframe(self):
+        return self.unlockframe
+    
+    def getmainwindow(self):
+        return self.mainWindow
+    
+    def setlockframe(self):
+        self.__initLockFrame__(self.mainWindow)
+        
+    def setunlockframe(self):
+        self.__initUnlockFrame__(self.mainWindow)
         
     def showunlockframe(self):
         if self.lockframe != None:
-            self.lockframe.quit()
+            self.lockframe.destroy()
         self.__initUnlockFrame__(self.mainWindow)
         
     def showlockframe(self):
         if self.unlockframe != None:
-            self.unlockframe.quit()
-        self.__initUnlockFrame__(self.mainWindow)
+            self.unlockframe.destroy()
+        self.__initLockFrame__(self.mainWindow)
         
+    def showoptionerror(self):
+        showerror('Error 404-File not found', 'No Options found.\nPlease open Options, choose an account\nand save it.')
+        
+    def showobjecterror(self):
+        showerror('Error', 'No Object is chosen.\nPleas choose an Object!')
+    
+    def pressoptions(self):
+        self.maincontroller.pressoptions()
+    
+    def presslock(self):
+        self.maincontroller.pressmainLock()
+            
+    def pressunlock(self):
+        self.maincontroller.pressmainUnlock()
+        
+    def pressnewpass(self):
+        self.maincontroller.pressnewpass()
+        
+    def presschangepass(self):
+        try:
+            index = self.getTitleBoxIndex()
+            self.maincontroller.presschangepass(index)    
+        except:
+            self.showobjecterror()
+            
+    def pressremovepass(self):
+        try:
+            index = self.getTitleBoxIndex()
+            self.maincontroller.pressremovepass(index)
+        except:
+            self.showobjecterror()    
     def show(self):
         self.mainWindow.mainloop()   

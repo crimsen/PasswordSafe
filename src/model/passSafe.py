@@ -12,13 +12,14 @@ from model.passObject import PasswordObject
 
 class PasswordSafe(object):
     
-    def __init__(self, filename, account):
+    def __init__(self, filename, account, controller):
         self.passwordSafe = []
         self.filename = filename
         self.account = account
+        self.maincontroller = controller
         self.gpg = gnupg.GPG()
         self.load(self.filename)
-        self.passwordSafe = self.sort(self.passwordSafe)
+        self.passsafesort()
                  
     def newPassObject(self, title='', username='', password='', email='', location='', note=''):
         '''
@@ -27,6 +28,7 @@ class PasswordSafe(object):
         '''
         passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
         self.passwordSafe.append(passOb)
+        self.passsafesort()
         
         self.write(self.filename, self.account)
         
@@ -37,6 +39,7 @@ class PasswordSafe(object):
         
         passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
         self.passwordSafe.append(passOb)
+        self.passsafesort()
         
     
     def load(self, filename):
@@ -124,7 +127,7 @@ class PasswordSafe(object):
         datei.write(str(encrypt))
         datei.close()
         
-        self.passwordSafe = self.sort(self.passwordSafe)
+        self.passsafesort()
         
     def changePassOb(self, index, title='', username='', password='', email='', location='', note=''):
         '''
@@ -158,8 +161,11 @@ class PasswordSafe(object):
         for k in knoten.childNodes:
             if k.nodeType == k.TEXT_NODE:
                 return k.nodeValue.strip()
+    
+    def passsafesort(self):
+        self.passwordSafe = self.sortfunc(self.passwordSafe)
      
-    def sort(self, array):
+    def sortfunc(self, array):
         less = []
         equal = []
         greater = []
@@ -174,7 +180,7 @@ class PasswordSafe(object):
                 if x.getTitle().lower() > pivot:
                     greater.append(x)
             # Don't forget to return something!
-            return self.sort(less)+equal+self.sort(greater)  # Just use the + operator to join lists
+            return self.sortfunc(less)+equal+self.sortfunc(greater)  # Just use the + operator to join lists
         # Note that you want equal ^^^^^ not pivot
         else:  # You need to hande the part at the end of the recursion - when you only have one element in your array, just return the array.
             return array 
@@ -185,6 +191,24 @@ class PasswordSafe(object):
             
     def getSafe(self):
         return self.passwordSafe
+    
+    def getTitle(self, index):
+        return self.passwordSafe[index].getTitle()
+    
+    def getUsername(self, index):
+        return self.passwordSafe[index].getUsername()
+    
+    def getPassword(self, index):
+        return self.passwordSafe[index].getPassword()
+    
+    def getEmail(self, index):
+        return self.passwordSafe[index].getEmail()
+    
+    def getLocation(self, index):
+        return self.passwordSafe[index].getLocation()
+    
+    def getNote(self, index):
+        return self.passwordSafe[index].getNote()
     
     def getSafeIndex(self, index):
         return self.passwordSafe[index]
