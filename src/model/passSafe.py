@@ -17,7 +17,7 @@ class PasswordSafe(object):
         self.filename = filename
         self.account = account
         self.maincontroller = controller
-        self.gpg = gnupg.GPG()
+        self.gpg = gnupg.GPG(use_agent=True)
         self.load(self.filename)
         self.passsafesort()
                  
@@ -71,7 +71,7 @@ class PasswordSafe(object):
                         note = self.liesText(knotenName)
                     self.loadPassObject(title, username, password, email, location, note) 
         except:
-            return True
+            print('fail to load safe.xml')
         
                
     def write(self, filename, account):
@@ -179,10 +179,8 @@ class PasswordSafe(object):
                     equal.append(x)
                 if x.getTitle().lower() > pivot:
                     greater.append(x)
-            # Don't forget to return something!
-            return self.sortfunc(less)+equal+self.sortfunc(greater)  # Just use the + operator to join lists
-        # Note that you want equal ^^^^^ not pivot
-        else:  # You need to hande the part at the end of the recursion - when you only have one element in your array, just return the array.
+            return self.sortfunc(less)+equal+self.sortfunc(greater)
+        else:  
             return array 
      
     def printFu(self, list):
