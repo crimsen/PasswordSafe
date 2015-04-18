@@ -22,7 +22,7 @@ class NewPassWindow(object):
         
     def __buildFrameData(self):
         '''
-        Build the frame left with the title, the username, the password and the emal
+        Build the frame left with the title, the username, the password and the email
         The user has to fill the entrys
         '''
         
@@ -90,15 +90,7 @@ class NewPassWindow(object):
         location = self.entryLocation.get()
         note = self.textNote.get('1.0', 'end')
         
-        self.maincontroller.pressnewpasssave(title, username, password, email, location, note)
-                
-        print('title: '+ str(title))
-        print('username: '+str(username))
-        print('password: '+str(password))
-        print('email: '+str(email))
-        print('location: '+str(location))
-        print('note: '+str(note))
-                
+        self.maincontroller.pressnewpasssave(title, username, password, email, location, note)       
         self.close()      
    
     def show(self):

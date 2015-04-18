@@ -6,6 +6,9 @@ Created on 28.03.2015
 import xml.dom.minidom
 import StringIO as StringStream
 import gnupg
+import os
+from datetime import datetime
+import shutil
 from model.passObject import PasswordObject
 
 
@@ -31,6 +34,7 @@ class PasswordSafe(object):
         self.passsafesort()
         
         self.write(self.filename, self.account)
+        self.backupsafe()
         
     def loadPassObject(self, title, username, password, email, location, note):
         '''
@@ -182,6 +186,19 @@ class PasswordSafe(object):
             return self.sortfunc(less)+equal+self.sortfunc(greater)
         else:  
             return array 
+    
+    def backupsafe(self):
+        
+        home = os.environ['HOME']
+        today = datetime.today()
+        
+        self.backup = home+'/Documents/.PasswordSafe/backup/'+str(today.year)+'-'+str(today.month)+'-'+str(today.day)
+        if not os.path.exists(self.backup):
+            os.makedirs(self.backup)
+        print self.backup
+        
+        shutil.copy(self.filename, self.backup+'/backupsafe.xml')
+        print ('backup completed')
      
     def printFu(self, list):
         for x in list:

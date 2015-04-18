@@ -48,26 +48,31 @@ class MainController(object):
         return retVal   
     
     def __initGUI__(self):
-        
+        print('init gui')
         self.mainWindow = MainWindow(self)
         
     def pressmainLock(self):
+        print('locking screen')
         if self.mainWindow.getunlockframe() != None:
             self.mainWindow.getunlockframe().destroy()
         self.mainWindow.setlockframe()
     
     def pressmainUnlock(self):
+        print('try to unlock screen')
         if self.existingFile(self.optionfile):
             self.loadoption()
             self.passsafe = PasswordSafe(self.safefile, self.account, self)
             if self.mainWindow.getlockframe() != None:
                 self.mainWindow.getlockframe().destroy()
             self.mainWindow.setunlockframe()
+            print('unlock complete')
             self.mainWindow.insertTitleBox(self.passsafe.getSafe())
         else:
+            print('fail to unlock screen')
             self.mainWindow.showoptionerror()
             
     def pressoptions(self):
+        print('open options')
         self.optionloader = OptionLoader(self.optionfile, self)
         self.accounts = self.optionloader.getaccounts()
         
@@ -75,13 +80,16 @@ class MainController(object):
         self.optionwindow.show()
         
     def pressoptionsave(self, entry):
+        print('save options')
         self.optionloader.writeEmailOption(entry, self.optionfile)
     
     def pressnewpass(self):
+        print('open newpassword')
         self.newpasswindow = NewPassWindow(self)
         self.newpasswindow.show()
         
     def presschangepass(self, index):
+        print('open changepassword')
         title = self.passsafe.getTitle(index)
         username = self.passsafe.getUsername(index)
         password = self.passsafe.getPassword(index)
@@ -91,23 +99,28 @@ class MainController(object):
         self.changepass = ChangePassWindow(self, index, title, username, password, email, location, note)
             
     def pressnewpasssave(self, title, username, password, email, location, note):
+        print('save new password')
         self.passsafe.newPassObject(title, username, password, email, location, note) 
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
         
     def presschangepasssave(self, index, title, username, password, email, location, note):
+        print('save passwordchanges')
         self.passsafe.changePassOb(index, title, username, password, email, location, note)
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
     
     def pressremovepass(self, index):
+        print('password deleted')
         self.passsafe.removePassOb(index)
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
                
     def loadoption(self):
+        print('loadoptions')
         self.optionloader = OptionLoader(self.optionfile, self)
         self.accounts = self.optionloader.getaccounts()
         self.account = self.optionloader.getemail()
     
     def loadPassOb(self, index):
+        print('load PasswordObject')
         title = self.passsafe.getTitle(index)
         username = self.passsafe.getUsername(index)
         password = self.passsafe.getPassword(index)
