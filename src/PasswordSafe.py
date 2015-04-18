@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+#version 1.0
 '''
 Created on 27.03.2015
 

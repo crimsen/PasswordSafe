@@ -15,13 +15,13 @@ from model.passObject import PasswordObject
 
 class PasswordSafe(object):
     
-    def __init__(self, filename, account, controller):
+    def __init__(self, filename, account, passphrase, controller):
         self.passwordSafe = []
         self.filename = filename
         self.account = account
         self.maincontroller = controller
         self.gpg = gnupg.GPG(use_agent=True)
-        self.load(self.filename)
+        self.load(self.filename, passphrase)
         self.passsafesort()
                  
     def newPassObject(self, title='', username='', password='', email='', location='', note=''):
@@ -46,36 +46,35 @@ class PasswordSafe(object):
         self.passsafesort()
         
     
-    def load(self, filename):
+    def load(self, filename, passphrase):
         '''
         Load the xml-file
         Save the passwordobjects in RAM
         '''
         
-        try:
-            datei = open(filename, "rb")
-            decrypt_data = self.gpg.decrypt_file(datei, always_trust=True)
-            decrypt = str(decrypt_data)
-            dom = xml.dom.minidom.parseString(decrypt)
-            datei.close()
+
+        datei = open(filename, "rb")
+        decrypt_data = self.gpg.decrypt_file(datei, passphrase=str(passphrase),always_trust=True)
+        decrypt = str(decrypt_data)
+        dom = xml.dom.minidom.parseString(decrypt)
+        datei.close()
+    
+        for elem in dom.getElementsByTagName('Safes'):
+            for elem1 in elem.getElementsByTagName('Safe'):
+                for knotenName in elem1.getElementsByTagName('Title'):
+                    title = self.liesText(knotenName)
+                for knotenName in elem1.getElementsByTagName('Username'):
+                    username = self.liesText(knotenName)
+                for knotenName in elem1.getElementsByTagName('Password'):
+                    password = self.liesText(knotenName)
+                for knotenName in elem1.getElementsByTagName('EMail'):
+                    email = self.liesText(knotenName)
+                for knotenName in elem1.getElementsByTagName('URL'):
+                    location = self.liesText(knotenName)
+                for knotenName in elem1.getElementsByTagName('Note'):
+                    note = self.liesText(knotenName)
+                self.loadPassObject(title, username, password, email, location, note) 
         
-            for elem in dom.getElementsByTagName('Safes'):
-                for elem1 in elem.getElementsByTagName('Safe'):
-                    for knotenName in elem1.getElementsByTagName('Title'):
-                        title = self.liesText(knotenName)
-                    for knotenName in elem1.getElementsByTagName('Username'):
-                        username = self.liesText(knotenName)
-                    for knotenName in elem1.getElementsByTagName('Password'):
-                        password = self.liesText(knotenName)
-                    for knotenName in elem1.getElementsByTagName('EMail'):
-                        email = self.liesText(knotenName)
-                    for knotenName in elem1.getElementsByTagName('URL'):
-                        location = self.liesText(knotenName)
-                    for knotenName in elem1.getElementsByTagName('Note'):
-                        note = self.liesText(knotenName)
-                    self.loadPassObject(title, username, password, email, location, note) 
-        except:
-            print('fail to load safe.xml')
         
                
     def write(self, filename, account):

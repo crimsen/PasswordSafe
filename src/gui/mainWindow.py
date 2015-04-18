@@ -32,20 +32,41 @@ class MainWindow(object):
         
         self.unlockframe = tk.Frame(master=parent)
         self.unlockframe.pack(fill='both', expand=True)
+        self.__buildFilterFrame__(self.unlockframe)
         self.__buildTitleBoxFrame__(self.unlockframe)
         self.__buildFrameData__(self.unlockframe)
         self.__buildFramePic__(self.unlockframe)
         self.__buildMenuBar__(self.unlockframe)
         
+    def __buildFilterFrame__(self, parent):
+        self.frameFilter = tk.Frame(master=parent)
+        self.frameFilter.pack(side='top', fill='x', padx=5)
+        
+        self.entryFilter = tk.Entry(master=self.frameFilter)
+        self.buttonFilterTitle = tk.Checkbutton(master=self.frameFilter, text='Title')
+        self.buttonFilterUsername = tk.Checkbutton(master=self.frameFilter, text='Username')
+        self.buttonFilterPassword = tk.Checkbutton(master=self.frameFilter, text='Password')
+        self.buttonFilterEmail = tk.Checkbutton(master=self.frameFilter, text='Email')
+        self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, text='Location')
+        self.buttonFilterNote = tk.Checkbutton(master=self.frameFilter, text='Note')
+        
+        self.entryFilter.pack(side='left', padx=5)
+        self.buttonFilterTitle.pack(side='left')
+        self.buttonFilterUsername.pack(side='left')
+        self.buttonFilterPassword.pack(side='left')
+        self.buttonFilterEmail.pack(side='left')
+        self.buttonFilterLocation.pack(side='left')
+        self.buttonFilterNote.pack(side='left')
         
     def __buildTitleBoxFrame__(self, parent):
         '''
         Build the TitleBox
         Show all passwordobjects
         '''
-        
-        self.titleBox = tk.Listbox(master=parent, selectmode='single', width=30)
-        self.titleBox.pack(side='left', fill='both', padx=5 ,pady=5)
+        self.frameTitleBox = tk.Frame(master=parent)
+        self.frameTitleBox.pack(side='left', fill='both', padx=5, pady=5)
+        self.titleBox = tk.Listbox(master=self.frameTitleBox, selectmode='single', width=30)
+        self.titleBox.pack(side='top', fill='both', padx=5, pady=5, expand=True)
         self.titleBox.delete(0, 'end')           
         self.titleBox.bind('<Button-1>', self.selectedTitle)
 
@@ -61,7 +82,7 @@ class MainWindow(object):
         self.labelTitle = tk.Label(master=self.frameData, text='Titel', anchor='w', font='Arial 20 bold')
         self.labelUsername = tk.Label(master=self.frameData, text='Username', anchor='w', font='Arial 20 bold')
         self.labelPassword = tk.Label(master=self.frameData, text='Passwort', anchor='w', font='Arial 20 bold')
-        self.labelEMail = tk.Label(master=self.frameData, text='E-Mail', anchor='w', font='Arial 20 bold')
+        self.labelEMail = tk.Label(master=self.frameData, text='E-Mail', anchor='w', font='Arial 20 bold')    
         
         self.labelTitleFill = tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
         self.labelUsernameFill= tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
@@ -90,11 +111,13 @@ class MainWindow(object):
         self.labelLocationLink = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 20 bold')
         self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16')
         self.buttonLock = tk.Button(master=self.framePic, text='Lock', command=self.presslock)
+        self.labelTime = tk.Label(master=self.framePic, anchor='e')
         
         self.labelLocationLink.pack(side='top', fill='both', padx=5, pady=5)
         self.labelLocationLinkFill.pack(side='top', fill='both', padx=5, pady=5)
         self.labelNote.pack(side='top', fill='both', padx=5, pady=5)
         self.labelNoteFill.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+        self.labelTime.pack(side='bottom')
         self.buttonLock.pack(side='bottom', fill='both', padx=5, pady=5)    
         
     def __buildMenuBar__(self, parent):
@@ -128,21 +151,23 @@ class MainWindow(object):
 
     def __buildLockFrame(self, parent):
         self.frameLock = tk.Frame(master=parent)
-        self.labelFunny = tk.Label(master=self.frameLock,fg='red', text='YOU\nSHALL\nNOT\nPASS!', font='Arial 72 bold')
-#         self.framePassphrase = tk.Frame(master=self.frameLock, bg='green')
-#         self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:')
-#         self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center')
-#         self.labelFalse = tk.Label(master=self.framePassphrase, text='')
-        self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock', command=self.pressunlock)
+#         self.labelFunny = tk.Label(master=self.frameLock,fg='red', text='YOU\nSHALL\nNOT\nPASS!', font='Arial 72 bold')
+        self.framePassphrase = tk.Frame(master=self.frameLock)
+        self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:')
+        self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center', show='*')
+        self.labelFalse = tk.Label(master=self.framePassphrase, text='', fg='red')
+        self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock')
+        self.buttonUnlock.bind('<1>', self.pressunlock)
+        self.entryPassphrase.bind('<Return>', self.pressunlock)
         
         
         
         self.frameLock.pack(side='top', fill='both', expand=True)
-        self.labelFunny.pack(expand=True)
-#         self.framePassphrase.place(relx=0.4, rely=0.4)
-#         self.labelPassphrase.pack(side='top', padx=5, pady=5, fill='both')
-#         self.entryPassphrase.pack(side='top', fill='both', padx=5, pady=5)
-#         self.labelFalse.pack(side='top', fill='both', padx=5, pady=5)
+#         self.labelFunny.pack(expand=True)
+        self.framePassphrase.place(relx=0.4, rely=0.4)
+        self.labelPassphrase.pack(side='top', padx=5, pady=5, fill='both')
+        self.entryPassphrase.pack(side='top', fill='both', padx=5, pady=5)
+        self.labelFalse.pack(side='top', fill='both', padx=5, pady=5)
         self.buttonUnlock.pack(side='bottom', anchor='se')   
         
     def __buildMenuBarLock__(self, parent):
@@ -230,8 +255,9 @@ class MainWindow(object):
     def presslock(self):
         self.maincontroller.pressmainLock()
             
-    def pressunlock(self):
-        self.maincontroller.pressmainUnlock()
+    def pressunlock(self, event):
+        passphrase = self.entryPassphrase.get()
+        self.maincontroller.pressmainUnlock(passphrase)
         
     def pressnewpass(self):
         self.maincontroller.pressnewpass()
@@ -248,6 +274,13 @@ class MainWindow(object):
             index = self.getTitleBoxIndex()
             self.maincontroller.pressremovepass(index)
         except:
-            self.showobjecterror()    
+            self.showobjecterror()   
+            
+    def setlabelpassphrase(self):
+        self.labelFalse.config(text='Your passphrase is wrong!')
+        
+    def setTime(self, time):
+        self.labelTime.config(text='Autolock in '+str(time)+' seconds!') 
+        
     def show(self):
         self.mainWindow.mainloop()   

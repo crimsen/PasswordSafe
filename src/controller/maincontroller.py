@@ -10,6 +10,7 @@ import os
 from gui.optionWindow import OptionWindow
 from gui.newPassWindow import NewPassWindow
 from gui.changePassWindow import ChangePassWindow
+import time
 
 
 class MainController(object):
@@ -24,6 +25,7 @@ class MainController(object):
         '''
         self.__searchFiles__()
         self.__initGUI__()
+        self.time = 0
         
         
     def __searchFiles__(self):
@@ -53,25 +55,32 @@ class MainController(object):
         
     def pressmainLock(self):
         print('locking screen')
+        self.settimezero()
         if self.mainWindow.getunlockframe() != None:
             self.mainWindow.getunlockframe().destroy()
         self.mainWindow.setlockframe()
     
-    def pressmainUnlock(self):
+    def pressmainUnlock(self, passphrase):
         print('try to unlock screen')
         if self.existingFile(self.optionfile):
             self.loadoption()
-            self.passsafe = PasswordSafe(self.safefile, self.account, self)
-            if self.mainWindow.getlockframe() != None:
-                self.mainWindow.getlockframe().destroy()
-            self.mainWindow.setunlockframe()
-            print('unlock complete')
-            self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+            try:
+                self.passsafe = PasswordSafe(self.safefile, self.account, passphrase, self)
+                if self.mainWindow.getlockframe() != None:
+                    self.mainWindow.getlockframe().destroy()
+                self.mainWindow.setunlockframe()
+                print('unlock complete')
+                self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+                self.settimeback()
+                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+            except:
+                self.mainWindow.setlabelpassphrase()
         else:
             print('fail to unlock screen')
             self.mainWindow.showoptionerror()
             
     def pressoptions(self):
+        self.settimeback()
         print('open options')
         self.optionloader = OptionLoader(self.optionfile, self)
         self.accounts = self.optionloader.getaccounts()
@@ -82,13 +91,16 @@ class MainController(object):
     def pressoptionsave(self, entry):
         print('save options')
         self.optionloader.writeEmailOption(entry, self.optionfile)
+        self.settimeback()
     
     def pressnewpass(self):
         print('open newpassword')
+        self.settimeback()
         self.newpasswindow = NewPassWindow(self)
         self.newpasswindow.show()
         
     def presschangepass(self, index):
+        self.settimeback()
         print('open changepassword')
         title = self.passsafe.getTitle(index)
         username = self.passsafe.getUsername(index)
@@ -102,16 +114,19 @@ class MainController(object):
         print('save new password')
         self.passsafe.newPassObject(title, username, password, email, location, note) 
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+        self.settimeback()
         
     def presschangepasssave(self, index, title, username, password, email, location, note):
         print('save passwordchanges')
         self.passsafe.changePassOb(index, title, username, password, email, location, note)
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+        self.settimeback()
     
     def pressremovepass(self, index):
         print('password deleted')
         self.passsafe.removePassOb(index)
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+        self.settimeback()
                
     def loadoption(self):
         print('loadoptions')
@@ -136,6 +151,7 @@ class MainController(object):
         note = self.controlNone(note)
         
         self.mainWindow.setfills(title, username, password, email, location, note)
+        self.settimeback()
         
     def controlNone(self, attr):
         if attr == 'None':
@@ -143,6 +159,23 @@ class MainController(object):
         else:
             retVal = attr 
         return retVal
+    
+    def timecontrol(self):
+        self.time -= 1
+        print self.time
+        if self.time <= 0:
+            if self.time !=-1:
+                self.pressmainLock()
+        else:
+            self.mainWindow.setTime(self.time)
+            self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+    
+    def settimeback(self):
+        self.time = 60
+        
+    def settimezero(self):
+        self.time = 0
        
     def show(self):
         self.mainWindow.show()
+    
