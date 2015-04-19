@@ -11,6 +11,7 @@ from gui.optionWindow import OptionWindow
 from gui.newPassWindow import NewPassWindow
 from gui.changePassWindow import ChangePassWindow
 import time
+from controller.filter import PassSafeFilter
 
 
 class MainController(object):
@@ -66,6 +67,7 @@ class MainController(object):
             self.loadoption()
             try:
                 self.passsafe = PasswordSafe(self.safefile, self.account, passphrase, self)
+                self.filter = PassSafeFilter(self.passsafe.getSafe())
                 if self.mainWindow.getlockframe() != None:
                     self.mainWindow.getlockframe().destroy()
                 self.mainWindow.setunlockframe()
@@ -169,6 +171,13 @@ class MainController(object):
         else:
             self.mainWindow.setTime(self.time)
             self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+            
+    def updatefilter(self, filterstring='', filterattribute=[]):
+        self.filter.setFilterstring(filterstring)
+        self.filter.setFilterattribute(filterattribute)
+        self.filter.doFilter()
+        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+        self.settimeback()
     
     def settimeback(self):
         self.time = 60

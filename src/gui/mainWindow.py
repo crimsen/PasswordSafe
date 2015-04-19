@@ -5,6 +5,7 @@ Created on 15.04.2015
 '''
 import Tkinter as tk
 from tkMessageBox import showerror
+from Tkinter import StringVar
 
 class MainWindow(object):
     '''
@@ -17,6 +18,22 @@ class MainWindow(object):
         self.mainWindow = tk.Tk()
         self.mainWindow.title('Passwordsafe')
         self.mainWindow.geometry('900x500')
+        
+        self.filterEntry = StringVar()
+        self.checkTitle = StringVar()
+        self.checkUsername = StringVar()
+        self.checkPassword = StringVar()
+        self.checkEmail = StringVar()
+        self.checkLocation = StringVar()
+        self.checkNote = StringVar()
+        
+        self.filterEntry.trace('w', self.updatefilter)
+        self.checkTitle.trace('w', self.updatefilter)
+        self.checkUsername.trace('w', self.updatefilter)
+        self.checkPassword.trace('w', self.updatefilter)
+        self.checkEmail.trace('w', self.updatefilter)
+        self.checkLocation.trace('w', self.updatefilter)
+        self.checkNote.trace('w', self.updatefilter)
         
         self.maincontroller = controller
         
@@ -42,13 +59,13 @@ class MainWindow(object):
         self.frameFilter = tk.Frame(master=parent)
         self.frameFilter.pack(side='top', fill='x', padx=5)
         
-        self.entryFilter = tk.Entry(master=self.frameFilter)
-        self.buttonFilterTitle = tk.Checkbutton(master=self.frameFilter, text='Title')
-        self.buttonFilterUsername = tk.Checkbutton(master=self.frameFilter, text='Username')
-        self.buttonFilterPassword = tk.Checkbutton(master=self.frameFilter, text='Password')
-        self.buttonFilterEmail = tk.Checkbutton(master=self.frameFilter, text='Email')
-        self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, text='Location')
-        self.buttonFilterNote = tk.Checkbutton(master=self.frameFilter, text='Note')
+        self.entryFilter = tk.Entry(master=self.frameFilter, textvariable=self.filterEntry)
+        self.buttonFilterTitle = tk.Checkbutton(master=self.frameFilter, variable=self.checkTitle, onvalue='title', offvalue='', text='Title')
+        self.buttonFilterUsername = tk.Checkbutton(master=self.frameFilter, variable=self.checkUsername, onvalue='username', offvalue='', text='Username')
+        self.buttonFilterPassword = tk.Checkbutton(master=self.frameFilter, variable=self.checkPassword, onvalue='password', offvalue='', text='Password')
+        self.buttonFilterEmail = tk.Checkbutton(master=self.frameFilter, variable=self.checkEmail, onvalue='email', offvalue='', text='Email')
+        self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, variable=self.checkLocation, onvalue='location', offvalue='', text='Location')
+        self.buttonFilterNote = tk.Checkbutton(master=self.frameFilter, variable=self.checkNote, onvalue='note', offvalue='', text='Note')
         
         self.entryFilter.pack(side='left', padx=5)
         self.buttonFilterTitle.pack(side='left')
@@ -281,6 +298,12 @@ class MainWindow(object):
         
     def setTime(self, time):
         self.labelTime.config(text='Autolock in '+str(time)+' seconds!') 
+    
+    def updatefilter(self, *args):
+        filterstring = self.filterEntry.get()
+        filterattribute = [self.checkTitle.get(), self.checkUsername.get(), self.checkPassword.get(),\
+                           self.checkEmail.get(), self.checkLocation.get(), self.checkNote.get()]
+        self.maincontroller.updatefilter(filterstring, filterattribute)
         
     def show(self):
         self.mainWindow.mainloop()   
