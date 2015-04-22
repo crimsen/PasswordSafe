@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/sh -e
 
 # Installer script for PasswordSafe
 # Supports at the moment all linux distributions that use pacman or zypper
@@ -87,11 +87,13 @@ install_prerequisites()
 install_files()
 {
     cd ..
-    cp -r src "$NAME"
-    cd "$NAME"
-    sed -i "s,/Documents/.PasswordSafe,/$DEFAULT_PROFILE_PATH,g" controller/maincontroller.py
-    cd ..
-    sudo mv $NAME $DEFAULT_INSTALL_PATH
+    if [ -d "$DEFAULT_INSTALL_PATH/$NAME" ]; then
+        sudo rm -r "$DEFAULT_INSTALL_PATH/$NAME"
+    fi
+    sudo mkdir -p "$DEFAULT_INSTALL_PATH/$NAME"
+    sudo cp -r src/* "$DEFAULT_INSTALL_PATH/$NAME"
+    cd "$DEFAULT_INSTALL_PATH/$NAME"
+    sudo sed -i "s,/Documents/.PasswordSafe,/$DEFAULT_PROFILE_PATH,g" controller/maincontroller.py
 }
 
 install_it()
@@ -106,9 +108,12 @@ install_it()
 
     echo "step 3) installing starter..."
     cd "$DEFAULT_BIN_PATH"
-    sudo echo -e "#!/bin/bash\n" \
-                 "$REQUIRED_PYTHON_PARSER $DEFAULT_INSTALL_PATH/$NAME/$NAME.py\n" >> "$NAME.sh"
-    sudo chmod +x "$NAME.sh"
+    if [ -f "$NAME" ]; then
+        rm "$NAME"
+    fi
+    sudo sh -c "echo -e \"#!/bin/bash\n\" \
+                 \"$REQUIRED_PYTHON_PARSER $DEFAULT_INSTALL_PATH/$NAME/$NAME.py\n\" >> \"$NAME\""
+    sudo chmod +x "$NAME"
     echo " $NAME installed."
 
     echo
@@ -120,7 +125,7 @@ uninstall_it()
 {
     echo "Uninstalling program files"
     sudo rm -r "$DEFAULT_INSTALL_PATH/$NAME"
-    sudo rm "$DEFAULT_BIN_PATH/$NAME.sh"
+    sudo rm "$DEFAULT_BIN_PATH/$NAME"
     echo "Uninstalling of $NAME complete"
 }
 
