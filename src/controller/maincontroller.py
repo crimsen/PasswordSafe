@@ -142,19 +142,25 @@ class MainController(object):
             
     def pressnewpasssave(self, title, username, password, email, location, note):
         print('save new password')
-        self.passsafe.newPassObject(title, username, password, email, location, note) 
+        self.passsafe.newPassObject(title, username, password, email, location, note)
+        self.filter = PassSafeFilter(self.passsafe.getSafe())
+        self.filter.doFilter() 
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
         self.settimeback()
         
     def presschangepasssave(self, index, title, username, password, email, location, note):
         print('save passwordchanges')
         self.passsafe.changePassOb(index, title, username, password, email, location, note)
+        self.filter = PassSafeFilter(self.passsafe.getSafe())
+        self.filter.doFilter()
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
         self.settimeback()
     
     def pressremovepass(self, index):
         print('password deleted')
         self.passsafe.removePassOb(index)
+        self.filter = PassSafeFilter(self.passsafe.getSafe())
+        self.filter.doFilter()
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
         self.settimeback()
         
