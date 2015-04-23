@@ -52,4 +52,20 @@ class PassSafeFilter(object):
             print(getattr(po, 'username'))
             print('\n')
         
+    def getTitle(self, index):
+        return self.filteredpasssafe[index].getTitle()
     
+    def getUsername(self, index):
+        return self.filteredpasssafe[index].getUsername()
+    
+    def getPassword(self, index):
+        return self.filteredpasssafe[index].getPassword()
+    
+    def getEmail(self, index):
+        return self.filteredpasssafe[index].getEmail()
+    
+    def getLocation(self, index):
+        return self.filteredpasssafe[index].getLocation()
+    
+    def getNote(self, index):
+        return self.filteredpasssafe[index].getNote()

@@ -24,25 +24,38 @@ class MainController(object):
         '''
         Constructor
         '''
-        self.__searchFiles__()
+        self.searchOptionFile()
         self.__initGUI__()
         self.time = 0
         
         
-    def __searchFiles__(self):
+    def searchSafeFile(self, account):
         '''
-        Search Safe and Option-File
+        Search Safe-File
         If not exist create path
         '''
         home = os.environ['HOME']
         
-        self.safefile = home+'/Documents/.PasswordSafe/safe.xml'
-        self.optionfile = home+'/Documents/.PasswordSafe/option.xml'
+        self.safefile = home+'/Documents/.PasswordSafe/'+account+'/safe.xml'
         
         self.dirfile = os.path.dirname(self.safefile)
         if not os.path.exists(self.dirfile):
             os.makedirs(self.dirfile)
         print(str(self.dirfile))  
+        
+    def searchOptionFile(self):
+        '''
+        Search Option-File
+        If not exist create path
+        '''
+        home = os.environ['HOME']
+        
+        self.optionfile = home+'/Documents/.PasswordSafe/option.xml'
+        
+        self.dirfile = os.path.dirname(self.optionfile)
+        if not os.path.exists(self.dirfile):
+            os.makedirs(self.dirfile)
+        print(str(self.dirfile)) 
     
     def existingFile(self, filename):
         retVal = False
@@ -53,6 +66,9 @@ class MainController(object):
     def __initGUI__(self):
         print('init gui')
         self.mainWindow = MainWindow(self)
+        
+        if not self.existingFile(self.optionfile):
+            self.pressoptions()
         
     def pressmainLock(self):
         print('locking screen')
@@ -65,18 +81,31 @@ class MainController(object):
         print('try to unlock screen')
         if self.existingFile(self.optionfile):
             self.loadoption()
-            try:
-                self.passsafe = PasswordSafe(self.safefile, self.account, passphrase, self)
-                self.filter = PassSafeFilter(self.passsafe.getSafe())
-                if self.mainWindow.getlockframe() != None:
-                    self.mainWindow.getlockframe().destroy()
-                self.mainWindow.setunlockframe()
-                print('unlock complete')
-                self.mainWindow.insertTitleBox(self.passsafe.getSafe())
-                self.settimeback()
-                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
-            except:
-                self.mainWindow.setlabelpassphrase()
+            self.searchSafeFile(self.account)
+            if self.existingFile(self.safefile):
+                try:
+                    self.passsafe = PasswordSafe(self.safefile, self.account, self)
+                    self.passsafe.load(passphrase)
+                    self.filter = PassSafeFilter(self.passsafe.getSafe())
+                    if self.mainWindow.getlockframe() != None:
+                        self.mainWindow.getlockframe().destroy()
+                    self.mainWindow.setunlockframe()
+                    print('unlock complete')
+                    self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+                    self.settimeback()
+                    self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+                except:
+                    self.mainWindow.setlabelpassphrase()
+            else:
+                    self.passsafe = PasswordSafe(self.safefile, self.account, self)
+                    self.filter = PassSafeFilter(self.filter.getFilteredpasssafe())
+                    if self.mainWindow.getlockframe() != None:
+                        self.mainWindow.getlockframe().destroy()
+                    self.mainWindow.setunlockframe()
+                    print('unlock complete')
+                    self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+                    self.settimeback()
+                    self.mainWindow.getmainwindow().after(1000, self.timecontrol)
         else:
             print('fail to unlock screen')
             self.mainWindow.showoptionerror()
@@ -138,7 +167,7 @@ class MainController(object):
     
     def loadPassOb(self, index):
         print('load PasswordObject')
-        title = self.passsafe.getTitle(index)
+        title = self.filter.getTitle(index)
         username = self.passsafe.getUsername(index)
         password = self.passsafe.getPassword(index)
         email = self.passsafe.getEmail(index)

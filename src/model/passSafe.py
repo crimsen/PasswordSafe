@@ -15,14 +15,12 @@ from model.passObject import PasswordObject
 
 class PasswordSafe(object):
     
-    def __init__(self, filename, account, passphrase, controller):
+    def __init__(self, filename, account, controller):
         self.passwordSafe = []
         self.filename = filename
         self.account = account
         self.maincontroller = controller
-        self.gpg = gnupg.GPG(use_agent=True)
-        self.load(self.filename, passphrase)
-        self.passsafesort()
+        self.gpg = gnupg.GPG()
                  
     def newPassObject(self, title='', username='', password='', email='', location='', note=''):
         '''
@@ -46,14 +44,14 @@ class PasswordSafe(object):
         self.passsafesort()
         
     
-    def load(self, filename, passphrase):
+    def load(self, passphrase):
         '''
         Load the xml-file
         Save the passwordobjects in RAM
         '''
         
 
-        datei = open(filename, "rb")
+        datei = open(self.filename, "rb")
         decrypt_data = self.gpg.decrypt_file(datei, passphrase=str(passphrase),always_trust=True)
         decrypt = str(decrypt_data)
         dom = xml.dom.minidom.parseString(decrypt)
@@ -191,7 +189,7 @@ class PasswordSafe(object):
         home = os.environ['HOME']
         today = datetime.today()
         
-        self.backup = home+'/Documents/.PasswordSafe/backup/'+str(today.year)+'-'+str(today.month)+'-'+str(today.day)
+        self.backup = home+'/Documents/.PasswordSafe/'+self.account+'/backup/'+str(today.year)+'-'+str(today.month)+'-'+str(today.day)
         if not os.path.exists(self.backup):
             os.makedirs(self.backup)
         print self.backup

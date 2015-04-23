@@ -17,6 +17,7 @@ class OptionWindow(object):
         self.optionWindow.geometry('400x400') 
         self.__buildFrames()
         self.__loadGpgBox(self.accounts)
+        self.optionWindow.attributes('-topmost', True)
         
     def __buildFrames(self):
         self.frameMain = tk.Frame(master=self.optionWindow)

@@ -54,6 +54,15 @@ class MainWindow(object):
         self.__buildFrameData__(self.unlockframe)
         self.__buildFramePic__(self.unlockframe)
         self.__buildMenuBar__(self.unlockframe)
+        self.__setDefault__()
+        
+    def __setDefault__(self):
+        self.buttonFilterTitle.select()
+        self.buttonFilterUsername.select()
+        self.buttonFilterPassword.select()
+        self.buttonFilterEmail.select()
+        self.buttonFilterLocation.select()
+        self.buttonFilterNote.select()
         
     def __buildFilterFrame__(self, parent):
         self.frameFilter = tk.Frame(master=parent)
@@ -81,11 +90,13 @@ class MainWindow(object):
         Show all passwordobjects
         '''
         self.frameTitleBox = tk.Frame(master=parent)
-        self.frameTitleBox.pack(side='left', fill='both', padx=5, pady=5)
+        self.frameTitleBox.pack(side='left', fill='both', padx=10, pady=10)
         self.titleBox = tk.Listbox(master=self.frameTitleBox, selectmode='single', width=30)
-        self.titleBox.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+        self.scrollbar = tk.Scrollbar(master=self.frameTitleBox)
+        self.titleBox.pack(side='left', fill='both', expand=True)
+        self.scrollbar.pack(side='left', fill='y')
         self.titleBox.delete(0, 'end')           
-        self.titleBox.bind('<Button-1>', self.selectedTitle)
+        self.titleBox.bind('<<ListboxSelect>>', self.selectedTitle)
 
     def __buildFrameData__(self, parent):
         '''
@@ -103,7 +114,8 @@ class MainWindow(object):
         
         self.labelTitleFill = tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
         self.labelUsernameFill= tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
-        self.labelPasswordFill = tk.Entry(master=self.frameData, bd=2, justify='center', relief='raised', font='Arial 16', state='readonly')
+        self.labelPasswordFill = tk.Entry(master=self.frameData, bd=2, justify='center', relief='raised', font='Arial 16', state='readonly', show='*')
+        self.buttonPasswordCopy = tk.Button(master=self.frameData, text='Copy')
         self.labelEMailFill = tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16') 
         
         self.labelTitle.pack(side='top', padx=5, pady=5, fill='both')
@@ -171,7 +183,7 @@ class MainWindow(object):
 #         self.labelFunny = tk.Label(master=self.frameLock,fg='red', text='YOU\nSHALL\nNOT\nPASS!', font='Arial 72 bold')
         self.framePassphrase = tk.Frame(master=self.frameLock)
         self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:')
-        self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center', show='*')
+        self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center')
         self.labelFalse = tk.Label(master=self.framePassphrase, text='', fg='red')
         self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock')
         self.buttonUnlock.bind('<1>', self.pressunlock)
@@ -208,6 +220,8 @@ class MainWindow(object):
         
         for passOb in passSafe:
             self.titleBox.insert('end', str(passOb.getTitle()))
+        self.titleBox.config(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.config(command=self.titleBox.yview)
     
     def selectedTitle(self, event):
         try:
