@@ -69,6 +69,7 @@ class MainController(object):
         
         if not self.existingFile(self.optionfile):
             self.pressoptions()
+        else: self.loadoption()
         
     def pressmainLock(self):
         print('locking screen')
@@ -76,39 +77,36 @@ class MainController(object):
         if self.mainWindow.getunlockframe() != None:
             self.mainWindow.getunlockframe().destroy()
         self.mainWindow.setlockframe()
+        self.loadoption()
     
     def pressmainUnlock(self, passphrase):
         print('try to unlock screen')
-        if self.existingFile(self.optionfile):
-            self.loadoption()
-            self.searchSafeFile(self.account)
-            if self.existingFile(self.safefile):
-                try:
-                    self.passsafe = PasswordSafe(self.safefile, self.account, self)
-                    self.passsafe.load(passphrase)
-                    self.filter = PassSafeFilter(self.passsafe.getSafe())
-                    if self.mainWindow.getlockframe() != None:
-                        self.mainWindow.getlockframe().destroy()
-                    self.mainWindow.setunlockframe()
-                    print('unlock complete')
-                    self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
-                    self.settimeback()
-                    self.mainWindow.getmainwindow().after(1000, self.timecontrol)
-                except:
-                    self.mainWindow.setlabelpassphrase()
-            else:
-                    self.passsafe = PasswordSafe(self.safefile, self.account, self)
-                    self.filter = PassSafeFilter(self.filter.getFilteredpasssafe())
-                    if self.mainWindow.getlockframe() != None:
-                        self.mainWindow.getlockframe().destroy()
-                    self.mainWindow.setunlockframe()
-                    print('unlock complete')
-                    self.mainWindow.insertTitleBox(self.passsafe.getSafe())
-                    self.settimeback()
-                    self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+        self.searchSafeFile(self.account)
+        if self.existingFile(self.safefile):
+            try:
+                self.passsafe = PasswordSafe(self.safefile, self.account, self)
+                self.passsafe.load(passphrase)
+                self.filter = PassSafeFilter(self.passsafe.getSafe())
+                if self.mainWindow.getlockframe() != None:
+                    self.mainWindow.getlockframe().destroy()
+                self.mainWindow.setunlockframe()
+                print('unlock complete')
+                self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+                self.settimeback()
+                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+            except:
+                self.mainWindow.setlabelpassphrase()
         else:
-            print('fail to unlock screen')
-            self.mainWindow.showoptionerror()
+                self.passsafe = PasswordSafe(self.safefile, self.account, self)
+                self.filter = PassSafeFilter(self.filter.getFilteredpasssafe())
+                if self.mainWindow.getlockframe() != None:
+                    self.mainWindow.getlockframe().destroy()
+                self.mainWindow.setunlockframe()
+                print('unlock complete')
+                self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+                self.settimeback()
+                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+
             
     def pressoptions(self):
         self.settimeback()
@@ -123,6 +121,7 @@ class MainController(object):
         print('save options')
         self.optionloader.writeEmailOption(entry, self.optionfile)
         self.settimeback()
+        self.loadoption()
     
     def pressnewpass(self):
         print('open newpassword')
@@ -168,6 +167,7 @@ class MainController(object):
         self.optionloader = OptionLoader(self.optionfile, self)
         self.accounts = self.optionloader.getaccounts()
         self.account = self.optionloader.getemail()
+        self.mainWindow.setAccount(self.account)
     
     def loadPassOb(self, index):
         print('load PasswordObject')

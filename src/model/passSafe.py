@@ -189,12 +189,12 @@ class PasswordSafe(object):
         home = os.environ['HOME']
         today = datetime.today()
         
-        self.backup = home+'/Documents/.PasswordSafe/'+self.account+'/backup/'+str(today.year)+'-'+str(today.month)+'-'+str(today.day)
+        self.backup = home+'/Documents/.PasswordSafe/'+self.account+'/backup/'
         if not os.path.exists(self.backup):
             os.makedirs(self.backup)
         print self.backup
         
-        shutil.copy(self.filename, self.backup+'/backupsafe.xml')
+        shutil.copy(self.filename, self.backup+str(today.year)+'-'+str(today.month)+'-'+str(today.day)+'-safe.xml')
         print ('backup completed')
      
     def printFu(self, list):

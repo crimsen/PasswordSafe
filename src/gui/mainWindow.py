@@ -6,6 +6,7 @@ Created on 15.04.2015
 import Tkinter as tk
 from tkMessageBox import showerror
 from Tkinter import StringVar
+import webbrowser
 
 class MainWindow(object):
     '''
@@ -37,6 +38,8 @@ class MainWindow(object):
         
         self.maincontroller = controller
         
+        self.account = ''
+        
         self.lockframe = None
         self.unlockframe = None
         
@@ -56,7 +59,11 @@ class MainWindow(object):
         self.__buildMenuBar__(self.unlockframe)
         self.__setDefault__()
         
-        #self.unlockframe.bind('<Key-Backspace>', self.presslock())
+        self.unlockframe.bind('<Escape>', self.presslock)
+        self.titleBox.bind('<Escape>', self.presslock)
+        self.frameData.bind('<Escape>', self.presslock)
+        self.framePic.bind('<Escape>', self.presslock)
+        self.labelPasswordFill.bind('<Escape>', self.presslock)
         
     def __setDefault__(self):
         self.buttonFilterTitle.select()
@@ -86,6 +93,8 @@ class MainWindow(object):
         self.buttonFilterLocation.pack(side='left')
         self.buttonFilterNote.pack(side='left')
         
+        self.entryFilter.focus_force()
+        
     def __buildTitleBoxFrame__(self, parent):
         '''
         Build the TitleBox
@@ -101,7 +110,6 @@ class MainWindow(object):
         self.titleBox.bind('<<ListboxSelect>>', self.selectedTitle)
         self.titleBox.bind('<Up>', self.setTitleBoxIndexUp)
         self.titleBox.bind('<Down>', self.setTitleBoxIndexDown)
-        self.titleBox.focus_force()
 
     def __buildFrameData__(self, parent):
         '''
@@ -150,8 +158,8 @@ class MainWindow(object):
         self.labelNote = tk.Label(master=self.framePic, text='Bemerkung', anchor='w', font='Arial 20 bold')
         self.labelNoteFill = tk.Label(master=self.framePic, text='', bg='white', justify='left', relief='raised', font='Arial')
         self.labelLocationLink = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 20 bold')
-        self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16')
-        self.buttonLock = tk.Button(master=self.framePic, text='Lock', command=self.presslock)
+        self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16', fg='blue', cursor='hand2')
+        self.buttonLock = tk.Button(master=self.framePic, text='Lock')
         self.labelTime = tk.Label(master=self.framePic, anchor='e')
         
         self.labelLocationLink.pack(side='top', fill='both', padx=5, pady=5)
@@ -159,7 +167,11 @@ class MainWindow(object):
         self.labelNote.pack(side='top', fill='both', padx=5, pady=5)
         self.labelNoteFill.pack(side='top', fill='both', padx=5, pady=5, expand=True)
         self.labelTime.pack(side='bottom')
-        self.buttonLock.pack(side='bottom', fill='both', padx=5, pady=5)    
+        self.buttonLock.pack(side='bottom', fill='both', padx=5, pady=5)  
+        
+        self.buttonLock.bind('<1>', self.presslock)
+        self.buttonLock.bind('<Return>', self.presslock)  
+        self.labelLocationLinkFill.bind('<1>', self.callLink)
         
     def __buildMenuBar__(self, parent):
         '''
@@ -199,12 +211,18 @@ class MainWindow(object):
         self.labelFalse = tk.Label(master=self.framePassphrase, text='', fg='red')
         self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock')
         self.buttonUnlock.bind('<1>', self.pressunlock)
+        self.buttonUnlock.bind('<Return>', self.pressunlock)
         self.entryPassphrase.bind('<Return>', self.pressunlock)
+        
+        self.labelAccount = tk.Label(master=self.frameLock, text='Account: ')
+        self.labelAccountChoosed = tk.Label(master=self.frameLock, text='test')
         
         
         
         self.frameLock.pack(side='top', fill='both', expand=True)
 #         self.labelFunny.pack(expand=True)
+        self.labelAccount.pack(side='left', anchor='n', padx=5, pady=5)
+        self.labelAccountChoosed.pack(side='left', anchor='n', padx=5, pady=5)
         self.framePassphrase.place(relx=0.4, rely=0.4)
         self.labelPassphrase.pack(side='top', padx=5, pady=5, fill='both')
         self.entryPassphrase.pack(side='top', fill='both', padx=5, pady=5)
@@ -242,6 +260,13 @@ class MainWindow(object):
         except:
             pass
         
+    def callLink(self, event):
+        url = self.labelLocationLinkFill.cget('text')
+        if 'http://' not in url:
+            if 'https://' not in url:
+                url = 'http://'+url
+        webbrowser.open_new_tab(str(url))
+        
     def getTitleBoxIndex(self):
 
         index = self.titleBox.curselection()
@@ -252,22 +277,22 @@ class MainWindow(object):
     def setTitleBoxIndexUp(self, event):
         try:
             index = self.getTitleBoxIndex()
-            if index != 0:
-                self.titleBox.select_clear(0, 'end')
-                self.titleBox.select_set(index-1)
-                self.maincontroller.loadPassOb(int(index-1))
         except:
-            pass
-        
+            index=len(self.titleBox.get(0, 'end'))-1
+        if index != 0:
+            self.titleBox.select_clear(0, 'end')
+            self.titleBox.select_set(index-1)
+            self.maincontroller.loadPassOb(int(index-1))
+    
     def setTitleBoxIndexDown(self, event):
         try:
             index = self.getTitleBoxIndex()
-            if index != len(self.titleBox.get(0, 'end')):
-                self.titleBox.select_clear(0, 'end')
-                self.titleBox.select_set(index+1)
-                self.maincontroller.loadPassOb(int(index+1))
         except:
-            pass
+            index=0
+        if index != (len(self.titleBox.get(0, 'end'))-1):
+            self.titleBox.select_clear(0, 'end')
+            self.titleBox.select_set(index+1)
+            self.maincontroller.loadPassOb(int(index+1))
         
     def setfills(self, title, username, password, email, location, note):
         self.labelTitleFill.config(text=str(title))
@@ -314,7 +339,7 @@ class MainWindow(object):
     def pressoptions(self):
         self.maincontroller.pressoptions()
     
-    def presslock(self):
+    def presslock(self, event):
         self.maincontroller.pressmainLock()
             
     def pressunlock(self, event):
@@ -346,7 +371,11 @@ class MainWindow(object):
         self.labelFalse.config(text='Your passphrase is wrong!')
         
     def setTime(self, time):
-        self.labelTime.config(text='Autolock in '+str(time)+' seconds!') 
+        self.labelTime.config(text='Autolock in '+str(time)+' seconds!')
+        
+    def setAccount(self, account):
+        self.account = account
+        self.labelAccountChoosed.config(text=self.account) 
     
     def updatefilter(self, *args):
         filterstring = self.filterEntry.get()
