@@ -98,12 +98,12 @@ class MainController(object):
                 self.mainWindow.setlabelpassphrase()
         else:
                 self.passsafe = PasswordSafe(self.safefile, self.account, self)
-                self.filter = PassSafeFilter(self.filter.getFilteredpasssafe())
+                self.filter = PassSafeFilter(self.passsafe.getSafe())
                 if self.mainWindow.getlockframe() != None:
                     self.mainWindow.getlockframe().destroy()
                 self.mainWindow.setunlockframe()
                 print('unlock complete')
-                self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+                self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
                 self.settimeback()
                 self.mainWindow.getmainwindow().after(1000, self.timecontrol)
 
