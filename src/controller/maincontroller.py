@@ -158,6 +158,10 @@ class MainController(object):
         self.passsafe.removePassOb(index)
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
         self.settimeback()
+        
+    def pressCopy(self, entry):
+        self.mainWindow.mainWindow.clipboard_clear()
+        self.mainWindow.mainWindow.clipboard_append(entry)
                
     def loadoption(self):
         print('loadoptions')

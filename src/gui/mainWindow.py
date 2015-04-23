@@ -56,6 +56,8 @@ class MainWindow(object):
         self.__buildMenuBar__(self.unlockframe)
         self.__setDefault__()
         
+        #self.unlockframe.bind('<Key-Backspace>', self.presslock())
+        
     def __setDefault__(self):
         self.buttonFilterTitle.select()
         self.buttonFilterUsername.select()
@@ -97,6 +99,9 @@ class MainWindow(object):
         self.scrollbar.pack(side='left', fill='y')
         self.titleBox.delete(0, 'end')           
         self.titleBox.bind('<<ListboxSelect>>', self.selectedTitle)
+        self.titleBox.bind('<Up>', self.setTitleBoxIndexUp)
+        self.titleBox.bind('<Down>', self.setTitleBoxIndexDown)
+        self.titleBox.focus_force()
 
     def __buildFrameData__(self, parent):
         '''
@@ -107,6 +112,8 @@ class MainWindow(object):
         self.frameData = tk.Frame(master=parent)
         self.frameData.pack(side='left', fill='both', expand=True, padx=5, pady=5)
         
+        self.framePassword = tk.Frame(master=self.frameData)
+        
         self.labelTitle = tk.Label(master=self.frameData, text='Titel', anchor='w', font='Arial 20 bold')
         self.labelUsername = tk.Label(master=self.frameData, text='Username', anchor='w', font='Arial 20 bold')
         self.labelPassword = tk.Label(master=self.frameData, text='Passwort', anchor='w', font='Arial 20 bold')
@@ -114,8 +121,8 @@ class MainWindow(object):
         
         self.labelTitleFill = tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
         self.labelUsernameFill= tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
-        self.labelPasswordFill = tk.Entry(master=self.frameData, bd=2, justify='center', relief='raised', font='Arial 16', state='readonly', show='*')
-        self.buttonPasswordCopy = tk.Button(master=self.frameData, text='Copy')
+        self.labelPasswordFill = tk.Entry(master=self.framePassword, bd=2, justify='center', relief='raised', font='Arial 16', state='readonly', show='*')
+        self.buttonPasswordCopy = tk.Button(master=self.framePassword, text='Copy')
         self.labelEMailFill = tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16') 
         
         self.labelTitle.pack(side='top', padx=5, pady=5, fill='both')
@@ -123,9 +130,14 @@ class MainWindow(object):
         self.labelUsername.pack(side='top', padx=5, pady=5, fill='both')
         self.labelUsernameFill.pack(side='top', padx=5, pady=5, fill='both')
         self.labelPassword.pack(side='top', padx=5, pady=5, fill='both')
-        self.labelPasswordFill.pack(side='top', padx=5, pady=5, fill='both')
+        self.framePassword.pack(side='top', fill='both')
+        self.labelPasswordFill.pack(side='left', padx=5, pady=5, fill='x', expand=True)
+        self.buttonPasswordCopy.pack(side='right', padx=5, pady=5)
         self.labelEMail.pack(side='top', padx=5, pady=5, fill='both')
         self.labelEMailFill.pack(side='top', padx=5, pady=5, fill='both')  
+        
+        self.buttonPasswordCopy.bind('<1>', self.pressCopy)
+        self.labelPasswordFill.bind('<Control-c>', self.pressCopy)
         
     def __buildFramePic__(self, parent):
         '''
@@ -183,7 +195,7 @@ class MainWindow(object):
 #         self.labelFunny = tk.Label(master=self.frameLock,fg='red', text='YOU\nSHALL\nNOT\nPASS!', font='Arial 72 bold')
         self.framePassphrase = tk.Frame(master=self.frameLock)
         self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:')
-        self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center')
+        self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center', show='*')
         self.labelFalse = tk.Label(master=self.framePassphrase, text='', fg='red')
         self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock')
         self.buttonUnlock.bind('<1>', self.pressunlock)
@@ -236,7 +248,26 @@ class MainWindow(object):
         index = index[0]
             
         return int(index)
-
+    
+    def setTitleBoxIndexUp(self, event):
+        try:
+            index = self.getTitleBoxIndex()
+            if index != 0:
+                self.titleBox.select_clear(0, 'end')
+                self.titleBox.select_set(index-1)
+                self.maincontroller.loadPassOb(int(index-1))
+        except:
+            pass
+        
+    def setTitleBoxIndexDown(self, event):
+        try:
+            index = self.getTitleBoxIndex()
+            if index != len(self.titleBox.get(0, 'end')):
+                self.titleBox.select_clear(0, 'end')
+                self.titleBox.select_set(index+1)
+                self.maincontroller.loadPassOb(int(index+1))
+        except:
+            pass
         
     def setfills(self, title, username, password, email, location, note):
         self.labelTitleFill.config(text=str(title))
@@ -305,7 +336,11 @@ class MainWindow(object):
             index = self.getTitleBoxIndex()
             self.maincontroller.pressremovepass(index)
         except:
-            self.showobjecterror()   
+            self.showobjecterror()
+            
+    def pressCopy(self, event):
+        entry = self.labelPasswordFill.get()
+        self.maincontroller.pressCopy(entry)   
             
     def setlabelpassphrase(self):
         self.labelFalse.config(text='Your passphrase is wrong!')
