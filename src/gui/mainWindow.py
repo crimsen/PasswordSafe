@@ -181,14 +181,14 @@ class MainWindow(object):
         self.menuBar = tk.Menu(master=parent)
         
         self.fileMenu = tk.Menu(master=self.menuBar, tearoff=0)
-        self.fileMenu.add_command(label='Options', command=self.pressoptions)
-        self.menuBar.add_cascade(label='File', menu=self.fileMenu)
+        self.fileMenu.add_command(label='Options', underline=0, command=self.pressoptions)
+        self.menuBar.add_cascade(label='File', underline=0, menu=self.fileMenu)
         
         self.passMenu = tk.Menu(master=self.menuBar, tearoff=0)      
-        self.passMenu.add_command(label='New Password', command=self.pressnewpass)
-        self.passMenu.add_command(label='Delete Password', command=self.pressremovepass)
-        self.passMenu.add_command(label='Change Password', command=self.presschangepass)
-        self.menuBar.add_cascade(label='Password', menu=self.passMenu)
+        self.passMenu.add_command(label='New Password', underline=0, command=self.pressnewpass)
+        self.passMenu.add_command(label='Delete Password', underline=0, command=self.pressremovepass)
+        self.passMenu.add_command(label='Change Password', underline=0, command=self.presschangepass)
+        self.menuBar.add_cascade(label='Password', underline=0, menu=self.passMenu)
         
         self.mainWindow.config(menu=self.menuBar) 
         
@@ -237,8 +237,8 @@ class MainWindow(object):
         self.menuBarLocked = tk.Menu(master=parent)
         
         self.fileMenu = tk.Menu(master=self.menuBarLocked, tearoff=0)
-        self.fileMenu.add_command(label='Options', command=self.pressoptions)
-        self.menuBarLocked.add_cascade(label='File', menu=self.fileMenu)
+        self.fileMenu.add_command(label='Options', underline=0, command=self.pressoptions)
+        self.menuBarLocked.add_cascade(label='File', underline=0, menu=self.fileMenu)
         
         self.mainWindow.config(menu=self.menuBarLocked) 
         
