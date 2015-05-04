@@ -88,7 +88,7 @@ install_prerequisites()
         done
     else
         echo
-        echo "Incompatible System. Neither 'pacman' nor 'zypper' found. Not possible to continue."
+        echo "Incompatible System. Neither 'pacman' nor 'zypper' nor 'apt-get' found. Not possible to continue."
         echo
         exit 1
     fi
