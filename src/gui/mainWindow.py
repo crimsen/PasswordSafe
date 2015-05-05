@@ -78,12 +78,12 @@ class MainWindow(object):
         self.frameFilter.pack(side='top', fill='x', padx=5)
         
         self.entryFilter = tk.Entry(master=self.frameFilter, textvariable=self.filterEntry)
-        self.buttonFilterTitle = tk.Checkbutton(master=self.frameFilter, variable=self.checkTitle, onvalue='title', offvalue='', text='Title')
-        self.buttonFilterUsername = tk.Checkbutton(master=self.frameFilter, variable=self.checkUsername, onvalue='username', offvalue='', text='Username')
-        self.buttonFilterPassword = tk.Checkbutton(master=self.frameFilter, variable=self.checkPassword, onvalue='password', offvalue='', text='Password')
-        self.buttonFilterEmail = tk.Checkbutton(master=self.frameFilter, variable=self.checkEmail, onvalue='email', offvalue='', text='Email')
-        self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, variable=self.checkLocation, onvalue='location', offvalue='', text='Location')
-        self.buttonFilterNote = tk.Checkbutton(master=self.frameFilter, variable=self.checkNote, onvalue='note', offvalue='', text='Note')
+        self.buttonFilterTitle = tk.Checkbutton(master=self.frameFilter, variable=self.checkTitle, onvalue='title', offvalue='', text='Title',underline=0)
+        self.buttonFilterUsername = tk.Checkbutton(master=self.frameFilter, variable=self.checkUsername, onvalue='username', offvalue='', text='Username',underline=0)
+        self.buttonFilterPassword = tk.Checkbutton(master=self.frameFilter, variable=self.checkPassword, onvalue='password', offvalue='', text='Password',underline=1)
+        self.buttonFilterEmail = tk.Checkbutton(master=self.frameFilter, variable=self.checkEmail, onvalue='email', offvalue='', text='Email',underline=0)
+        self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, variable=self.checkLocation, onvalue='location', offvalue='', text='Location',underline=0)
+        self.buttonFilterNote = tk.Checkbutton(master=self.frameFilter, variable=self.checkNote, onvalue='note', offvalue='', text='Note',underline=0)
         
         self.entryFilter.pack(side='left', padx=5)
         self.buttonFilterTitle.pack(side='left')
@@ -92,6 +92,13 @@ class MainWindow(object):
         self.buttonFilterEmail.pack(side='left')
         self.buttonFilterLocation.pack(side='left')
         self.buttonFilterNote.pack(side='left')
+        
+        self.mainWindow.bind('<Alt-t>', lambda e: self.buttonFilterTitle.toggle())
+        self.mainWindow.bind('<Alt-u>', lambda e: self.buttonFilterUsername.toggle())
+        self.mainWindow.bind('<Alt-a>', lambda e: self.buttonFilterPassword.toggle())
+        self.mainWindow.bind('<Alt-e>', lambda e: self.buttonFilterEmail.toggle())
+        self.mainWindow.bind('<Alt-l>', lambda e: self.buttonFilterLocation.toggle())
+        self.mainWindow.bind('<Alt-n>', lambda e: self.buttonFilterNote.toggle())
         
         self.entryFilter.focus_force()
         
@@ -190,7 +197,18 @@ class MainWindow(object):
         self.passMenu.add_command(label='Change Password', underline=0, command=self.presschangepass)
         self.menuBar.add_cascade(label='Password', underline=0, menu=self.passMenu)
         
-        self.mainWindow.config(menu=self.menuBar) 
+        self.mainWindow.config(menu=self.menuBar)
+    
+    def hideUnlockFrame(self):
+        if(None != self.unlockframe):
+            self.mainWindow.unbind('<Alt-t>')
+            self.mainWindow.unbind('<Alt-u>')
+            self.mainWindow.unbind('<Alt-a>')
+            self.mainWindow.unbind('<Alt-e>')
+            self.mainWindow.unbind('<Alt-l>')
+            self.mainWindow.unbind('<Alt-n>')
+            self.unlockframe.destroy()
+            self.unlockframe=None
         
     def __initLockFrame__(self, parent):
         '''
@@ -206,11 +224,11 @@ class MainWindow(object):
         self.frameLock = tk.Frame(master=parent)
 #         self.labelFunny = tk.Label(master=self.frameLock,fg='red', text='YOU\nSHALL\nNOT\nPASS!', font='Arial 72 bold')
         self.framePassphrase = tk.Frame(master=self.frameLock)
-        self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:')
+        self.labelPassphrase = tk.Label(master=self.framePassphrase, text='Please insert your Passphrase:',underline=19)
         self.entryPassphrase = tk.Entry(master=self.framePassphrase, justify='center', show='*')
         self.labelFalse = tk.Label(master=self.framePassphrase, text='', fg='red')
-        self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock')
-        self.buttonUnlock.bind('<1>', self.pressunlock)
+        self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock',underline=0)
+        self.mainWindow.bind('<Alt-u>', self.pressunlock)
         self.buttonUnlock.bind('<Return>', self.pressunlock)
         self.entryPassphrase.bind('<Return>', self.pressunlock)
         
@@ -229,6 +247,8 @@ class MainWindow(object):
         self.labelFalse.pack(side='top', fill='both', padx=5, pady=5)
         self.buttonUnlock.pack(side='bottom', anchor='se')   
         
+        self.entryPassphrase.focus()
+        
     def __buildMenuBarLock__(self, parent):
         '''
         Build the MenuBar if the window is locked
@@ -242,6 +262,12 @@ class MainWindow(object):
         
         self.mainWindow.config(menu=self.menuBarLocked) 
         
+    def hideLockFrame(self):
+        if(None != self.lockframe):
+            self.mainWindow.unbind('<Alt-u>')
+            self.lockframe.destroy()
+            self.lockframe = None
+
     def insertTitleBox(self, passSafe):
         '''
         Reloaded the TitleBox if some Objects will be removed or changed

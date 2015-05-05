@@ -12,7 +12,7 @@ from gui.newPassWindow import NewPassWindow
 from gui.changePassWindow import ChangePassWindow
 import time
 from controller.filter import PassSafeFilter
-
+import sys
 
 class MainController(object):
     '''
@@ -66,7 +66,6 @@ class MainController(object):
     def __initGUI__(self):
         print('init gui')
         self.mainWindow = MainWindow(self)
-        
         if not self.existingFile(self.optionfile):
             self.pressoptions()
         else: self.loadoption()
@@ -74,8 +73,7 @@ class MainController(object):
     def pressmainLock(self):
         print('locking screen')
         self.settimezero()
-        if self.mainWindow.getunlockframe() != None:
-            self.mainWindow.getunlockframe().destroy()
+        self.mainWindow.hideUnlockFrame()
         self.mainWindow.setlockframe()
         self.loadoption()
     
@@ -87,20 +85,19 @@ class MainController(object):
                 self.passsafe = PasswordSafe(self.safefile, self.account, self)
                 self.passsafe.load(passphrase)
                 self.filter = PassSafeFilter(self.passsafe.getSafe())
-                if self.mainWindow.getlockframe() != None:
-                    self.mainWindow.getlockframe().destroy()
+                self.mainWindow.hideLockFrame()
                 self.mainWindow.setunlockframe()
                 print('unlock complete')
                 self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
                 self.settimeback()
                 self.mainWindow.getmainwindow().after(1000, self.timecontrol)
             except:
+                print sys.exc_info()
                 self.mainWindow.setlabelpassphrase()
         else:
                 self.passsafe = PasswordSafe(self.safefile, self.account, self)
                 self.filter = PassSafeFilter(self.passsafe.getSafe())
-                if self.mainWindow.getlockframe() != None:
-                    self.mainWindow.getlockframe().destroy()
+                self.mainWindow.hideLockFrame()
                 self.mainWindow.setunlockframe()
                 print('unlock complete')
                 self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
@@ -167,7 +164,7 @@ class MainController(object):
     def pressCopy(self, entry):
         self.mainWindow.mainWindow.clipboard_clear()
         self.mainWindow.mainWindow.clipboard_append(entry)
-               
+    
     def loadoption(self):
         print('loadoptions')
         self.optionloader = OptionLoader(self.optionfile, self)
