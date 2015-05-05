@@ -2,7 +2,7 @@
 
 # Installer script for PasswordSafe
 # Supports at the moment all linux distributions that use pacman or zypper
-# (Arch, openSUSE, etc).
+# (Arch, openSUSE, Ubuntu etc).
 
 # Name of the program
 NAME=PasswordSafe
@@ -21,7 +21,7 @@ REQUIRED_PYTHON_PARSER=python2 #at the moment 2 (aka 2.7) maybe 3.x in the futur
 usage()
 {
     echo ""
-    echo " usage:"
+    echo "Usage:"
     echo ""
     echo "./linux-installer.sh <cmd>"
     echo "    where <cmd> is one of:"
@@ -36,7 +36,7 @@ usage()
 install_prerequisites()
 {
     # Find a package manager, PM
-    PM=$( command -v pacman || command -v zypper )
+    PM=$( command -v pacman || command -v zypper || command -v apt-get )
 
     # assume all arch systems have same prerequisites
     if [ "$(expr match "$PM" '.*\(pacman\)')" == "pacman" ]; then
@@ -74,10 +74,21 @@ install_prerequisites()
         for p in ${prerequisite_list}
         do
             sudo zypper in $p || exit 1
-        done     
+        done
+    elif [ "$(expr match "$PM" '.*\(apt-get\)')" == "apt-get" ]; then
+        #echo "Ubuntu compatible system"
+        prerequisite_list="
+            python
+            python-tk
+            python-gnupg
+        "
+
+        for p in ${prerequisite_list}; do
+            sudo apt-get install $p || exit 1
+        done
     else
         echo
-        echo "Incompatible System. Neither 'pacman' nor 'zypper' found. Not possible to continue."
+        echo "Incompatible System. Neither 'pacman' nor 'zypper' nor 'apt-get' found. Not possible to continue."
         echo
         exit 1
     fi
