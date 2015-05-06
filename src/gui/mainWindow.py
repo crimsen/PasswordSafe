@@ -82,7 +82,7 @@ class MainWindow(object):
         self.buttonFilterUsername = tk.Checkbutton(master=self.frameFilter, variable=self.checkUsername, onvalue='username', offvalue='', text='Username',underline=0)
         self.buttonFilterPassword = tk.Checkbutton(master=self.frameFilter, variable=self.checkPassword, onvalue='password', offvalue='', text='Password',underline=1)
         self.buttonFilterEmail = tk.Checkbutton(master=self.frameFilter, variable=self.checkEmail, onvalue='email', offvalue='', text='Email',underline=0)
-        self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, variable=self.checkLocation, onvalue='location', offvalue='', text='Location',underline=0)
+        self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, variable=self.checkLocation, onvalue='location', offvalue='', text='Location',underline=1)
         self.buttonFilterNote = tk.Checkbutton(master=self.frameFilter, variable=self.checkNote, onvalue='note', offvalue='', text='Note',underline=0)
         
         self.entryFilter.pack(side='left', padx=5)
@@ -97,7 +97,7 @@ class MainWindow(object):
         self.mainWindow.bind('<Alt-u>', lambda e: self.buttonFilterUsername.toggle())
         self.mainWindow.bind('<Alt-a>', lambda e: self.buttonFilterPassword.toggle())
         self.mainWindow.bind('<Alt-e>', lambda e: self.buttonFilterEmail.toggle())
-        self.mainWindow.bind('<Alt-l>', lambda e: self.buttonFilterLocation.toggle())
+        self.mainWindow.bind('<Alt-o>', lambda e: self.buttonFilterLocation.toggle())
         self.mainWindow.bind('<Alt-n>', lambda e: self.buttonFilterNote.toggle())
         
         self.entryFilter.focus_force()
@@ -137,7 +137,7 @@ class MainWindow(object):
         self.labelTitleFill = tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
         self.labelUsernameFill= tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16')
         self.labelPasswordFill = tk.Entry(master=self.framePassword, bd=2, justify='center', relief='raised', font='Arial 16', state='readonly', show='*')
-        self.buttonPasswordCopy = tk.Button(master=self.framePassword, text='Copy')
+        self.buttonPasswordCopy = tk.Button(master=self.framePassword, text='Copy', underline=0)
         self.labelEMailFill = tk.Label(master=self.frameData, text='', relief='raised', font='Arial 16') 
         
         self.labelTitle.pack(side='top', padx=5, pady=5, fill='both')
@@ -153,6 +153,7 @@ class MainWindow(object):
         
         self.buttonPasswordCopy.bind('<1>', self.pressCopy)
         self.labelPasswordFill.bind('<Control-c>', self.pressCopy)
+        self.mainWindow.bind('<Alt-c>', self.pressCopy)
         
     def __buildFramePic__(self, parent):
         '''
@@ -166,7 +167,7 @@ class MainWindow(object):
         self.labelNoteFill = tk.Label(master=self.framePic, text='', bg='white', justify='left', relief='raised', font='Arial')
         self.labelLocationLink = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 20 bold')
         self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16', fg='blue', cursor='hand2')
-        self.buttonLock = tk.Button(master=self.framePic, text='Lock')
+        self.buttonLock = tk.Button(master=self.framePic, text='Lock', underline=0)
         self.labelTime = tk.Label(master=self.framePic, anchor='e')
         
         self.labelLocationLink.pack(side='top', fill='both', padx=5, pady=5)
@@ -176,6 +177,7 @@ class MainWindow(object):
         self.labelTime.pack(side='bottom')
         self.buttonLock.pack(side='bottom', fill='both', padx=5, pady=5)  
         
+        self.mainWindow.bind('<Alt-l>', self.presslock)
         self.buttonLock.bind('<1>', self.presslock)
         self.buttonLock.bind('<Return>', self.presslock)  
         self.labelLocationLinkFill.bind('<1>', self.callLink)
@@ -205,8 +207,10 @@ class MainWindow(object):
             self.mainWindow.unbind('<Alt-u>')
             self.mainWindow.unbind('<Alt-a>')
             self.mainWindow.unbind('<Alt-e>')
-            self.mainWindow.unbind('<Alt-l>')
+            self.mainWindow.unbind('<Alt-o>')
             self.mainWindow.unbind('<Alt-n>')
+            self.mainWindow.unbind('<Alt-l>')
+            self.mainWindow.unbind('<Alt-c>')
             self.unlockframe.destroy()
             self.unlockframe=None
         
@@ -229,6 +233,7 @@ class MainWindow(object):
         self.labelFalse = tk.Label(master=self.framePassphrase, text='', fg='red')
         self.buttonUnlock = tk.Button(master=self.frameLock, text='Unlock',underline=0)
         self.mainWindow.bind('<Alt-u>', self.pressunlock)
+        self.buttonUnlock.bind('<1>', self.pressunlock)
         self.buttonUnlock.bind('<Return>', self.pressunlock)
         self.entryPassphrase.bind('<Return>', self.pressunlock)
         
