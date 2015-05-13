@@ -111,15 +111,11 @@ class MainController(object):
     def pressoptions(self):
         self.settimeback()
         print('open options')
-        self.optionloader = OptionLoader(self.optionfile, self)
-        self.accounts = self.optionloader.getaccounts()
-        
-        self.optionwindow = OptionWindow(self.accounts, self)
+        self.optionwindow = OptionWindow(self.option, self)
         self.optionwindow.show()
         
-    def pressoptionsave(self, entry):
+    def pressOptionSave(self):
         print('save options')
-        self.option.setEmail(entry)
         writer = OptionWriter()
         writer.write(self.option, self.optionfile)
         self.settimeback()
