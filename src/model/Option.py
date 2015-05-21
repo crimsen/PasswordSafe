@@ -20,3 +20,6 @@ class Option(object):
 
     def setEmail(self, val):
         self.email = val
+        
+    def getFiles(self):
+        return self.files
