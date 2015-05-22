@@ -86,6 +86,7 @@ class MainController(object):
                 self.passsafe.load(passphrase)
                 self.filter = PassSafeFilter(self.passsafe.getSafe())
                 self.mainWindow.hideLockFrame()
+                self.filter.doFilter()
                 self.mainWindow.setunlockframe()
                 print('unlock complete')
                 self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
