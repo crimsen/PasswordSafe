@@ -4,6 +4,7 @@ Created on 28.03.2015
 @author: crimsen
 '''
 import Tkinter as tk
+from Tkinter import StringVar
 
 class NewPassWindow(object):
     #Build a new Window for a new PasswordObject
@@ -15,10 +16,21 @@ class NewPassWindow(object):
         self.newPassWindow.title('New Password')
         self.newPassWindow.geometry('400x320')
         
+        self.varTitle = StringVar()
+        self.varUsername = StringVar()
+        self.varPassword = StringVar()
+        self.varEmail = StringVar()
+        self.varLocation = StringVar()
+        self.varNote = StringVar()
+        
         self.__buildFrameData()
         self.__buildFramePic()
         
-        self.maincontroller = controller
+        self.mainController = controller
+        
+        self.varTitle.trace('w', self.resetTime)
+        
+        self.newPassWindow.focus_force()
         
     def __buildFrameData(self):
         '''
@@ -34,10 +46,10 @@ class NewPassWindow(object):
         self.labelPassword = tk.Label(master=self.frameData, text='Passwort', anchor='w', font='Arial 18 bold')
         self.labelEMail = tk.Label(master=self.frameData, text='E-Mail', anchor='w', font='Arial 18 bold')
         
-        self.entryTitle = tk.Entry(master=self.frameData)
-        self.entryUsername = tk.Entry(master=self.frameData)
-        self.entryPassword = tk.Entry(master=self.frameData)
-        self.entryEMail = tk.Entry(master=self.frameData)
+        self.entryTitle = tk.Entry(master=self.frameData, textvariable=self.varTitle)
+        self.entryUsername = tk.Entry(master=self.frameData, textvariable=self.varUsername)
+        self.entryPassword = tk.Entry(master=self.frameData, textvariable=self.varPassword)
+        self.entryEMail = tk.Entry(master=self.frameData, textvariable=self.varEmail)
         
         self.labelTitle.pack(side='top', fill='both', padx=5, pady=5)
         self.entryTitle.pack(side='top', fill='both', padx=5, pady=5)
@@ -58,11 +70,13 @@ class NewPassWindow(object):
         self.framePic.pack(side='left', fill='both', padx=5, pady=5, expand=True)
         
         self.labelLocation = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 18 bold')
-        self.entryLocation = tk.Entry(master=self.framePic)
+        self.entryLocation = tk.Entry(master=self.framePic, textvariable=self.varLocation)
         self.labelNote = tk.Label(master=self.framePic, text='Note', anchor='w', font='Arial 18 bold')
         self.textNote = tk.Text(master=self.framePic, height=3, bd=2, relief='flat')
         self.buttonSave = tk.Button(master=self.framePic, text='Save', command=self.pressSave)
         self.buttonCancel = tk.Button(master=self.framePic, text='Cancel', command=self.pressCancel)
+        
+        self.textNote.bind('<<Modified>>')
         
         self.labelLocation.pack(side='top', fill='both', padx=5, pady=5)
         self.entryLocation.pack(side='top', fill='both', padx=5, pady=5)
@@ -90,11 +104,18 @@ class NewPassWindow(object):
         location = self.entryLocation.get()
         note = self.textNote.get('1.0', 'end')
         
-        self.maincontroller.pressnewpasssave(title, username, password, email, location, note)       
-        self.close()      
-   
+        self.mainController.pressnewpasssave(title, username, password, email, location, note)       
+        self.close()
+        
+#     def resetTime(self, *args):
+#         print('hier soll was passiern')
+#    
     def show(self):
         self.newPassWindow.mainloop()
         
     def close(self):
         self.newPassWindow.destroy()
+
+# if __name__=='__main__':
+#     test = NewPassWindow('main')
+#     test.show()

@@ -39,6 +39,14 @@ class UnlockFrame(object):
         self.__buildMenuBar__(self.unlockframe)
         self.__setDefault__()
         
+        self.filterEntry.trace('w', self.updatefilter)
+        self.checkTitle.trace('w', self.updatefilter)
+        self.checkUsername.trace('w', self.updatefilter)
+        self.checkPassword.trace('w', self.updatefilter)
+        self.checkEmail.trace('w', self.updatefilter)
+        self.checkLocation.trace('w', self.updatefilter)
+        self.checkNote.trace('w', self.updatefilter)
+        
         self.unlockframe.bind('<Escape>', self.presslock)
         self.titleBox.bind('<Escape>', self.presslock)
         self.frameData.bind('<Escape>', self.presslock)
