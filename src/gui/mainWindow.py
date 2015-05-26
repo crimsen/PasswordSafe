@@ -91,8 +91,8 @@ class MainWindow(object):
         self.account = account
         self.lockframe.setAccount(account)
         
-    def setfills(self, *params):
-        self.unlockframe.setfills(params)
+    def setfills(self, title, username, password, email, location, note):
+        self.unlockframe.setfills(title, username, password, email, location, note)
         
     def setTime(self, time):
         self.unlockframe.setTime(time) 
