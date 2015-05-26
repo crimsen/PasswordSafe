@@ -6,6 +6,8 @@ Created on 15.04.2015
 from gui.mainWindow import MainWindow
 from model.passSafe import PasswordSafe
 from model.optionLoader import OptionLoader
+from model.OptionWriter import OptionWriter
+from model.Option import Option
 import os
 from gui.optionWindow import OptionWindow
 from gui.newPassWindow import NewPassWindow
@@ -24,6 +26,7 @@ class MainController(object):
         '''
         Constructor
         '''
+        self.option = Option( )
         self.searchOptionFile()
         self.__initGUI__()
         self.time = 0
@@ -75,7 +78,7 @@ class MainController(object):
         self.settimezero()
         self.mainWindow.hideUnlockFrame()
         self.mainWindow.setlockframe()
-        self.loadoption()
+        self.mainWindow.setAccount(self.option.getEmail())
     
     def pressmainUnlock(self, passphrase):
         print('try to unlock screen')
@@ -109,15 +112,13 @@ class MainController(object):
     def pressoptions(self):
         self.settimeback()
         print('open options')
-        self.optionloader = OptionLoader(self.optionfile, self)
-        self.accounts = self.optionloader.getaccounts()
-        
-        self.optionwindow = OptionWindow(self.accounts, self)
+        self.optionwindow = OptionWindow(self.option, self)
         self.optionwindow.show()
         
-    def pressoptionsave(self, entry):
+    def pressOptionSave(self):
         print('save options')
-        self.optionloader.writeEmailOption(entry, self.optionfile)
+        writer = OptionWriter()
+        writer.write(self.option, self.optionfile)
         self.settimeback()
         self.loadoption()
     
@@ -169,8 +170,9 @@ class MainController(object):
     def loadoption(self):
         print('loadoptions')
         self.optionloader = OptionLoader(self.optionfile, self)
+        self.optionloader.loadOptions(self.optionfile, self.option)
         self.accounts = self.optionloader.getaccounts()
-        self.account = self.optionloader.getemail()
+        self.account = self.option.getEmail()
         self.mainWindow.setAccount(self.account)
     
     def loadPassOb(self, index):

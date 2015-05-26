@@ -45,14 +45,14 @@ class OptionLoader(object):
                 retVal+=i
         return retVal
     
-    def loadOptions(self, filename):
+    def loadOptions(self, filename, option):
         datei = open(filename, "r")
         dom = xml.dom.minidom.parse(datei)
         datei.close()
         
         for elem in dom.getElementsByTagName('Options'):
             for elem1 in elem.getElementsByTagName('ActivateEmail'):
-                self.email = self.liesText(elem1)
+                option.email = self.liesText(elem1)
      
     
     def liesText(self, knoten):
@@ -64,26 +64,6 @@ class OptionLoader(object):
                 return k.nodeValue.strip()
      
     
-    def writeEmailOption(self, email, filename):
-        
-        implement = xml.dom.getDOMImplementation()
-        doc = implement.createDocument(None, 'Options', None)
-        
-        emailElem = doc.createElement('ActivateEmail')
-        emailTextElem = doc.createTextNode(str(email))
-        emailElem.appendChild(emailTextElem)
-        
-        doc.documentElement.appendChild(emailElem)
-        
-        datei = open(filename, 'w')
-        doc.writexml(datei, '\n', ' ')
-        datei.close()
-        
     def getaccounts(self):
         print self.accounts
         return self.accounts
-    
-    def getemail(self):
-        self.loadOptions(self.filename)
-        print str(self.email)
-        return self.email
