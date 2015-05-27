@@ -40,7 +40,7 @@ class OptionTree(object):
         '''
         self.content = []
         self.content.append(TreeItem("Account",self.option, AccountPage))
-        #self.content.append(TreeItem("Files",self.option, FilesPage))
+        self.content.append(TreeItem("Files",self.option, FilesPage))
         self.loadTreeBox()
 
     def updateWindow(self):

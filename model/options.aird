@@ -62,17 +62,23 @@
           <children xmi:type="notation:Node" xmi:id="_ZtZCEPQxEeSf06_rNT5v6w" type="2003" element="_Zs1ocPQxEeSf06_rNT5v6w">
             <children xmi:type="notation:Node" xmi:id="_ZtaQMPQxEeSf06_rNT5v6w" type="5007"/>
             <children xmi:type="notation:Node" xmi:id="_ZtaQMfQxEeSf06_rNT5v6w" type="7004">
-              <children xmi:type="notation:Node" xmi:id="_d43kAPQxEeSf06_rNT5v6w" type="3010" element="_0FWKEPQtEeSf06_rNT5v6w">
-                <layoutConstraint xmi:type="notation:Location" xmi:id="_d43kAfQxEeSf06_rNT5v6w"/>
+              <children xmi:type="notation:Node" xmi:id="_9FxkQAQ9EeW8PNYZ3k2EPQ" type="3010" element="_sdh1EAQ8EeW8PNYZ3k2EPQ">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_9FxkQQQ9EeW8PNYZ3k2EPQ"/>
               </children>
-              <children xmi:type="notation:Node" xmi:id="_igZv0PQxEeSf06_rNT5v6w" type="3010" element="_if2WMPQxEeSf06_rNT5v6w">
-                <layoutConstraint xmi:type="notation:Location" xmi:id="_igZv0fQxEeSf06_rNT5v6w"/>
+              <children xmi:type="notation:Node" xmi:id="_hb624AQ-EeW8PNYZ3k2EPQ" type="3010" element="_hbLQAAQ-EeW8PNYZ3k2EPQ">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_hb624QQ-EeW8PNYZ3k2EPQ"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_nLyjwAQ-EeW8PNYZ3k2EPQ" type="3010" element="_0FWKEPQtEeSf06_rNT5v6w">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_nLyjwQQ-EeW8PNYZ3k2EPQ"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_nLzK0AQ-EeW8PNYZ3k2EPQ" type="3010" element="_if2WMPQxEeSf06_rNT5v6w">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_nLzK0QQ-EeW8PNYZ3k2EPQ"/>
               </children>
               <styles xmi:type="notation:SortingStyle" xmi:id="_ZtaQMvQxEeSf06_rNT5v6w"/>
               <styles xmi:type="notation:FilteringStyle" xmi:id="_ZtaQM_QxEeSf06_rNT5v6w"/>
             </children>
             <styles xmi:type="notation:ShapeStyle" xmi:id="_ZtZCEfQxEeSf06_rNT5v6w" fontName="Cantarell" fontHeight="8"/>
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZtZCEvQxEeSf06_rNT5v6w" x="314" y="305" width="120" height="100"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZtZCEvQxEeSf06_rNT5v6w" x="314" y="305" width="120" height="130"/>
           </children>
           <styles xmi:type="notation:DiagramStyle" xmi:id="_n0IskvQsEeSf06_rNT5v6w"/>
           <edges xmi:type="notation:Edge" xmi:id="_5oJO0PQuEeSf06_rNT5v6w" type="4001" element="_5nix4PQuEeSf06_rNT5v6w" source="_r1xWAPQsEeSf06_rNT5v6w" target="_jNp-wPQuEeSf06_rNT5v6w">
@@ -382,14 +388,36 @@
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_Zs1ocPQxEeSf06_rNT5v6w" name="PasswordFile" tooltipText="" incomingEdges="_ufRVkPQxEeSf06_rNT5v6w" width="12" height="10">
         <target xmi:type="ecore:EClass" href="options.ecore#//PasswordFile"/>
         <semanticElements xmi:type="ecore:EClass" href="options.ecore#//PasswordFile"/>
-        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_pTxhEPQxEeSf06_rNT5v6w" backgroundStyle="Liquid">
-          <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_pTxhEfQxEeSf06_rNT5v6w"/>
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_kfNBsAQ-EeW8PNYZ3k2EPQ" backgroundStyle="Liquid">
+          <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_kfNBsQQ-EeW8PNYZ3k2EPQ"/>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
-          <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_pTxhEvQxEeSf06_rNT5v6w"/>
-          <backgroundColor xmi:type="viewpoint:RGBValues" xmi:id="_pTxhE_QxEeSf06_rNT5v6w" red="255" green="255" blue="255"/>
-          <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_pTxhFPQxEeSf06_rNT5v6w" red="255" green="252" blue="216"/>
+          <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_kfNBsgQ-EeW8PNYZ3k2EPQ"/>
+          <backgroundColor xmi:type="viewpoint:RGBValues" xmi:id="_kfNBswQ-EeW8PNYZ3k2EPQ" red="255" green="255" blue="255"/>
+          <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_kfNBtAQ-EeW8PNYZ3k2EPQ" red="255" green="252" blue="216"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_sdh1EAQ8EeW8PNYZ3k2EPQ" name="isDefault : EBoolean = false" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@341549e8{platform:/resource/PasswordSafe/model/options.ecore#//PasswordFile/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+          <target xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/isDefault"/>
+          <semanticElements xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/isDefault"/>
+          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_TezRMAQ9EeW8PNYZ3k2EPQ" labelAlignment="LEFT">
+            <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_TezRMQQ9EeW8PNYZ3k2EPQ"/>
+            <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
+            <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_TezRMgQ9EeW8PNYZ3k2EPQ"/>
+            <color xmi:type="viewpoint:RGBValues" xmi:id="_TezRMwQ9EeW8PNYZ3k2EPQ"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
+        </ownedElements>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_hbLQAAQ-EeW8PNYZ3k2EPQ" name="needBackup : EBoolean = true" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@c6f6aef{platform:/resource/PasswordSafe/model/options.ecore#//PasswordFile/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+          <target xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/needBackup"/>
+          <semanticElements xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/needBackup"/>
+          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_kfadEAQ-EeW8PNYZ3k2EPQ" labelAlignment="LEFT">
+            <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_kfadEQQ-EeW8PNYZ3k2EPQ"/>
+            <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
+            <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_kfadEgQ-EeW8PNYZ3k2EPQ"/>
+            <color xmi:type="viewpoint:RGBValues" xmi:id="_kfadEwQ-EeW8PNYZ3k2EPQ"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
+        </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_0FWKEPQtEeSf06_rNT5v6w" name="filename : EString" tooltipText="">
           <target xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/filename"/>
           <semanticElements xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/filename"/>

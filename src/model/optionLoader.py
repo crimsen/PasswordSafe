@@ -5,7 +5,9 @@ Created on 16.04.2015
 '''
 
 import gnupg
+import os
 import xml.dom
+from PasswordFileOption import PasswordFileOption
 
 class OptionLoader(object):
     '''
@@ -53,7 +55,21 @@ class OptionLoader(object):
         for elem in dom.getElementsByTagName('Options'):
             for elem1 in elem.getElementsByTagName('ActivateEmail'):
                 option.email = self.liesText(elem1)
-     
+        self.updateDefaultValues(option)
+
+    def updateDefaultValues(self, option):
+        '''
+        sets default values that are not saved in the optionfile,
+        but that are used implicitly
+        '''
+        # delete all files that are default, because we are updating
+        option.files = [x for x in option.files if not x.isDefault]
+                
+        home = os.environ['HOME']
+        filename = home+'/Documents/.PasswordSafe/' + option.getEmail() + '/safe.xml'
+        passwordFileOption = PasswordFileOption(filename, [option.getEmail()], isDefault=True, needBackup=True)
+        option.files.insert(0, passwordFileOption)
+
     
     def liesText(self, knoten):
         '''

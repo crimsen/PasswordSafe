@@ -32,7 +32,7 @@ class FilesPage(object):
         '''
         reads values from the option object and sets the ui according to the values
         '''
-        files = [a.getFileName() for a in self.option.getFiles()]
+        files = [a.getFilename() for a in self.option.getFiles()]
         self.loadFileBox(files)
 
     def updateWindow(self):
