@@ -83,31 +83,20 @@ class MainController(object):
     def pressmainUnlock(self, passphrase):
         print('try to unlock screen')
         self.searchSafeFile(self.account)
-        if self.existingFile(self.safefile):
-            try:
-                self.passsafe = PasswordSafe(self.safefile, self.account, self)
-                self.passsafe.load(passphrase)
-                self.filter = PassSafeFilter(self.passsafe.getSafe())
-                self.mainWindow.hideLockFrame()
-                self.filter.doFilter()
-                self.mainWindow.setunlockframe()
-                print('unlock complete')
-                self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
-                self.settimeback()
-                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
-            except:
-                print sys.exc_info()
-                self.mainWindow.setlabelpassphrase()
-        else:
-                self.passsafe = PasswordSafe(self.safefile, self.account, self)
-                self.filter = PassSafeFilter(self.passsafe.getSafe())
-                self.mainWindow.hideLockFrame()
-                self.mainWindow.setunlockframe()
-                print('unlock complete')
-                self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
-                self.settimeback()
-                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
-
+        try:
+            self.passsafe = PasswordSafe(self.option, self)
+            self.passsafe.load(passphrase)
+            self.filter = PassSafeFilter(self.passsafe.getSafe())
+            self.mainWindow.hideLockFrame()
+            self.filter.doFilter()
+            self.mainWindow.setunlockframe()
+            print('unlock complete')
+            self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+            self.settimeback()
+            self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+        except:
+            print sys.exc_info()
+            self.mainWindow.setlabelpassphrase()
             
     def pressoptions(self):
         self.settimeback()

@@ -10,15 +10,17 @@ import os
 from datetime import datetime
 import shutil
 from model.passObject import PasswordObject
+from model.PasswordSafeReader import PasswordSafeReader
 
 
 
 class PasswordSafe(object):
     
-    def __init__(self, filename, account, controller):
+    def __init__(self, option, controller):
         self.passwordSafe = []
-        self.filename = filename
-        self.account = account
+        self.option = option
+        self.filename = option.getFiles()[0].getFilename()
+        self.account = option.getEmail()
         self.maincontroller = controller
         self.gpg = gnupg.GPG()
                  
@@ -49,31 +51,8 @@ class PasswordSafe(object):
         Load the xml-file
         Save the passwordobjects in RAM
         '''
-        
-
-        datei = open(self.filename, "rb")
-        decrypt_data = self.gpg.decrypt_file(datei, passphrase=str(passphrase),always_trust=True)
-        decrypt = str(decrypt_data)
-        dom = xml.dom.minidom.parseString(decrypt)
-        datei.close()
-    
-        for elem in dom.getElementsByTagName('Safes'):
-            for elem1 in elem.getElementsByTagName('Safe'):
-                for knotenName in elem1.getElementsByTagName('Title'):
-                    title = self.liesText(knotenName)
-                for knotenName in elem1.getElementsByTagName('Username'):
-                    username = self.liesText(knotenName)
-                for knotenName in elem1.getElementsByTagName('Password'):
-                    password = self.liesText(knotenName)
-                for knotenName in elem1.getElementsByTagName('EMail'):
-                    email = self.liesText(knotenName)
-                for knotenName in elem1.getElementsByTagName('URL'):
-                    location = self.liesText(knotenName)
-                for knotenName in elem1.getElementsByTagName('Note'):
-                    note = self.liesText(knotenName)
-                self.loadPassObject(title, username, password, email, location, note) 
-        
-        
+        passwordSafeReader = PasswordSafeReader(self.option, self.gpg)
+        passwordSafeReader.read(self, passphrase)
                
     def write(self, filename, account):
         '''
@@ -155,14 +134,6 @@ class PasswordSafe(object):
         
         self.write(self.filename, self.account)
                     
-    def liesText(self, knoten):
-        '''
-        Return the text of the nodeType
-        '''
-        for k in knoten.childNodes:
-            if k.nodeType == k.TEXT_NODE:
-                return k.nodeValue.strip()
-    
     def passsafesort(self):
         self.passwordSafe = self.sortfunc(self.passwordSafe)
      
