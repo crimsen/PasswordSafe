@@ -8,13 +8,15 @@ class PasswordObject(object):
 
 
     def __init__(self, title, username, password, email, location, note):
+        self.passwordFile = None
         self.title = title
         self.username = username
         self.password = password
         self.email = email
         self.location = location
         self.note = note
-    
+    def setPasswordFile(self, passwordFile):
+        self.passwordFile = passwordFile
     def setTitle(self, title):
         self.title = title
     def setUsername(self, username):
@@ -28,6 +30,8 @@ class PasswordObject(object):
     def setNote(self, note):
         self.note = note
     
+    def getPasswordFile(self):
+        return self.passwordFile
     def getTitle(self):
         return self.title
     def getUsername(self):

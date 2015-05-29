@@ -18,6 +18,9 @@ class PasswordFileOption(object):
         self.encodeId = encodeId
         self.isDefault = isDefault
         self.needBackup = needBackup
+        # per default the ischanged is true to save always
+        self.isChanged = True
 
     def getFilename(self):
         return self.filename
+        

@@ -3,16 +3,13 @@ Created on 28.03.2015
 
 @author: crimsen
 '''
-import xml.dom.minidom
-import StringIO as StringStream
 import gnupg
 import os
 from datetime import datetime
 import shutil
 from model.passObject import PasswordObject
 from model.PasswordSafeReader import PasswordSafeReader
-
-
+from model.PasswordSafeWriter import PasswordSafeWriter
 
 class PasswordSafe(object):
     
@@ -33,7 +30,8 @@ class PasswordSafe(object):
         self.passwordSafe.append(passOb)
         self.passsafesort()
         
-        self.write(self.filename, self.account)
+        #TODO: do we really want to safe everything when a new password is created?
+        self.save()
         self.backupsafe()
         
     def loadPassObject(self, title, username, password, email, location, note):
@@ -54,58 +52,12 @@ class PasswordSafe(object):
         passwordSafeReader = PasswordSafeReader(self.option, self.gpg)
         passwordSafeReader.read(self, passphrase)
                
-    def write(self, filename, account):
+    def save(self):
         '''
         Write the xml-file
         '''
-        
-        implement = xml.dom.getDOMImplementation()
-        doc = implement.createDocument(None, 'Safes', None)
-        
-        for i in self.passwordSafe:
-            
-            safeElem = doc.createElement('Safe')
-        
-            titleElem = doc.createElement('Title')
-            safeElem.appendChild(titleElem)
-            titleTextElem = doc.createTextNode(str(i.getTitle()))
-            titleElem.appendChild(titleTextElem)
-        
-            usernameElem = doc.createElement('Username')
-            safeElem.appendChild(usernameElem)
-            usernameTextElem = doc.createTextNode(str(i.getUsername()))
-            usernameElem.appendChild(usernameTextElem)
-        
-            passwordElem = doc.createElement('Password')
-            safeElem.appendChild(passwordElem)
-            passwordTextElem = doc.createTextNode(str(i.getPassword()))
-            passwordElem.appendChild(passwordTextElem)
-        
-            emailElem = doc.createElement('EMail')
-            safeElem.appendChild(emailElem)
-            emailTextElem = doc.createTextNode(str(i.getEmail()))
-            emailElem.appendChild(emailTextElem)
-        
-            locationElem = doc.createElement('URL')
-            safeElem.appendChild(locationElem)
-            locationTextElem = doc.createTextNode(str(i.getLocation()))
-            locationElem.appendChild(locationTextElem)
-        
-            noteElem = doc.createElement('Note')
-            safeElem.appendChild(noteElem)
-            noteTextElem = doc.createTextNode(str(i.getNote()))
-            noteElem.appendChild(noteTextElem)
-        
-            doc.documentElement.appendChild(safeElem)
-        
-        
-        datei = open(filename, 'w')
-        noneencrypt = StringStream.StringIO()
-        doc.writexml(noneencrypt, '\n', ' ')
-        s = noneencrypt.getvalue()
-        encrypt = self.gpg.encrypt(s, str(account), always_trust=True)
-        datei.write(str(encrypt))
-        datei.close()
+        passwordSafeWriter = PasswordSafeWriter(self.option, self.gpg)
+        passwordSafeWriter.write(self)
         
         self.passsafesort()
         
@@ -123,7 +75,8 @@ class PasswordSafe(object):
         passOb.setLocation(location)
         passOb.setNote(note)
            
-        self.write(self.filename, self.account)
+        #TODO: do we really want to save on each password change? Why dont we backup here?
+        self.save()
                                    
     def removePassOb(self, index):
         '''
@@ -132,7 +85,8 @@ class PasswordSafe(object):
         '''
         self.passwordSafe.remove(self.passwordSafe[index])
         
-        self.write(self.filename, self.account)
+        #TODO: do we really want to save on each password change? Why dont we backup here?
+        self.save()
                     
     def passsafesort(self):
         self.passwordSafe = self.sortfunc(self.passwordSafe)
