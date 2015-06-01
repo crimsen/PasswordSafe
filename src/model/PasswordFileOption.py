@@ -23,4 +23,6 @@ class PasswordFileOption(object):
 
     def getFilename(self):
         return self.filename
-        
+    
+    def getEncodeId(self):
+        return self.encodeId

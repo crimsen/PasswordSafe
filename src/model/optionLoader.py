@@ -6,6 +6,7 @@ Created on 16.04.2015
 
 import gnupg
 import os
+import string
 import xml.dom
 from PasswordFileOption import PasswordFileOption
 
@@ -55,6 +56,14 @@ class OptionLoader(object):
         for elem in dom.getElementsByTagName('Options'):
             for elem1 in elem.getElementsByTagName('ActivateEmail'):
                 option.email = self.liesText(elem1)
+            for passwordFile in elem.getElementsByTagName('passwordfile'):
+                filename = passwordFile.getAttribute('filename')
+                encodeId = self.getList(passwordFile.getAttribute('encodeid'))
+                encodeId.insert(0, option.getEmail())
+                isDefault = self.getBoolean(passwordFile.getAttribute('isdefault'))
+                needBackup = self.getBoolean(passwordFile.getAttribute('needbackup'))
+                passwordFileOption = PasswordFileOption(filename, encodeId, isDefault=isDefault, needBackup=needBackup)
+                option.files.append(passwordFileOption)
         self.updateDefaultValues(option)
 
     def updateDefaultValues(self, option):
@@ -83,3 +92,9 @@ class OptionLoader(object):
     def getaccounts(self):
         print self.accounts
         return self.accounts
+
+    def getBoolean(self, boolstring):
+        return boolstring in ['true']
+    
+    def getList(self, liststring):
+        return string.split(liststring)

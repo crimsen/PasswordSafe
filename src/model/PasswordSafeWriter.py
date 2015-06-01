@@ -80,7 +80,8 @@ class PasswordSafeWriter(object):
         noneencrypt = StringStream.StringIO()
         doc.writexml(noneencrypt, '\n', ' ')
         s = noneencrypt.getvalue()
-        encrypt = self.gpg.encrypt(s, str(self.option.getEmail()), always_trust=True)
+        encodeIds = [str(i) for i in passwordFile.getEncodeId()]
+        encrypt = self.gpg.encrypt(s, encodeIds, always_trust=True)
         datei.write(str(encrypt))
         datei.close()
 
