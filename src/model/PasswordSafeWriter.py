@@ -5,6 +5,8 @@ Created on May 29, 2015
 '''
 
 import os
+from datetime import datetime
+import shutil
 import StringIO as StringStream
 import xml.dom.minidom
 
@@ -24,6 +26,10 @@ class PasswordSafeWriter(object):
     def write(self, passwordSafe):
         for passwordFile in self.option.getFiles():
             if passwordFile.isChanged:
+                filename = passwordFile.getFilename()
+                if passwordFile.needBackup:
+                    if os.path.isfile(filename):
+                        self.doBackup(filename)
                 self.assureDirectory(passwordFile.getFilename())
                 self.writeFile(passwordFile, passwordSafe)
 
@@ -77,6 +83,17 @@ class PasswordSafeWriter(object):
         encrypt = self.gpg.encrypt(s, str(self.option.getEmail()), always_trust=True)
         datei.write(str(encrypt))
         datei.close()
+
+    def doBackup(self, filename):
+        (directory, filepart) = os.path.split(filename)
+        today = datetime.today()
+        filepart = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '-' + filepart
+        backupFilename = os.path.join(directory, 'backup', filepart)
+        self.assureDirectory(backupFilename)
+        print backupFilename
+        
+        shutil.copy(filename, backupFilename)
+        print ('backup completed')
 
     def assureDirectory(self, filename):
         directory = os.path.dirname(filename)

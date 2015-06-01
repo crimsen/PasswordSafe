@@ -12,7 +12,6 @@ import os
 from gui.optionWindow import OptionWindow
 from gui.newPassWindow import NewPassWindow
 from gui.changePassWindow import ChangePassWindow
-import time
 from controller.filter import PassSafeFilter
 import sys
 
@@ -30,21 +29,6 @@ class MainController(object):
         self.searchOptionFile()
         self.__initGUI__()
         self.time = 0
-        
-        
-    def searchSafeFile(self, account):
-        '''
-        Search Safe-File
-        If not exist create path
-        '''
-        home = os.environ['HOME']
-        
-        self.safefile = home+'/Documents/.PasswordSafe/'+account+'/safe.xml'
-        
-        self.dirfile = os.path.dirname(self.safefile)
-        if not os.path.exists(self.dirfile):
-            os.makedirs(self.dirfile)
-        print(str(self.dirfile))  
         
     def searchOptionFile(self):
         '''
@@ -82,9 +66,8 @@ class MainController(object):
     
     def pressmainUnlock(self, passphrase):
         print('try to unlock screen')
-        self.searchSafeFile(self.account)
         try:
-            self.passsafe = PasswordSafe(self.option, self)
+            self.passsafe = PasswordSafe(self.option)
             self.passsafe.load(passphrase)
             self.filter = PassSafeFilter(self.passsafe.getSafe())
             self.mainWindow.hideLockFrame()

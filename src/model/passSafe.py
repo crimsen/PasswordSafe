@@ -4,21 +4,15 @@ Created on 28.03.2015
 @author: crimsen
 '''
 import gnupg
-import os
-from datetime import datetime
-import shutil
 from model.passObject import PasswordObject
 from model.PasswordSafeReader import PasswordSafeReader
 from model.PasswordSafeWriter import PasswordSafeWriter
 
 class PasswordSafe(object):
     
-    def __init__(self, option, controller):
+    def __init__(self, option):
         self.passwordSafe = []
         self.option = option
-        self.filename = option.getFiles()[0].getFilename()
-        self.account = option.getEmail()
-        self.maincontroller = controller
         self.gpg = gnupg.GPG()
                  
     def newPassObject(self, title='', username='', password='', email='', location='', note=''):
@@ -32,7 +26,6 @@ class PasswordSafe(object):
         
         #TODO: do we really want to safe everything when a new password is created?
         self.save()
-        self.backupsafe()
         
     def loadPassObject(self, title, username, password, email, location, note):
         '''
@@ -109,19 +102,6 @@ class PasswordSafe(object):
         else:  
             return array 
     
-    def backupsafe(self):
-        
-        home = os.environ['HOME']
-        today = datetime.today()
-        
-        self.backup = home+'/Documents/.PasswordSafe/'+self.account+'/backup/'
-        if not os.path.exists(self.backup):
-            os.makedirs(self.backup)
-        print self.backup
-        
-        shutil.copy(self.filename, self.backup+str(today.year)+'-'+str(today.month)+'-'+str(today.day)+'-safe.xml')
-        print ('backup completed')
-     
     def printFu(self, list):
         for x in list:
             print(x.getTitle())
