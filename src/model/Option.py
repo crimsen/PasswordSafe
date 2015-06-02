@@ -23,3 +23,7 @@ class Option(object):
         
     def getFiles(self):
         return self.files
+
+    def getDefaultPasswordFile(self):
+        retVal = [i for i in self.files if i.isDefault]
+        return retVal[0]

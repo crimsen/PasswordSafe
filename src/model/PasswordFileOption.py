@@ -19,10 +19,16 @@ class PasswordFileOption(object):
         self.isDefault = isDefault
         self.needBackup = needBackup
         # per default the ischanged is true to save always
-        self.isChanged = True
+        self.resetChanged()
 
     def getFilename(self):
         return self.filename
     
     def getEncodeId(self):
         return self.encodeId
+    
+    def setChanged(self, val):
+        self.isChanged = val
+
+    def resetChanged(self):
+        self.isChanged = False

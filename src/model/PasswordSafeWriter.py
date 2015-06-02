@@ -32,6 +32,7 @@ class PasswordSafeWriter(object):
                         self.doBackup(filename)
                 self.assureDirectory(passwordFile.getFilename())
                 self.writeFile(passwordFile, passwordSafe)
+                passwordFile.resetChanged()
 
     def writeFile(self, passwordFile, passwordSafe):
         implement = xml.dom.getDOMImplementation()

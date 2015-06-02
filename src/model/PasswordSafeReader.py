@@ -54,7 +54,8 @@ class PasswordSafeReader(object):
                     location = self.readText(knotenName)
                 for knotenName in elem1.getElementsByTagName('Note'):
                     note = self.readText(knotenName)
-                passwordSafe.loadPassObject(title, username, password, email, location, note) 
+                passOb = passwordSafe.loadPassObject(title, username, password, email, location, note)
+                passOb.setPasswordFile(passwordFile) 
 
     def readText(self, node):
         '''

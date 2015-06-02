@@ -23,7 +23,8 @@ class PasswordSafe(object):
         passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
         self.passwordSafe.append(passOb)
         self.passsafesort()
-        
+        self.markFileModified(passOb)
+
         #TODO: do we really want to safe everything when a new password is created?
         self.save()
         
@@ -35,6 +36,7 @@ class PasswordSafe(object):
         passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
         self.passwordSafe.append(passOb)
         self.passsafesort()
+        return passOb
         
     
     def load(self, passphrase):
@@ -67,6 +69,8 @@ class PasswordSafe(object):
         passOb.setEmail(email)
         passOb.setLocation(location)
         passOb.setNote(note)
+        
+        self.markFileModified(passOb)
            
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()
@@ -76,8 +80,11 @@ class PasswordSafe(object):
         Delete a passwordobject
         And write it in a file
         '''
-        self.passwordSafe.remove(self.passwordSafe[index])
+        passOb = self.passwordSafe[index]
+        self.passwordSafe.remove(passOb)
         
+        self.markFileModified(passOb)
+
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()
                     
@@ -133,5 +140,10 @@ class PasswordSafe(object):
     def close(self):
         del self.passwordSafe
                 
-    
+    def markFileModified(self, passwordObject):
+        passwordFile = passwordObject.getPasswordFile()
+        if None == passwordFile:
+            passwordFile = self.option.getDefaultPasswordFile()
+        passwordFile.setChanged(True)
+
     
