@@ -4,20 +4,37 @@ Created on 16.04.2015
 @author: crimsen
 '''
 import Tkinter as tk
+from Tkinter import StringVar
 
 class ChangePassWindow():
     
     def __init__(self, controller, index, title='', username='', password='', email='', location='', note=''):
-        self.newPassWindow = tk.Tk()
+        self.newPassWindow = tk.Toplevel()
         self.newPassWindow.title('Change Password')
         self.newPassWindow.geometry('400x320')
         
+        self.mainController = controller
+        self.index = index
+
+        self.varTitle = StringVar()
+        self.varUsername = StringVar()
+        self.varPassword = StringVar()
+        self.varEmail = StringVar()
+        self.varLocation = StringVar()
+        self.varNote = StringVar()
+                
         self.__buildFrameData(str(title), str(username), str(password), str(email))
         self.__buildFramePic(str(location), str(note))
         
+        self.varTitle.trace('w', self.resetTime)
+        self.varUsername.trace('w', self.resetTime)
+        self.varPassword.trace('w', self.resetTime)
+        self.varEmail.trace('w', self.resetTime)
+        self.varLocation.trace('w', self.resetTime)
+        
         self.buttonSave.config(text='Change')
-        self.index = index
-        self.maincontroller = controller
+        
+        
             
     def __buildFrameData(self, title='', username='', password='', email=''):
         '''
@@ -33,10 +50,10 @@ class ChangePassWindow():
         self.labelPassword = tk.Label(master=self.frameData, text='Passwort', anchor='w', font='Arial 18 bold')
         self.labelEMail = tk.Label(master=self.frameData, text='E-Mail', anchor='w', font='Arial 18 bold')
         
-        self.entryTitle = tk.Entry(master=self.frameData)
-        self.entryUsername = tk.Entry(master=self.frameData)
-        self.entryPassword = tk.Entry(master=self.frameData)
-        self.entryEMail = tk.Entry(master=self.frameData)
+        self.entryTitle = tk.Entry(master=self.frameData, textvariable=self.varTitle)
+        self.entryUsername = tk.Entry(master=self.frameData, textvariable=self.varUsername)
+        self.entryPassword = tk.Entry(master=self.frameData, textvariable=self.varPassword)
+        self.entryEMail = tk.Entry(master=self.frameData, textvariable=self.varEmail)
         
         self.entryTitle.insert('end', title)
         self.entryUsername.insert('end', username)
@@ -62,7 +79,7 @@ class ChangePassWindow():
         self.framePic.pack(side='left', fill='both', padx=5, pady=5, expand=True)
         
         self.labelLocation = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 18 bold')
-        self.entryLocation = tk.Entry(master=self.framePic)
+        self.entryLocation = tk.Entry(master=self.framePic, textvariable=self.varLocation)
         self.labelNote = tk.Label(master=self.framePic, text='Note', anchor='w', font='Arial 18 bold')
         self.textNote = tk.Text(master=self.framePic, height=3, bd=2, relief='flat')
         self.buttonSave = tk.Button(master=self.framePic, text='Save', command=self.pressSave)
@@ -77,6 +94,8 @@ class ChangePassWindow():
         self.textNote.pack(side='top', fill='both', padx=5, pady=5, expand=True)
         self.buttonSave.pack(side='top', fill='both', padx=5, pady=5)
         self.buttonCancel.pack(side='top', fill='both', padx=5, pady=5)
+        
+        self.textNote.bind('<KeyPress>', self.resetTime)
     
     def pressCancel(self):
         '''
@@ -97,7 +116,7 @@ class ChangePassWindow():
         location = self.entryLocation.get()
         note = self.textNote.get('1.0', 'end')
         
-        self.maincontroller.presschangepasssave(self.index, title, username, password, email, location, note)
+        self.mainController.presschangepasssave(self.index, title, username, password, email, location, note)
                 
         print('title: '+ str(title))
         print('username: '+str(username))
@@ -106,7 +125,10 @@ class ChangePassWindow():
         print('location: '+str(location))
         print('note: '+str(note))
                 
-        self.close() 
+        self.close()
+        
+    def resetTime(self, event, *args):
+        self.mainController.settimeback() 
         
     def show(self):
         self.newPassWindow.mainloop()

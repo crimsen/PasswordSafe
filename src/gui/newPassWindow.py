@@ -12,7 +12,7 @@ class NewPassWindow(object):
 
     def __init__(self, controller, title='', username='', password='', email='', location='', note=''):
         
-        self.newPassWindow = tk.Tk()
+        self.newPassWindow = tk.Toplevel()
         self.newPassWindow.title('New Password')
         self.newPassWindow.geometry('400x320')
         
@@ -29,6 +29,10 @@ class NewPassWindow(object):
         self.mainController = controller
         
         self.varTitle.trace('w', self.resetTime)
+        self.varUsername.trace('w', self.resetTime)
+        self.varPassword.trace('w', self.resetTime)
+        self.varEmail.trace('w', self.resetTime)
+        self.varLocation.trace('w', self.resetTime)
         
         self.newPassWindow.focus_force()
         
@@ -76,7 +80,7 @@ class NewPassWindow(object):
         self.buttonSave = tk.Button(master=self.framePic, text='Save', command=self.pressSave)
         self.buttonCancel = tk.Button(master=self.framePic, text='Cancel', command=self.pressCancel)
         
-        self.textNote.bind('<<Modified>>')
+        self.textNote.bind('<KeyPress>', self.resetTime)
         
         self.labelLocation.pack(side='top', fill='both', padx=5, pady=5)
         self.entryLocation.pack(side='top', fill='both', padx=5, pady=5)
@@ -84,6 +88,7 @@ class NewPassWindow(object):
         self.textNote.pack(side='top', fill='both', padx=5, pady=5, expand=True)
         self.buttonSave.pack(side='top', fill='both', padx=5, pady=5)
         self.buttonCancel.pack(side='top', fill='both', padx=5, pady=5)
+        
     
     def pressCancel(self):
         '''
@@ -107,9 +112,10 @@ class NewPassWindow(object):
         self.mainController.pressnewpasssave(title, username, password, email, location, note)       
         self.close()
         
-#     def resetTime(self, *args):
-#         print('hier soll was passiern')
-#    
+        
+    def resetTime(self, event, *args):
+        self.mainController.settimeback()
+    
     def show(self):
         self.newPassWindow.mainloop()
         
