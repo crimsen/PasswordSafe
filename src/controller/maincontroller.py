@@ -195,7 +195,7 @@ class MainController(object):
         self.settimeback()
         
     def controlNone(self, attr):
-        if attr == 'None':
+        if (attr == None) or (attr == 'None'):
             retVal = ''
         else:
             retVal = attr 

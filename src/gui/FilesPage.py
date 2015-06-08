@@ -44,5 +44,5 @@ class FilesPage(object):
     def loadFileBox(self, files):
         self.fileBox.delete(0, 'end')
         for filename in files:
-            self.fileBox.insert('end', str(filename))
+            self.fileBox.insert('end', filename)
         

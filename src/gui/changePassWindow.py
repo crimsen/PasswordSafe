@@ -23,8 +23,8 @@ class ChangePassWindow():
         self.varLocation = StringVar()
         self.varNote = StringVar()
                 
-        self.__buildFrameData(str(title), str(username), str(password), str(email))
-        self.__buildFramePic(str(location), str(note))
+        self.__buildFrameData(title, username, password, email)
+        self.__buildFramePic(location, note)
         
         self.varTitle.trace('w', self.resetTime)
         self.varUsername.trace('w', self.resetTime)
@@ -118,12 +118,12 @@ class ChangePassWindow():
         
         self.mainController.presschangepasssave(self.index, title, username, password, email, location, note)
                 
-        print('title: '+ str(title))
-        print('username: '+str(username))
-        print('password: '+str(password))
-        print('email: '+str(email))
-        print('location: '+str(location))
-        print('note: '+str(note))
+        print('title: %s' % title)
+        print('username: %s' % username)
+        print('password: %s' % password)
+        print('email: %s' % email)
+        print('location: %s' % location)
+        print('note: %s' % note)
                 
         self.close()
         

@@ -87,5 +87,5 @@ class AccountPage(object):
     def loadGpgBox(self, accounts):
         self.gpgBox.delete(0, 'end')
         for email in accounts:
-            self.gpgBox.insert('end', str(email))
+            self.gpgBox.insert('end', email)
 

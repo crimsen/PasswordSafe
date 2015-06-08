@@ -27,7 +27,7 @@ class PasswordSafe(object):
         Create a new passwordobject
         And save it in RAM
         '''
-        passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
+        passOb = PasswordObject(title, username, password, email, location, note)
         self.passwordSafe.append(passOb)
         self.passsafesort()
         
@@ -39,7 +39,7 @@ class PasswordSafe(object):
         Load a Passobject from XML file
         '''
         
-        passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
+        passOb = PasswordObject(title, username, password, email, location, note)
         self.passwordSafe.append(passOb)
         self.passsafesort()
         
@@ -53,12 +53,19 @@ class PasswordSafe(object):
 
         datei = open(self.filename, "rb")
         decrypt_data = self.gpg.decrypt_file(datei, passphrase=str(passphrase),always_trust=True)
-        decrypt = str(decrypt_data)
+        decrypt = decrypt_data.data
         dom = xml.dom.minidom.parseString(decrypt)
         datei.close()
     
         for elem in dom.getElementsByTagName('Safes'):
             for elem1 in elem.getElementsByTagName('Safe'):
+                # set default values to prevent None-types
+                title = ''
+                username = ''
+                password = ''
+                email = ''
+                location = ''
+                note = ''
                 for knotenName in elem1.getElementsByTagName('Title'):
                     title = self.liesText(knotenName)
                 for knotenName in elem1.getElementsByTagName('Username'):
@@ -89,32 +96,32 @@ class PasswordSafe(object):
         
             titleElem = doc.createElement('Title')
             safeElem.appendChild(titleElem)
-            titleTextElem = doc.createTextNode(str(i.getTitle()))
+            titleTextElem = doc.createTextNode(i.getTitle())
             titleElem.appendChild(titleTextElem)
         
             usernameElem = doc.createElement('Username')
             safeElem.appendChild(usernameElem)
-            usernameTextElem = doc.createTextNode(str(i.getUsername()))
+            usernameTextElem = doc.createTextNode(i.getUsername())
             usernameElem.appendChild(usernameTextElem)
         
             passwordElem = doc.createElement('Password')
             safeElem.appendChild(passwordElem)
-            passwordTextElem = doc.createTextNode(str(i.getPassword()))
+            passwordTextElem = doc.createTextNode(i.getPassword())
             passwordElem.appendChild(passwordTextElem)
         
             emailElem = doc.createElement('EMail')
             safeElem.appendChild(emailElem)
-            emailTextElem = doc.createTextNode(str(i.getEmail()))
+            emailTextElem = doc.createTextNode(i.getEmail())
             emailElem.appendChild(emailTextElem)
         
             locationElem = doc.createElement('URL')
             safeElem.appendChild(locationElem)
-            locationTextElem = doc.createTextNode(str(i.getLocation()))
+            locationTextElem = doc.createTextNode(i.getLocation())
             locationElem.appendChild(locationTextElem)
         
             noteElem = doc.createElement('Note')
             safeElem.appendChild(noteElem)
-            noteTextElem = doc.createTextNode(str(i.getNote()))
+            noteTextElem = doc.createTextNode(i.getNote())
             noteElem.appendChild(noteTextElem)
         
             doc.documentElement.appendChild(safeElem)
@@ -159,9 +166,12 @@ class PasswordSafe(object):
         '''
         Return the text of the nodeType
         '''
+        retVal = ''
         for k in knoten.childNodes:
             if k.nodeType == k.TEXT_NODE:
-                return k.nodeValue.strip()
+                retVal = k.nodeValue.strip()
+                break
+        return retVal
     
     def passsafesort(self):
         self.passwordSafe = self.sortfunc(self.passwordSafe)

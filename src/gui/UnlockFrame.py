@@ -207,7 +207,7 @@ class UnlockFrame(object):
         self.titleBox.delete(0, 'end')
         
         for passOb in passSafe:
-            self.titleBox.insert('end', str(passOb.getTitle()))
+            self.titleBox.insert('end', passOb.getTitle())
         self.titleBox.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.titleBox.yview)
     
@@ -223,7 +223,7 @@ class UnlockFrame(object):
         if 'http://' not in url:
             if 'https://' not in url:
                 url = 'http://'+url
-        webbrowser.open_new_tab(str(url))
+        webbrowser.open_new_tab(url)
         
     def getTitleBoxIndex(self):
 
@@ -253,15 +253,15 @@ class UnlockFrame(object):
             self.mainController.loadPassOb(int(index+1))
         
     def setfills(self, title, username, password, email, location, note):
-        self.labelTitleFill.config(text=str(title))
-        self.labelUsernameFill.config(text=str(username))
+        self.labelTitleFill.config(text=title)
+        self.labelUsernameFill.config(text=username)
         self.labelPasswordFill.config(state='normal')
         self.labelPasswordFill.delete(0, 'end')
-        self.labelPasswordFill.insert('end', str(password))
+        self.labelPasswordFill.insert('end', password)
         self.labelPasswordFill.config(state='readonly')
-        self.labelEMailFill.config(text=str(email))
-        self.labelLocationLinkFill.config(text=str(location))
-        self.labelNoteFill.config(text=str(note))
+        self.labelEMailFill.config(text=email)
+        self.labelLocationLinkFill.config(text=location)
+        self.labelNoteFill.config(text=note)
         
     def updatefilter(self, *args):
         filterstring = self.filterEntry.get()
