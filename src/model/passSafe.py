@@ -20,7 +20,7 @@ class PasswordSafe(object):
         Create a new passwordobject
         And save it in RAM
         '''
-        passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
+        passOb = PasswordObject(title, username, password, email, location, note)
         self.passwordSafe.append(passOb)
         self.passsafesort()
         self.markFileModified(passOb)
@@ -33,7 +33,7 @@ class PasswordSafe(object):
         Load a Passobject from XML file
         '''
         
-        passOb = PasswordObject(str(title), str(username), str(password), str(email), str(location), str(note))
+        passOb = PasswordObject(title, username, password, email, location, note)
         self.passwordSafe.append(passOb)
         self.passsafesort()
         return passOb

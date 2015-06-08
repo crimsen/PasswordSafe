@@ -46,32 +46,32 @@ class PasswordSafeWriter(object):
             
                 titleElem = doc.createElement('Title')
                 safeElem.appendChild(titleElem)
-                titleTextElem = doc.createTextNode(str(i.getTitle()))
+                titleTextElem = doc.createTextNode(i.getTitle())
                 titleElem.appendChild(titleTextElem)
             
                 usernameElem = doc.createElement('Username')
                 safeElem.appendChild(usernameElem)
-                usernameTextElem = doc.createTextNode(str(i.getUsername()))
+                usernameTextElem = doc.createTextNode(i.getUsername())
                 usernameElem.appendChild(usernameTextElem)
             
                 passwordElem = doc.createElement('Password')
                 safeElem.appendChild(passwordElem)
-                passwordTextElem = doc.createTextNode(str(i.getPassword()))
+                passwordTextElem = doc.createTextNode(i.getPassword())
                 passwordElem.appendChild(passwordTextElem)
             
                 emailElem = doc.createElement('EMail')
                 safeElem.appendChild(emailElem)
-                emailTextElem = doc.createTextNode(str(i.getEmail()))
+                emailTextElem = doc.createTextNode(i.getEmail())
                 emailElem.appendChild(emailTextElem)
             
                 locationElem = doc.createElement('URL')
                 safeElem.appendChild(locationElem)
-                locationTextElem = doc.createTextNode(str(i.getLocation()))
+                locationTextElem = doc.createTextNode(i.getLocation())
                 locationElem.appendChild(locationTextElem)
             
                 noteElem = doc.createElement('Note')
                 safeElem.appendChild(noteElem)
-                noteTextElem = doc.createTextNode(str(i.getNote()))
+                noteTextElem = doc.createTextNode(i.getNote())
                 noteElem.appendChild(noteTextElem)
             
                 doc.documentElement.appendChild(safeElem)

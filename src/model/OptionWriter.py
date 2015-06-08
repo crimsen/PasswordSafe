@@ -27,7 +27,7 @@ class OptionWriter(object):
 
     def writeEmailOption(self, email, document):
         emailElem = document.createElement('ActivateEmail')
-        emailTextElem = document.createTextNode(str(email))
+        emailTextElem = document.createTextNode(email)
         emailElem.appendChild(emailTextElem)
         
         document.documentElement.appendChild(emailElem)

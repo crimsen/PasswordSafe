@@ -36,12 +36,19 @@ class PasswordSafeReader(object):
 
         datei = open(passwordFile.getFilename(), "rb")
         decrypt_data = self.gpg.decrypt_file(datei, passphrase=str(passPhrase), always_trust=True)
-        decrypt = str(decrypt_data)
+        decrypt = decrypt_data.data
         dom = xml.dom.minidom.parseString(decrypt)
         datei.close()
     
         for elem in dom.getElementsByTagName('Safes'):
             for elem1 in elem.getElementsByTagName('Safe'):
+                # set default values to prevent None-types
+                title = ''
+                username = ''
+                password = ''
+                email = ''
+                location = ''
+                note = ''
                 for knotenName in elem1.getElementsByTagName('Title'):
                     title = self.readText(knotenName)
                 for knotenName in elem1.getElementsByTagName('Username'):
@@ -61,8 +68,10 @@ class PasswordSafeReader(object):
         '''
         Return the text of the nodeType
         '''
+        retVal = ''
         for k in node.childNodes:
             if k.nodeType == k.TEXT_NODE:
-                return k.nodeValue.strip()
+                retVal = k.nodeValue.strip()
+                break
+        return retVal
     
-
