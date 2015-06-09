@@ -35,7 +35,6 @@ class PasswordSafe(object):
         
         passOb = PasswordObject(title, username, password, email, location, note)
         self.passwordSafe.append(passOb)
-        self.passsafesort()
         return passOb
         
     
