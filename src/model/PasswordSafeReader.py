@@ -25,44 +25,52 @@ class PasswordSafeReader(object):
             filename = f.getFilename()
             if os.path.isfile(filename) and os.access(filename, os.R_OK):
                 self.readFile(f, passwordSafe, passPhrase)
-        # TODO: sorting is only needed once, so remove sorting in passwordSafe.loadPassObject 
-        #passwordSafe.passsafesort()
+        passwordSafe.passsafesort()
 
     def readFile(self, passwordFile, passwordSafe, passPhrase):
         '''
         Load the xml-file
         Save the passwordobjects in RAM
         '''
+        dom = self.decryptFile(passwordFile.getFilename(), passPhrase)
+        if None == dom:
+            print "decryption of %s failed" % passwordFile.getFilename()
+            if passwordFile.isDefault:
+                raise Exception("decryption not possible")
+        else:
+            for elem in dom.getElementsByTagName('Safes'):
+                for elem1 in elem.getElementsByTagName('Safe'):
+                    # set default values to prevent None-types
+                    title = ''
+                    username = ''
+                    password = ''
+                    email = ''
+                    location = ''
+                    note = ''
+                    for knotenName in elem1.getElementsByTagName('Title'):
+                        title = self.readText(knotenName)
+                    for knotenName in elem1.getElementsByTagName('Username'):
+                        username = self.readText(knotenName)
+                    for knotenName in elem1.getElementsByTagName('Password'):
+                        password = self.readText(knotenName)
+                    for knotenName in elem1.getElementsByTagName('EMail'):
+                        email = self.readText(knotenName)
+                    for knotenName in elem1.getElementsByTagName('URL'):
+                        location = self.readText(knotenName)
+                    for knotenName in elem1.getElementsByTagName('Note'):
+                        note = self.readText(knotenName)
+                    passOb = passwordSafe.loadPassObject(title, username, password, email, location, note)
+                    passOb.setPasswordFile(passwordFile) 
 
-        datei = open(passwordFile.getFilename(), "rb")
+    def decryptFile(self, filename, passPhrase):
+        retVal = None
+        datei = open(filename, "rb")
         decrypt_data = self.gpg.decrypt_file(datei, passphrase=str(passPhrase), always_trust=True)
-        decrypt = decrypt_data.data
-        dom = xml.dom.minidom.parseString(decrypt)
+        if decrypt_data.ok:
+            decrypt = decrypt_data.data
+            retVal = xml.dom.minidom.parseString(decrypt)
         datei.close()
-    
-        for elem in dom.getElementsByTagName('Safes'):
-            for elem1 in elem.getElementsByTagName('Safe'):
-                # set default values to prevent None-types
-                title = ''
-                username = ''
-                password = ''
-                email = ''
-                location = ''
-                note = ''
-                for knotenName in elem1.getElementsByTagName('Title'):
-                    title = self.readText(knotenName)
-                for knotenName in elem1.getElementsByTagName('Username'):
-                    username = self.readText(knotenName)
-                for knotenName in elem1.getElementsByTagName('Password'):
-                    password = self.readText(knotenName)
-                for knotenName in elem1.getElementsByTagName('EMail'):
-                    email = self.readText(knotenName)
-                for knotenName in elem1.getElementsByTagName('URL'):
-                    location = self.readText(knotenName)
-                for knotenName in elem1.getElementsByTagName('Note'):
-                    note = self.readText(knotenName)
-                passOb = passwordSafe.loadPassObject(title, username, password, email, location, note)
-                passOb.setPasswordFile(passwordFile) 
+        return retVal
 
     def readText(self, node):
         '''
