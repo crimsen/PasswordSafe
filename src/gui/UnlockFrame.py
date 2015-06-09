@@ -153,7 +153,7 @@ class UnlockFrame(object):
         self.framePic = tk.Frame(master=parent)
         self.framePic.pack(side='left', fill='both', expand=True, padx=5, pady=5)
         self.labelNote = tk.Label(master=self.framePic, text='Bemerkung', anchor='w', font='Arial 20 bold')
-        self.labelNoteFill = tk.Label(master=self.framePic, text='', bg='white', justify='left', relief='raised', font='Arial')
+        self.labelNoteFill = tk.Text(master=self.framePic, bg='white', relief='raised', font='Arial')
         self.labelLocationLink = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 20 bold')
         self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16', fg='blue', cursor='hand2')
         self.buttonLock = tk.Button(master=self.framePic, text='Lock', underline=0)
@@ -261,7 +261,10 @@ class UnlockFrame(object):
         self.labelPasswordFill.config(state='readonly')
         self.labelEMailFill.config(text=email)
         self.labelLocationLinkFill.config(text=location)
-        self.labelNoteFill.config(text=note)
+        self.labelNoteFill.config(state='normal')
+        self.labelNoteFill.delete(1.0, 'end')
+        self.labelNoteFill.insert('end', note)
+        self.labelNoteFill.config(state='readonly')
         
     def updatefilter(self, *args):
         filterstring = self.filterEntry.get()
