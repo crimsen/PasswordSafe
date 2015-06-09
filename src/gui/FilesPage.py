@@ -21,6 +21,13 @@ class FilesPage(object):
         self.option = option
         self.__buildFrame__(parent)
         self.updateWindow()
+
+    def apply(self):
+        '''
+        all derived pages should have an apply function to write the values from the ui into the model
+        '''
+        pass
+
         
     def __buildFrame__(self, parent):
         self.frameMain = tk.Frame(master=parent)
