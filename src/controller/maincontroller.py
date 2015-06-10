@@ -150,11 +150,11 @@ class MainController(object):
     def loadPassOb(self, index):
         print('load PasswordObject')
         title = self.filter.getTitle(index)
-        username = self.passsafe.getUsername(index)
-        password = self.passsafe.getPassword(index)
-        email = self.passsafe.getEmail(index)
-        location = self.passsafe.getLocation(index)
-        note = self.passsafe.getNote(index)
+        username = self.filter.getUsername(index)
+        password = self.filter.getPassword(index)
+        email = self.filter.getEmail(index)
+        location = self.filter.getLocation(index)
+        note = self.filter.getNote(index)
         
         title = self.controlNone(title)
         username = self.controlNone(username)
