@@ -21,6 +21,7 @@ class OptionWriter(object):
         implement = xml.dom.getDOMImplementation()
         document = implement.createDocument(None, 'Options', None)
         self.writeEmailOption(option.getEmail(), document)
+        self.writePasswordFiles(option.getFiles(), document)
         xmlfile = open(filename, 'w')
         document.writexml(xmlfile, '\n', ' ')
         xmlfile.close()
@@ -31,3 +32,20 @@ class OptionWriter(object):
         emailElem.appendChild(emailTextElem)
         
         document.documentElement.appendChild(emailElem)
+
+    def writePasswordFiles(self, passwordFiles, document):
+        for passwordFile in passwordFiles:
+            if not passwordFile.isDefault:
+                element = document.createElement('passwordfile')
+                element.setAttribute('filename', passwordFile.getFilename())
+                encodeIds = passwordFile.encodeId[1:]
+                encodeId = ' '.join(encodeIds)
+                element.setAttribute('encodeid', encodeId)
+                element.setAttribute('needbackup', self.getBoolString(passwordFile.needBackup))
+                document.documentElement.appendChild(element)
+
+    def getBoolString(self, val):
+        retVal = 'false'
+        if val:
+            retVal = 'true'
+        return retVal

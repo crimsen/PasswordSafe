@@ -52,6 +52,8 @@ class OptionLoader(object):
         datei = open(filename, "r")
         dom = xml.dom.minidom.parse(datei)
         datei.close()
+
+        option.files = []
         
         for elem in dom.getElementsByTagName('Options'):
             for elem1 in elem.getElementsByTagName('ActivateEmail'):
