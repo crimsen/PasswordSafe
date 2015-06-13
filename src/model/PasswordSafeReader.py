@@ -47,6 +47,7 @@ class PasswordSafeReader(object):
                     email = ''
                     location = ''
                     note = ''
+                    history = []
                     for knotenName in elem1.getElementsByTagName('Title'):
                         title = self.readText(knotenName)
                     for knotenName in elem1.getElementsByTagName('Username'):
@@ -59,7 +60,32 @@ class PasswordSafeReader(object):
                         location = self.readText(knotenName)
                     for knotenName in elem1.getElementsByTagName('Note'):
                         note = self.readText(knotenName)
-                    passOb = passwordSafe.loadPassObject(title, username, password, email, location, note)
+                    for historySafe in elem1.getElementsByTagName('History'):
+                        for elem2 in historySafe.getElementsByTagName('SafeOld'):
+                            # set default values to prevent None-types
+                            titleOld = ''
+                            usernameOld = ''
+                            passwordOld = ''
+                            emailOld = ''
+                            locationOld = ''
+                            noteOld = ''
+                            for knotenName in elem2.getElementsByTagName('TitleOld'):
+                                titleOld = self.readText(knotenName)
+                            for knotenName in elem2.getElementsByTagName('UsernameOld'):
+                                usernameOld = self.readText(knotenName)
+                            for knotenName in elem2.getElementsByTagName('PasswordOld'):
+                                passwordOld = self.readText(knotenName)
+                            for knotenName in elem2.getElementsByTagName('EMailOld'):
+                                emailOld = self.readText(knotenName)
+                            for knotenName in elem2.getElementsByTagName('URLOld'):
+                                locationOld = self.readText(knotenName)
+                            for knotenName in elem2.getElementsByTagName('NoteOld'):
+                                noteOld = self.readText(knotenName)
+                                
+                            passObOld = passwordSafe.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld)
+                            history.append(passObOld)
+                        
+                    passOb = passwordSafe.loadPassObject(title, username, password, email, location, note, history)
                     passOb.setPasswordFile(passwordFile) 
 
     def decryptFile(self, filename, passPhrase):

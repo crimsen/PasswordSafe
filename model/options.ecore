@@ -34,4 +34,34 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="encodeId" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PasswordSafe">
+    <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
+      <details key="archetype" value="Role"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newEReference1" upperBound="-1"
+        eType="#//PassObjectView"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PassObject">
+    <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
+      <details key="archetype" value="Role"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Title"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Username"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="location"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="note"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PassObjectView" eSuperTypes="#//PassObject">
+    <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
+      <details key="archetype" value="Role"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="history" upperBound="-1"
+        eType="#//PassObjectHistory"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PassObjectHistory" eSuperTypes="#//PassObject">
+    <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
+      <details key="archetype" value="Role"/>
+    </eAnnotations>
+  </eClassifiers>
 </ecore:EPackage>

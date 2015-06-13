@@ -4,10 +4,11 @@ Created on 28.03.2015
 @author: crimsen
 '''
 
+
 class PasswordObject(object):
 
 
-    def __init__(self, title, username, password, email, location, note):
+    def __init__(self, title='', username='', password='', email='', location='', note=''):
         self.passwordFile = None
         self.title = title
         self.username = username
@@ -15,6 +16,7 @@ class PasswordObject(object):
         self.email = email
         self.location = location
         self.note = note
+        
     def setPasswordFile(self, passwordFile):
         self.passwordFile = passwordFile
     def setTitle(self, title):
