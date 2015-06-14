@@ -4,7 +4,7 @@ Created on 13.06.2015
 @author: timgroger
 '''
 from model.passObject import PasswordObject
-from datetime import datetime
+from datetime import date
 
 class HistoryPasswordObject(PasswordObject):
     '''
@@ -12,22 +12,20 @@ class HistoryPasswordObject(PasswordObject):
     '''
 
 
-    def __init__(self, title='', username='', password='', email='', location='', note='', endDate=''):
+    def __init__(self, title='', username='', password='', email='', location='', note='', createDate=None,endDate=None):
         '''
         Constructor
         '''
-        PasswordObject.__init__(self, title, username, password, email, location, note)
+        PasswordObject.__init__(self, title, username, password, email, location, note, createDate)
         
-        self.endDate = self.controlDate(endDate)
+        self.endDate = endDate
         
-    def controlDate(self, endDate):
-        if endDate == '':
-            date = datetime.now()
-            endDate = str(date.year) + '-' + str(date.month) + '-' + str(date.day)
-        return endDate
+    def haveEndDate(self):
+        if self.endDate == None:
+            self.endDate = date.today()
     
     def setEndDate(self, endDate):
-        self.endDate = self.controlDate(endDate)
+        self.endDate = endDate
     def getEndDate(self):
         return self.endDate
     

@@ -6,6 +6,7 @@ Created on May 28, 2015
 
 import os
 import xml.dom.minidom
+import datetime
 
 class PasswordSafeReader(object):
     '''
@@ -47,6 +48,7 @@ class PasswordSafeReader(object):
                     email = ''
                     location = ''
                     note = ''
+                    createDate = None
                     history = []
                     for knotenName in elem1.getElementsByTagName('Title'):
                         title = self.readText(knotenName)
@@ -60,6 +62,8 @@ class PasswordSafeReader(object):
                         location = self.readText(knotenName)
                     for knotenName in elem1.getElementsByTagName('Note'):
                         note = self.readText(knotenName)
+                    for knotenName in elem1.getElementsByTagName('CreateDate'):
+                        createDate = self.decodeDate(self.readText(knotenName)) 
                     for historySafe in elem1.getElementsByTagName('History'):
                         for elem2 in historySafe.getElementsByTagName('SafeOld'):
                             # set default values to prevent None-types
@@ -69,6 +73,8 @@ class PasswordSafeReader(object):
                             emailOld = ''
                             locationOld = ''
                             noteOld = ''
+                            createDateOld = None
+                            endDate = None
                             for knotenName in elem2.getElementsByTagName('TitleOld'):
                                 titleOld = self.readText(knotenName)
                             for knotenName in elem2.getElementsByTagName('UsernameOld'):
@@ -81,11 +87,15 @@ class PasswordSafeReader(object):
                                 locationOld = self.readText(knotenName)
                             for knotenName in elem2.getElementsByTagName('NoteOld'):
                                 noteOld = self.readText(knotenName)
+                            for knotenName in elem2.getElementsByTagName('CreateDateOld'):
+                                createDateOld = self.decodeDate(self.readText(knotenName))
+                            for knotenName in elem2.getElementsByTagName('EndDate'):
+                                endDate = self.decodeDate(self.readText(knotenName))
                                 
-                            passObOld = passwordSafe.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld)
+                            passObOld = passwordSafe.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld, createDateOld, endDate)
                             history.append(passObOld)
                         
-                    passOb = passwordSafe.loadPassObject(title, username, password, email, location, note, history)
+                    passOb = passwordSafe.loadPassObject(title, username, password, email, location, note, createDate, history)
                     passOb.setPasswordFile(passwordFile) 
 
     def decryptFile(self, filename, passPhrase):
@@ -96,6 +106,15 @@ class PasswordSafeReader(object):
             decrypt = decrypt_data.data
             retVal = xml.dom.minidom.parseString(decrypt)
         datei.close()
+        return retVal
+    
+    def decodeDate(self, date):
+        retVal = None
+        listDate = date.split('-')
+        year = int(listDate[0])
+        month = int(listDate[1])
+        day = int(listDate[2])
+        retVal = datetime.date(year, month, day)
         return retVal
 
     def readText(self, node):

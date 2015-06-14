@@ -4,6 +4,7 @@ Created on 28.03.2015
 @author: crimsen
 '''
 import gnupg
+from datetime import date
 from model.NewPasswordObject import NewPasswordObject
 from model.HistoryPasswordObject import HistoryPasswordObject
 from model.PasswordSafeReader import PasswordSafeReader
@@ -16,12 +17,13 @@ class PasswordSafe(object):
         self.option = option
         self.gpg = gnupg.GPG()
                  
-    def newPassObject(self, title='', username='', password='', email='', location='', note='', history=[]):
+    def newPassObject(self, title='', username='', password='', email='', location='', note='', createDate=None, history=[]):
         '''
         Create a new passwordobject
         And save it in RAM
         '''
-        passOb = NewPasswordObject(title, username, password, email, location, note, history)
+        passOb = NewPasswordObject(title, username, password, email, location, note, createDate, history)
+        passOb.haveCreateDate()
         self.passwordSafe.append(passOb)
         self.passsafesort()
         self.markFileModified(passOb)
@@ -29,17 +31,20 @@ class PasswordSafe(object):
         #TODO: do we really want to safe everything when a new password is created?
         self.save()
         
-    def loadPassObject(self, title, username, password, email, location, note, history):
+    def loadPassObject(self, title, username, password, email, location, note, createDate, history):
         '''
         Load a Passobject from XML file
         '''
         
-        passOb = NewPasswordObject(title, username, password, email, location, note, history)
+        passOb = NewPasswordObject(title, username, password, email, location, note, createDate, history)
+        passOb.haveCreateDate()
         self.passwordSafe.append(passOb)
         return passOb
     
-    def loadHistoryPassObject(self, title, username, password, email, location, note):
-        passOb = HistoryPasswordObject(title, username, password, email, location, note)
+    def loadHistoryPassObject(self, title, username, password, email, location, note, createDate=None, endDate=None):
+        passOb = HistoryPasswordObject(title, username, password, email, location, note, createDate, endDate)
+        passOb.haveCreateDate()
+        passOb.haveEndDate()
         return passOb
         
     
@@ -74,8 +79,9 @@ class PasswordSafe(object):
         emailOld = passOb.getEmail()
         locationOld = passOb.getLocation()
         noteOld = passOb.getNote()
+        createDateOld = passOb.getCreateDate()
         
-        passObOld = self.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld)
+        passObOld = self.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld, createDateOld)
         
         passOb.addHistory(passObOld)
         
@@ -85,6 +91,7 @@ class PasswordSafe(object):
         passOb.setEmail(email)
         passOb.setLocation(location)
         passOb.setNote(note)
+        passOb.setCreateDate(date.today())
         
         self.markFileModified(passOb)
            

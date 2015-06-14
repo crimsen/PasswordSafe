@@ -12,8 +12,8 @@ class NewPasswordObject(PasswordObject):
     '''
 
 
-    def __init__(self, title='', username='', password='', email='', location='', note='', history=[]):
-        PasswordObject.__init__(self, title, username, password, email, location, note)
+    def __init__(self, title='', username='', password='', email='', location='', note='', createDate=None, history=[]):
+        PasswordObject.__init__(self, title, username, password, email, location, note, createDate)
         self.history = history
         
     def setHistory(self, history):

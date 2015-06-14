@@ -14,6 +14,7 @@ from gui.newPassWindow import NewPassWindow
 from gui.changePassWindow import ChangePassWindow
 from controller.filter import PassSafeFilter
 import sys
+from gui.ViewHistory import ViewHistory
 
 class MainController(object):
     '''
@@ -134,6 +135,11 @@ class MainController(object):
         self.filter.doFilter()
         self.mainWindow.insertTitleBox(self.passsafe.getSafe())
         self.settimeback()
+        
+    def pressViewHistory(self, index):
+        history = self.passsafe.getSafe()[index].getHistory()
+        self.viewHistory = ViewHistory(self.mainWindow, history)
+        self.viewHistory.show()
         
     def pressCopy(self, entry):
         self.mainWindow.mainWindow.clipboard_clear()

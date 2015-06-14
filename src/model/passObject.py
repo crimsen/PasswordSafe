@@ -3,12 +3,12 @@ Created on 28.03.2015
 
 @author: crimsen
 '''
-
+from datetime import date
 
 class PasswordObject(object):
 
 
-    def __init__(self, title='', username='', password='', email='', location='', note=''):
+    def __init__(self, title='', username='', password='', email='', location='', note='', createDate=None):
         self.passwordFile = None
         self.title = title
         self.username = username
@@ -16,7 +16,12 @@ class PasswordObject(object):
         self.email = email
         self.location = location
         self.note = note
+        self.createDate = createDate
         
+    def haveCreateDate(self):
+        if self.createDate == None:
+            self.createDate = date.today()
+            
     def setPasswordFile(self, passwordFile):
         self.passwordFile = passwordFile
     def setTitle(self, title):
@@ -31,6 +36,8 @@ class PasswordObject(object):
         self.location = location
     def setNote(self, note):
         self.note = note
+    def setCreateDate(self, createDate):
+        self.createDate = createDate
     
     def getPasswordFile(self):
         return self.passwordFile
@@ -46,6 +53,8 @@ class PasswordObject(object):
         return self.location
     def getNote(self):
         return self.note
+    def getCreateDate(self):
+        return self.createDate
     def getAll(self):
-        return [self.title, self.username, self.password, self.email, self.location, self.note]
+        return [self.title, self.username, self.password, self.email, self.location, self.note, self.createDate]
         

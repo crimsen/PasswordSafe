@@ -186,6 +186,7 @@ class UnlockFrame(object):
         self.passMenu.add_command(label='New Password', underline=0, command=self.pressnewpass)
         self.passMenu.add_command(label='Delete Password', underline=0, command=self.pressremovepass)
         self.passMenu.add_command(label='Change Password', underline=0, command=self.presschangepass)
+        self.passMenu.add_command(label='View History', underline=0, command=self.pressViewHistory)
         self.menuBar.add_cascade(label='Password', underline=0, menu=self.passMenu)
         
         self.mainWindowFrame.config(menu=self.menuBar)
@@ -291,6 +292,10 @@ class UnlockFrame(object):
             
     def pressnewpass(self):
         self.mainController.pressnewpass()
+        
+    def pressViewHistory(self):
+        index = self.getTitleBoxIndex()
+        self.mainController.pressViewHistory(index)
         
     def presschangepass(self):
         try:
