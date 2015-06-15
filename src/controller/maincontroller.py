@@ -138,7 +138,7 @@ class MainController(object):
         
     def pressViewHistory(self, index):
         history = self.passsafe.getSafe()[index].getHistory()
-        self.viewHistory = ViewHistory(self.mainWindow, history)
+        self.viewHistory = ViewHistory(self, self.mainWindow, history)
         self.viewHistory.show()
         
     def pressCopy(self, entry):

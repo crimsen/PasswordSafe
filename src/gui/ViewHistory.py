@@ -14,7 +14,7 @@ class ViewHistory(object):
     '''
 
 
-    def __init__(self, mainWindow, history):
+    def __init__(self, mainController, mainWindow, history):
         '''
         Constructor
         '''
@@ -23,6 +23,7 @@ class ViewHistory(object):
         self.viewHistory.geometry('400x400')
         
         self.mainWindow = mainWindow
+        self.mainController = mainController
         self.history = history
         
         self.__buildFrame(self.viewHistory)
@@ -47,14 +48,30 @@ class ViewHistory(object):
         self.canvas.create_window((0,0), window=self.window, anchor='nw')
         self.window.bind('<Configure>', self.configureCanvas)
         
+        self.canvas.bind_all('<MouseWheel>', self._on_mousewheel)
+        self.canvas.bind_all('<Key-Up>', self.up)
+        self.canvas.bind_all('<Key-Down>', self.down)
+        self.canvas.bind_all('<Escape>', self.destroy)
+        
+    def destroy(self, event):
+        self.viewHistory.destroy()
+        
+    def up(self, event):
+        self.canvas.yview_scroll(-1, 'units')
+    def down(self, event):
+        self.canvas.yview_scroll(1, 'units')
+        
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(-1*event.delta, 'units')
+        print event.delta
+        
     def configureCanvas(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox('all'))
         
     def buildData(self, history):
         for passOb in history:
-            HistoryFrame(self.window, passOb).pack(side='top', fill='both', padx=5, pady=5, expand=True)
-        
-        
+            HistoryFrame(self.window,self.mainController, passOb).pack(side='top', fill='both', padx=5, pady=5, expand=True)
+           
         
 # if __name__ == '__main__':
 #     

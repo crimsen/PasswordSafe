@@ -294,8 +294,11 @@ class UnlockFrame(object):
         self.mainController.pressnewpass()
         
     def pressViewHistory(self):
-        index = self.getTitleBoxIndex()
-        self.mainController.pressViewHistory(index)
+        try:
+            index = self.getTitleBoxIndex()
+            self.mainController.pressViewHistory(index)
+        except:
+            self.showobjecterror()
         
     def presschangepass(self):
         try:

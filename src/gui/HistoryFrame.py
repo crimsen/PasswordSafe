@@ -14,12 +14,13 @@ class HistoryFrame(Tk.Frame):
     '''
 
 
-    def __init__(self, parent, passOb):
+    def __init__(self, parent,mainController, passOb):
         '''
         Constructor
         '''
         self.parent = parent
         self.passOb = passOb
+        self.mainController = mainController
         Tk.Frame.__init__(self, master=self.parent)
         self.__buildFrame__(self.parent, self.passOb)
         
@@ -50,10 +51,19 @@ class HistoryFrame(Tk.Frame):
         self.textCreateDate = Tk.Text(master=self.mainFrame, width=10, height=3)
         self.textTitle = Tk.Text(master=self.mainFrame, width=10, height=3)
         self.textUsername = Tk.Text(master=self.mainFrame, width=10, height=3)
-        self.textPassword = Tk.Text(master=self.mainFrame, width=10, height=3)
+        
+        self.framePassword = Tk.Frame(master=self.mainFrame)
+        self.entryPassword = Tk.Entry(master=self.framePassword, width=10, state='readonly', show='*')
+        self.buttonPassword = Tk.Button(master=self.framePassword, text='Copy')
+        self.entryPassword.pack(side='top', fill='both', anchor='w')
+        self.buttonPassword.pack(side='top', fill='both')
+        
         self.textEmail = Tk.Text(master=self.mainFrame, width=10, height=3)
         self.textLocation = Tk.Text(master=self.mainFrame, width=10, height=3)
         self.textNote = Tk.Text(master=self.mainFrame, width=10, height=3)
+        
+        self.entryPassword.bind('<Control-c>', self.pressCopy)
+        self.buttonPassword.bind('<1>', self.pressCopy)
         
         
         self.mainFrame.pack(side='top', padx=5, pady=5)
@@ -62,20 +72,20 @@ class HistoryFrame(Tk.Frame):
         self.line2 = [self.labelCreateDate, self.labelTitle, self.labelUsername,
                        self.labelPassword, self.labelEmail, self.labelLocation, self.labelNote]
         self.line3 = [self.textCreateDate, self.textTitle, self.textUsername, 
-                      self.textPassword, self.textEmail,  self.textLocation, self.textNote]
+                      self.framePassword, self.textEmail,  self.textLocation, self.textNote]
+        self.line4 = [self.textCreateDate, self.textTitle, self.textUsername, 
+                      self.entryPassword, self.textEmail,  self.textLocation, self.textNote]
         
         self.__buildTable__(self.line1, 0)
         self.__buildTable__(self.line2, 1)
         self.__buildTable__(self.line3, 2)
         
-        self.__insertData__(self.line3, self.data)
-        
-        self.__config__(self.line3)
-        
-    def __config__(self, line):
-        for object in line:
-            object.config(state='disabled', exportselection=1)
-        
+        self.__insertData__(self.line4, self.data)
+    
+    def pressCopy(self, event):
+        entry = self.entryPassword.get()
+        self.mainController.pressCopy(entry)
+    
     def __buildTable__(self, line, row):
         i=0
         for object in line:
@@ -85,7 +95,12 @@ class HistoryFrame(Tk.Frame):
     def __insertData__(self, line, data):
         i = 0
         for object in line:
+            object.config(state='normal')
             object.insert('end', data[i])
+            try:
+                object.config(state='readonly')
+            except:
+                object.config(state='disabled')
             i+=1
             
 # if __name__ == '__main__':
