@@ -76,7 +76,8 @@ class MainController(object):
             print('unlock complete')
             self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
             self.settimeback()
-            self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+            if 0 != self.option.gui.autolock:
+                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
         except:
             print sys.exc_info()
             self.mainWindow.setlabelpassphrase()
@@ -191,7 +192,7 @@ class MainController(object):
         self.settimeback()
     
     def settimeback(self):
-        self.time = 60
+        self.time = self.option.gui.autolock
         
     def settimezero(self):
         self.time = 0

@@ -14,7 +14,7 @@ class OptionWindow(object):
     def __init__(self, option, controller):
         self.option = option
         self.maincontroller = controller
-        self.optionWindow = tk.Tk()
+        self.optionWindow = tk.Toplevel()
         self.optionWindow.title('Preferences')
         self.__buildFrames()
         self.optionWindow.attributes('-topmost', True)

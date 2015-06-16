@@ -3,6 +3,7 @@ Created on May 8, 2015
 
 @author: groegert
 '''
+from GuiOption import GuiOption
 
 class Option(object):
     '''
@@ -13,7 +14,7 @@ class Option(object):
     def __init__(self):
         self.email = None
         self.files = []
-        self.gui = None
+        self.gui = GuiOption()
     
     def getEmail(self):
         return self.email

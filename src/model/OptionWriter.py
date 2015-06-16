@@ -22,6 +22,7 @@ class OptionWriter(object):
         document = implement.createDocument(None, 'Options', None)
         self.writeEmailOption(option.getEmail(), document)
         self.writePasswordFiles(option.getFiles(), document)
+        self.writeGuiOption(option.gui, document)
         xmlfile = open(filename, 'w')
         document.writexml(xmlfile, '\n', ' ')
         xmlfile.close()
@@ -43,6 +44,11 @@ class OptionWriter(object):
                 element.setAttribute('encodeid', encodeId)
                 element.setAttribute('needbackup', self.getBoolString(passwordFile.needBackup))
                 document.documentElement.appendChild(element)
+    
+    def writeGuiOption(self, gui, document):
+        element = document.createElement('gui')
+        element.setAttribute('autolock', gui.autolock)
+        document.documentElement.appendChild(element)
 
     def getBoolString(self, val):
         retVal = 'false'

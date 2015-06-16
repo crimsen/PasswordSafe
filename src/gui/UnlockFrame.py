@@ -264,7 +264,7 @@ class UnlockFrame(object):
         self.labelNoteFill.config(state='normal')
         self.labelNoteFill.delete(1.0, 'end')
         self.labelNoteFill.insert('end', note)
-        self.labelNoteFill.config(state='readonly')
+        self.labelNoteFill.config(state='disabled')
         
     def updatefilter(self, *args):
         filterstring = self.filterEntry.get()

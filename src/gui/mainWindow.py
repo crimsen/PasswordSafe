@@ -89,7 +89,8 @@ class MainWindow(object):
                 
     def setAccount(self, account):
         self.account = account
-        self.lockframe.setAccount(account)
+        if None != self.lockframe:
+            self.lockframe.setAccount(account)
         
     def setfills(self, title, username, password, email, location, note):
         self.unlockframe.setfills(title, username, password, email, location, note)

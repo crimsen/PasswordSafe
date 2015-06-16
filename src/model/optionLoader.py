@@ -66,7 +66,12 @@ class OptionLoader(object):
                 needBackup = self.getBoolean(passwordFile.getAttribute('needbackup'))
                 passwordFileOption = PasswordFileOption(filename, encodeId, isDefault=isDefault, needBackup=needBackup)
                 option.files.append(passwordFileOption)
+            self.readGuiOption(elem, option.gui)
         self.updateDefaultValues(option)
+
+    def readGuiOption(self, parent, gui):
+        for element in parent.getElementsByTagName('gui'):
+            gui.autolock = self.getIntAttribute(element, 'autolock', gui.autolock)
 
     def updateDefaultValues(self, option):
         '''
@@ -97,6 +102,20 @@ class OptionLoader(object):
 
     def getBoolean(self, boolstring):
         return boolstring in ['true']
+
+    def getBoolAttribute(self, element, attributeName, defaultValue):
+        retVal = defaultValue
+        attributeNode = element.getAttributeNode(attributeName)
+        if None != attributeNode:
+            retVal = self.getBoolean(attributeNode.value)
+        return retVal
+    
+    def getIntAttribute(self, element, attributeName, defaultValue):
+        retVal = defaultValue
+        attributeNode = element.getAttributeNode(attributeName)
+        if None != attributeNode:
+            retVal = int(attributeNode.value)
+        return retVal
     
     def getList(self, liststring):
         return string.split(liststring)

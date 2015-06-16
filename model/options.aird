@@ -20,6 +20,9 @@
           <children xmi:type="notation:Node" xmi:id="_jNp-wPQuEeSf06_rNT5v6w" type="2003" element="_jNV1sPQuEeSf06_rNT5v6w">
             <children xmi:type="notation:Node" xmi:id="_jNql0PQuEeSf06_rNT5v6w" type="5007"/>
             <children xmi:type="notation:Node" xmi:id="_jNql0fQuEeSf06_rNT5v6w" type="7004">
+              <children xmi:type="notation:Node" xmi:id="__k00gBANEeWm7OsNOpGBQA" type="3010" element="__jU_sBANEeWm7OsNOpGBQA">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="__k1bkBANEeWm7OsNOpGBQA"/>
+              </children>
               <styles xmi:type="notation:SortingStyle" xmi:id="_jNql0vQuEeSf06_rNT5v6w"/>
               <styles xmi:type="notation:FilteringStyle" xmi:id="_jNql0_QuEeSf06_rNT5v6w"/>
             </children>
@@ -245,14 +248,25 @@
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
         <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
         <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
-        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_jNXq4PQuEeSf06_rNT5v6w" backgroundStyle="Liquid">
-          <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_jNXq4fQuEeSf06_rNT5v6w"/>
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_Cp_OoBAOEeWm7OsNOpGBQA" backgroundStyle="Liquid">
+          <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_Cp_OoRAOEeWm7OsNOpGBQA"/>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
-          <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_jNXq4vQuEeSf06_rNT5v6w"/>
-          <backgroundColor xmi:type="viewpoint:RGBValues" xmi:id="_jNXq4_QuEeSf06_rNT5v6w" red="255" green="255" blue="255"/>
-          <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_jNXq5PQuEeSf06_rNT5v6w" red="255" green="252" blue="216"/>
+          <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_Cp_OohAOEeWm7OsNOpGBQA"/>
+          <backgroundColor xmi:type="viewpoint:RGBValues" xmi:id="_Cp_OoxAOEeWm7OsNOpGBQA" red="255" green="255" blue="255"/>
+          <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_Cp_OpBAOEeWm7OsNOpGBQA" red="255" green="252" blue="216"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="__jU_sBANEeWm7OsNOpGBQA" name="autolock : EBoolean = true" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@6b37aef7{platform:/resource/PasswordSafe/model/options.ecore#//GuiOptions/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+          <target xmi:type="ecore:EAttribute" href="options.ecore#//GuiOptions/autolock"/>
+          <semanticElements xmi:type="ecore:EAttribute" href="options.ecore#//GuiOptions/autolock"/>
+          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_CqGjYBAOEeWm7OsNOpGBQA" labelAlignment="LEFT">
+            <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_CqGjYRAOEeWm7OsNOpGBQA"/>
+            <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
+            <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_CqGjYhAOEeWm7OsNOpGBQA"/>
+            <color xmi:type="viewpoint:RGBValues" xmi:id="_CqGjYxAOEeWm7OsNOpGBQA"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
+        </ownedElements>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_5nix4PQuEeSf06_rNT5v6w" name="[0..1] gui" sourceNode="_rxM_EPQsEeSf06_rNT5v6w" targetNode="_jNV1sPQuEeSf06_rNT5v6w">
         <target xmi:type="ecore:EReference" href="options.ecore#//Options/gui"/>
@@ -396,7 +410,7 @@
           <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_kfNBtAQ-EeW8PNYZ3k2EPQ" red="255" green="252" blue="216"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_sdh1EAQ8EeW8PNYZ3k2EPQ" name="isDefault : EBoolean = false" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@341549e8{platform:/resource/PasswordSafe/model/options.ecore#//PasswordFile/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_sdh1EAQ8EeW8PNYZ3k2EPQ" name="isDefault : EBoolean = false" tooltipText="">
           <target xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/isDefault"/>
           <semanticElements xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/isDefault"/>
           <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_TezRMAQ9EeW8PNYZ3k2EPQ" labelAlignment="LEFT">
@@ -407,7 +421,7 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_hbLQAAQ-EeW8PNYZ3k2EPQ" name="needBackup : EBoolean = true" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@c6f6aef{platform:/resource/PasswordSafe/model/options.ecore#//PasswordFile/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_hbLQAAQ-EeW8PNYZ3k2EPQ" name="needBackup : EBoolean = true" tooltipText="">
           <target xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/needBackup"/>
           <semanticElements xmi:type="ecore:EAttribute" href="options.ecore#//PasswordFile/needBackup"/>
           <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_kfadEAQ-EeW8PNYZ3k2EPQ" labelAlignment="LEFT">
