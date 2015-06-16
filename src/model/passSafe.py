@@ -98,12 +98,11 @@ class PasswordSafe(object):
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()
                                    
-    def removePassOb(self, index):
+    def removePassOb(self, passOb):
         '''
         Delete a passwordobject
         And write it in a file
         '''
-        passOb = self.passwordSafe[index]
         self.passwordSafe.remove(passOb)
         
         self.markFileModified(passOb)

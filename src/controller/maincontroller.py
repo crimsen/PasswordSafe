@@ -104,20 +104,27 @@ class MainController(object):
     def presschangepass(self, index):
         self.settimeback()
         print('open changepassword')
-        title = self.passsafe.getTitle(index)
-        username = self.passsafe.getUsername(index)
-        password = self.passsafe.getPassword(index)
-        email = self.passsafe.getEmail(index)
-        location = self.passsafe.getLocation(index)
-        note = self.passsafe.getNote(index)
-        self.changepass = ChangePassWindow(self, index, title, username, password, email, location, note)
+        
+        passObFilter = self.filter.getFilteredpasssafe()[index]
+        indexSafe = 0
+        for passObSafe in self.passsafe.getSafe():
+            if passObFilter == passObSafe:
+                break
+            indexSafe += 1
+        title = self.passsafe.getTitle(indexSafe)
+        username = self.passsafe.getUsername(indexSafe)
+        password = self.passsafe.getPassword(indexSafe)
+        email = self.passsafe.getEmail(indexSafe)
+        location = self.passsafe.getLocation(indexSafe)
+        note = self.passsafe.getNote(indexSafe)
+        self.changepass = ChangePassWindow(self, indexSafe, title, username, password, email, location, note)
             
     def pressnewpasssave(self, title, username, password, email, location, note):
         print('save new password')
         self.passsafe.newPassObject(title, username, password, email, location, note)
         self.filter = PassSafeFilter(self.passsafe.getSafe())
         self.filter.doFilter() 
-        self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
         self.settimeback()
         
     def presschangepasssave(self, index, title, username, password, email, location, note):
@@ -125,19 +132,25 @@ class MainController(object):
         self.passsafe.changePassOb(index, title, username, password, email, location, note)
         self.filter = PassSafeFilter(self.passsafe.getSafe())
         self.filter.doFilter()
-        self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
         self.settimeback()
     
     def pressremovepass(self, index):
         print('password deleted')
-        self.passsafe.removePassOb(index)
+        
+        passObFilter = self.filter.getFilteredpasssafe()[index]
+        for passObSafe in self.passsafe.getSafe():
+            if passObFilter == passObSafe:
+                self.passsafe.removePassOb(passObSafe)
+        
+
         self.filter = PassSafeFilter(self.passsafe.getSafe())
         self.filter.doFilter()
-        self.mainWindow.insertTitleBox(self.passsafe.getSafe())
+        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
         self.settimeback()
         
     def pressViewHistory(self, index):
-        history = self.passsafe.getSafe()[index].getHistory()
+        history = self.filter.getFilteredpasssafe()[index].getHistory()
         self.viewHistory = ViewHistory(self, self.mainWindow, history)
         self.viewHistory.show()
         

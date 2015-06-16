@@ -20,7 +20,6 @@ class ViewHistory(object):
         '''
         self.viewHistory = Tk.Toplevel()
         self.viewHistory.title('PasswordHistory')
-        self.viewHistory.geometry('400x400')
         
         self.mainWindow = mainWindow
         self.mainController = mainController
