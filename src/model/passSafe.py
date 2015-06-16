@@ -4,7 +4,9 @@ Created on 28.03.2015
 @author: crimsen
 '''
 import gnupg
-from model.passObject import PasswordObject
+from datetime import date
+from model.NewPasswordObject import NewPasswordObject
+from model.HistoryPasswordObject import HistoryPasswordObject
 from model.PasswordSafeReader import PasswordSafeReader
 from model.PasswordSafeWriter import PasswordSafeWriter
 
@@ -15,12 +17,13 @@ class PasswordSafe(object):
         self.option = option
         self.gpg = gnupg.GPG()
                  
-    def newPassObject(self, title='', username='', password='', email='', location='', note=''):
+    def newPassObject(self, title='', username='', password='', email='', location='', note='', createDate=None, history=[]):
         '''
         Create a new passwordobject
         And save it in RAM
         '''
-        passOb = PasswordObject(title, username, password, email, location, note)
+        passOb = NewPasswordObject(title, username, password, email, location, note, createDate, history)
+        passOb.haveCreateDate()
         self.passwordSafe.append(passOb)
         self.passsafesort()
         self.markFileModified(passOb)
@@ -28,13 +31,20 @@ class PasswordSafe(object):
         #TODO: do we really want to safe everything when a new password is created?
         self.save()
         
-    def loadPassObject(self, title, username, password, email, location, note):
+    def loadPassObject(self, title, username, password, email, location, note, createDate, history):
         '''
         Load a Passobject from XML file
         '''
         
-        passOb = PasswordObject(title, username, password, email, location, note)
+        passOb = NewPasswordObject(title, username, password, email, location, note, createDate, history)
+        passOb.haveCreateDate()
         self.passwordSafe.append(passOb)
+        return passOb
+    
+    def loadHistoryPassObject(self, title, username, password, email, location, note, createDate=None, endDate=None):
+        passOb = HistoryPasswordObject(title, username, password, email, location, note, createDate, endDate)
+        passOb.haveCreateDate()
+        passOb.haveEndDate()
         return passOb
         
     
@@ -62,24 +72,37 @@ class PasswordSafe(object):
         '''
         
         passOb=self.passwordSafe[index]
+        
+        titleOld = passOb.getTitle()
+        usernameOld = passOb.getUsername()
+        passwordOld = passOb.getPassword()
+        emailOld = passOb.getEmail()
+        locationOld = passOb.getLocation()
+        noteOld = passOb.getNote()
+        createDateOld = passOb.getCreateDate()
+        
+        passObOld = self.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld, createDateOld)
+        
+        passOb.addHistory(passObOld)
+        
         passOb.setTitle(title)
         passOb.setUsername(username)
         passOb.setPassword(password)
         passOb.setEmail(email)
         passOb.setLocation(location)
         passOb.setNote(note)
+        passOb.setCreateDate(date.today())
         
         self.markFileModified(passOb)
            
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()
                                    
-    def removePassOb(self, index):
+    def removePassOb(self, passOb):
         '''
         Delete a passwordobject
         And write it in a file
         '''
-        passOb = self.passwordSafe[index]
         self.passwordSafe.remove(passOb)
         
         self.markFileModified(passOb)

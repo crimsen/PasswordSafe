@@ -68,7 +68,7 @@ class MainWindow(object):
     def showunlockframe(self):
         if self.lockframe != None:
             self.lockframe.destroy()
-        self.__initUnlockFrame__(self.mainWindow)
+        self.__initUnlockFrame__()
         
     def showlockframe(self):
         if self.unlockframe != None:

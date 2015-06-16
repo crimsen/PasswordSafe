@@ -153,7 +153,7 @@ class UnlockFrame(object):
         self.framePic = tk.Frame(master=parent)
         self.framePic.pack(side='left', fill='both', expand=True, padx=5, pady=5)
         self.labelNote = tk.Label(master=self.framePic, text='Bemerkung', anchor='w', font='Arial 20 bold')
-        self.labelNoteFill = tk.Text(master=self.framePic, bg='white', relief='raised', font='Arial')
+        self.labelNoteFill = tk.Text(master=self.framePic, bg='white', relief='raised', font='Arial', height=16)
         self.labelLocationLink = tk.Label(master=self.framePic, text='Location / URL', anchor='w', font='Arial 20 bold')
         self.labelLocationLinkFill = tk.Label(master=self.framePic, text='', justify='left', relief='raised', font='Arial 16', fg='blue', cursor='hand2')
         self.buttonLock = tk.Button(master=self.framePic, text='Lock', underline=0)
@@ -186,6 +186,7 @@ class UnlockFrame(object):
         self.passMenu.add_command(label='New Password', underline=0, command=self.pressnewpass)
         self.passMenu.add_command(label='Delete Password', underline=0, command=self.pressremovepass)
         self.passMenu.add_command(label='Change Password', underline=0, command=self.presschangepass)
+        self.passMenu.add_command(label='View History', underline=0, command=self.pressViewHistory)
         self.menuBar.add_cascade(label='Password', underline=0, menu=self.passMenu)
         
         self.mainWindowFrame.config(menu=self.menuBar)
@@ -291,6 +292,13 @@ class UnlockFrame(object):
             
     def pressnewpass(self):
         self.mainController.pressnewpass()
+        
+    def pressViewHistory(self):
+        try:
+            index = self.getTitleBoxIndex()
+            self.mainController.pressViewHistory(index)
+        except:
+            self.showobjecterror()
         
     def presschangepass(self):
         try:

@@ -73,12 +73,63 @@ class PasswordSafeWriter(object):
                 safeElem.appendChild(noteElem)
                 noteTextElem = doc.createTextNode(i.getNote())
                 noteElem.appendChild(noteTextElem)
+                
+                createDateElem = doc.createElement('CreateDate')
+                safeElem.appendChild(createDateElem)
+                createDateTextElem = doc.createTextNode(i.getCreateDate().isoformat())
+                createDateElem.appendChild(createDateTextElem)
+                
+                historyElem = doc.createElement('History')
+                safeElem.appendChild(historyElem)
+                for passOb in i.getHistory():
+                    safeElemOld = doc.createElement('SafeOld')
+                    historyElem.appendChild(safeElemOld)
+                    
+                    titleElem = doc.createElement('TitleOld')
+                    safeElemOld.appendChild(titleElem)
+                    titleTextElem = doc.createTextNode(passOb.getTitle())
+                    titleElem.appendChild(titleTextElem)
+                
+                    usernameElem = doc.createElement('UsernameOld')
+                    safeElemOld.appendChild(usernameElem)
+                    usernameTextElem = doc.createTextNode(passOb.getUsername())
+                    usernameElem.appendChild(usernameTextElem)
+                
+                    passwordElem = doc.createElement('PasswordOld')
+                    safeElemOld.appendChild(passwordElem)
+                    passwordTextElem = doc.createTextNode(passOb.getPassword())
+                    passwordElem.appendChild(passwordTextElem)
+                
+                    emailElem = doc.createElement('EMailOld')
+                    safeElemOld.appendChild(emailElem)
+                    emailTextElem = doc.createTextNode(passOb.getEmail())
+                    emailElem.appendChild(emailTextElem)
+                
+                    locationElem = doc.createElement('URLOld')
+                    safeElemOld.appendChild(locationElem)
+                    locationTextElem = doc.createTextNode(passOb.getLocation())
+                    locationElem.appendChild(locationTextElem)
+                
+                    noteElem = doc.createElement('NoteOld')
+                    safeElemOld.appendChild(noteElem)
+                    noteTextElem = doc.createTextNode(passOb.getNote())
+                    noteElem.appendChild(noteTextElem)
+                    
+                    createDateElem = doc.createElement('CreateDateOld')
+                    safeElemOld.appendChild(createDateElem)
+                    createDateTextElem = doc.createTextNode(passOb.getCreateDate().isoformat())
+                    createDateElem.appendChild(createDateTextElem)
+                    
+                    endDateElem = doc.createElement('EndDate')
+                    safeElemOld.appendChild(endDateElem)
+                    endDateTextElem = doc.createTextNode(passOb.getEndDate().isoformat())
+                    endDateElem.appendChild(endDateTextElem)
             
                 doc.documentElement.appendChild(safeElem)
         
-        
         datei = open(passwordFile.getFilename(), 'w')
         noneencrypt = StringStream.StringIO()
+        b = doc.toxml(encoding='utf-8')
         doc.writexml(noneencrypt, '\n', ' ')
         s = noneencrypt.getvalue()
         encodeIds = [str(i) for i in passwordFile.getEncodeId()]
