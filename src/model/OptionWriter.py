@@ -47,7 +47,7 @@ class OptionWriter(object):
     
     def writeGuiOption(self, gui, document):
         element = document.createElement('gui')
-        element.setAttribute('autolock', gui.autolock)
+        element.setAttribute('autolock', str(gui.autolock))
         document.documentElement.appendChild(element)
 
     def getBoolString(self, val):
