@@ -8,6 +8,7 @@ import Tkinter as tk
 import webbrowser
 import gnupg
 import re
+import sys
 
 class AccountPage(object):
     '''
@@ -57,9 +58,12 @@ class AccountPage(object):
         '''
         reads values from the option object and sets the ui according to the values
         '''
-        accounts = self.gpgBox.get(0, 'end')
-        currentIndex = accounts.index(self.option.getEmail())
-        self.gpgBox.selection_set(currentIndex)
+        try:
+            accounts = self.gpgBox.get(0, 'end')
+            currentIndex = accounts.index(self.option.getEmail())
+            self.gpgBox.selection_set(currentIndex)
+        except:
+            print sys.exc_info()
 
     def updateWindow(self):
         '''
