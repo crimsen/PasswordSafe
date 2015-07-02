@@ -7,6 +7,7 @@ import ttk as tk
 from TreeItem import TreeItem
 from AccountPage import AccountPage
 from FilesPage import FilesPage
+from GuiPage import GuiPage
 
 class OptionTree(object):
     '''
@@ -40,6 +41,7 @@ class OptionTree(object):
         '''
         self.content = []
         self.content.append(TreeItem("Account",self.option, AccountPage))
+        self.content.append(TreeItem("User Interface", self.option.gui, GuiPage))
         self.content.append(TreeItem("Files",self.option, FilesPage))
         self.loadTreeBox()
 

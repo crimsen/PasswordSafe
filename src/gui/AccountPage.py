@@ -4,13 +4,14 @@ Created on 09.05.2015
 @author: thomas
 '''
 
+from OptionPage import OptionPage
 import Tkinter as tk
 import webbrowser
 import gnupg
 import re
 import sys
 
-class AccountPage(object):
+class AccountPage(OptionPage):
     '''
     classdocs
     '''
@@ -20,9 +21,7 @@ class AccountPage(object):
         '''
         Constructor
         '''
-        self.option = option
-        self.__buildFrame__(parent)
-        self.updateWindow()
+        OptionPage.__init__(self, parent, option)
     
     def __buildFrame__(self, parent):
         self.frameMain = tk.Frame(master=parent)

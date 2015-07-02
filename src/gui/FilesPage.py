@@ -4,9 +4,10 @@ Created on May 12, 2015
 @author: thomas
 '''
 
+from OptionPage import OptionPage
 import Tkinter as tk
 
-class FilesPage(object):
+class FilesPage(OptionPage):
     '''
     Page for the options dialog.
     This page shows up all files that have to be loaded.
@@ -18,17 +19,8 @@ class FilesPage(object):
         '''
         Constructor
         '''
-        self.option = option
-        self.__buildFrame__(parent)
-        self.updateWindow()
+        OptionPage.__init__(self, parent, option)
 
-    def apply(self):
-        '''
-        all derived pages should have an apply function to write the values from the ui into the model
-        '''
-        pass
-
-        
     def __buildFrame__(self, parent):
         self.frameMain = tk.Frame(master=parent)
         self.fileBox = tk.Listbox(master=self.frameMain)

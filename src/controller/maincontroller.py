@@ -76,9 +76,9 @@ class MainController(object):
             self.mainWindow.setunlockframe()
             print('unlock complete')
             self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
-            self.settimeback()
             if 0 != self.option.gui.autolock:
-                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+                self.startTimeControl()
+            self.settimeback()
         except:
             print sys.exc_info()
             self.mainWindow.setlabelpassphrase()
@@ -93,8 +93,13 @@ class MainController(object):
         print('save options')
         writer = OptionWriter()
         writer.write(self.option, self.optionfile)
-        self.settimeback()
         self.loadoption()
+        #do we need to start the autolock?
+        # might be it is already started
+        # --> take self.time to decide whether autolock is started
+        if 0 == self.time and None != self.mainWindow.getunlockframe() and 0 != self.option.gui.autolock:
+            self.startTimeControl()
+        self.settimeback()
     
     def pressnewpass(self):
         print('open newpassword')
@@ -193,15 +198,23 @@ class MainController(object):
             retVal = attr 
         return retVal
     
+    def startTimeControl(self):
+        self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+
     def timecontrol(self):
-        self.time -= 1
-        print self.time
-        if self.time <= 0:
-            if self.time !=-1:
-                self.pressmainLock()
+        # we need to check the autolock every time because it might be changed in option dialog while
+        # a self.timecontrol was queued
+        if 0 != self.option.gui.autolock:
+            self.time -= 1
+            print self.time
+            if self.time <= 0:
+                if self.time !=-1:
+                    self.pressmainLock()
+            else:
+                self.mainWindow.setTime(self.time)
+                self.mainWindow.getmainwindow().after(1000, self.timecontrol)
         else:
-            self.mainWindow.setTime(self.time)
-            self.mainWindow.getmainwindow().after(1000, self.timecontrol)
+            self.mainWindow.setTime(None)
             
     def updatefilter(self, filterstring='', filterattribute=[]):
         self.filter.setFilterstring(filterstring)

@@ -308,9 +308,11 @@ class UnlockFrame(object):
             self.showobjecterror()
             
     def setTime(self, time):
-        self.labelTime.config(text='Autolock in '+str(time)+' seconds!')
+        text = ''
+        if None != time:
+            text = 'Autolock in '+str(time)+' seconds!'
+        self.labelTime.config(text=text)
 
-            
     def showoptionerror(self):
         showerror('Error 404-File not found', 'No Options found.\nPlease open Options, choose an account\nand save it.')
         
