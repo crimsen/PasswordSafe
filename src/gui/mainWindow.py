@@ -82,7 +82,7 @@ class MainWindow(object):
         self.maincontroller.pressmainLock()
             
     def pressunlock(self, passphrase):
-        self.maincontroller.pressmainUnlock(passphrase)   
+        self.maincontroller.pressmainUnlock(passphrase)
             
     def setlabelpassphrase(self):
         self.lockframe.setlabelpassphrase()

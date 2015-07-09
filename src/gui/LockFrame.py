@@ -65,6 +65,7 @@ class LockFrame(object):
         self.fileMenu = tk.Menu(master=self.menuBarLocked, tearoff=0)
         self.fileMenu.add_command(label='Options', underline=0, command=self.pressoptions)
         self.menuBarLocked.add_cascade(label='File', underline=0, menu=self.fileMenu)
+        self.menuBarLocked.add_command(label='About', underline=0, command=self.pressAbout)
         
         self.mainWindowFrame.config(menu=self.menuBarLocked)
         
@@ -77,6 +78,9 @@ class LockFrame(object):
         
     def pressoptions(self):
         self.mainWindow.pressoptions()
+        
+    def pressAbout(self):
+        self.mainController.pressAbout()
         
     def setAccount(self, account):
         self.account = account

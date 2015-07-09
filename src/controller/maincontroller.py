@@ -15,6 +15,7 @@ from gui.changePassWindow import ChangePassWindow
 from controller.filter import PassSafeFilter
 import sys
 from gui.ViewHistory import ViewHistory
+from gui.AboutFrame import AboutFrame
 
 class MainController(object):
     '''
@@ -174,6 +175,9 @@ class MainController(object):
     def pressCopy(self, entry):
         self.mainWindow.mainWindow.clipboard_clear()
         self.mainWindow.mainWindow.clipboard_append(entry)
+        
+    def pressAbout(self):
+        self.aboutFrame = AboutFrame()
     
     def loadoption(self):
         print('loadoptions')
