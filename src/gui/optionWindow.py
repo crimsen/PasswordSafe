@@ -51,7 +51,7 @@ class OptionWindow(object):
         try:
             self.apply()
             print(self.option.email)
-            self.maincontroller.pressOptionSave()
+            self.maincontroller.controlOptionSave()
             self.optionWindow.destroy()
         except:
             showerror('Incorrect Setting', 'Any setting is incorrect. Check if you did choose an account.')

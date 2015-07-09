@@ -13,11 +13,15 @@ class Option(object):
     
     def __init__(self):
         self.email = None
+        self.emailOld = None
         self.files = []
         self.gui = GuiOption()
     
     def getEmail(self):
         return self.email
+
+    def getEmailOld(self):
+        return self.emailOld
 
     def setEmail(self, val):
         self.email = val

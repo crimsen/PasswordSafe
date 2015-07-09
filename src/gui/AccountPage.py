@@ -51,7 +51,9 @@ class AccountPage(OptionPage):
         emaillist = self.gpgBox.curselection()
         emailindex = emaillist[0]
         email = self.gpgBox.get(emailindex)
+        emailOld = self.option.getEmailOld()
         self.option.email = email
+        self.option.emailOld = emailOld
 
     def readFromOption(self):
         '''

@@ -68,6 +68,11 @@ class OptionLoader(object):
                 option.files.append(passwordFileOption)
             self.readGuiOption(elem, option.gui)
         self.updateDefaultValues(option)
+        self.controlEmailOld(option)
+        
+    def controlEmailOld(self, option):
+        if option.emailOld == None:
+            option.emailOld = option.email
 
     def readGuiOption(self, parent, gui):
         for element in parent.getElementsByTagName('gui'):

@@ -100,6 +100,17 @@ class MainController(object):
         if 0 == self.time and None != self.mainWindow.getunlockframe() and 0 != self.option.gui.autolock:
             self.startTimeControl()
         self.settimeback()
+        
+    def controlOptionSave(self):
+        
+        if self.mainWindow.getunlockframe() == None:
+            self.pressOptionSave()
+        elif self.mainWindow.getlockframe() == None:
+            if self.option.getEmail() != self.option.getEmailOld():
+                self.pressmainLock()
+                self.pressOptionSave()
+            else:
+                self.pressOptionSave()
     
     def pressnewpass(self):
         print('open newpassword')
