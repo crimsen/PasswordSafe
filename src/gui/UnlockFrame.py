@@ -89,6 +89,8 @@ class UnlockFrame(object):
         self.mainWindowFrame.bind('<Alt-o>', lambda e: self.buttonFilterLocation.toggle())
         self.mainWindowFrame.bind('<Alt-n>', lambda e: self.buttonFilterNote.toggle())
         
+        self.entryFilter.bind('<Up>', self.setTitleBoxIndexUp)
+        self.entryFilter.bind('<Down>', self.setTitleBoxIndexDown)
         self.entryFilter.focus_force()
         
     def __buildTitleBoxFrame__(self, parent):
@@ -228,6 +230,11 @@ class UnlockFrame(object):
                 url = 'http://'+url
         webbrowser.open_new_tab(url)
         
+    def setTitleBoxIndex(self, index):
+        self.titleBox.select_clear(0, 'end')
+        self.titleBox.select_set(index)
+        self.mainController.loadPassOb(index)
+
     def getTitleBoxIndex(self):
 
         index = self.titleBox.curselection()
@@ -241,19 +248,15 @@ class UnlockFrame(object):
         except:
             index=len(self.titleBox.get(0, 'end'))-1
         if index != 0:
-            self.titleBox.select_clear(0, 'end')
-            self.titleBox.select_set(index-1)
-            self.mainController.loadPassOb(int(index-1))
-    
+            self.setTitleBoxIndex(index-1)
+
     def setTitleBoxIndexDown(self, event):
         try:
             index = self.getTitleBoxIndex()
         except:
             index=0
         if index != (len(self.titleBox.get(0, 'end'))-1):
-            self.titleBox.select_clear(0, 'end')
-            self.titleBox.select_set(index+1)
-            self.mainController.loadPassOb(int(index+1))
+            self.setTitleBoxIndex(index+1)
         
     def setfills(self, title, username, password, email, location, note):
         self.labelTitleFill.config(text=title)

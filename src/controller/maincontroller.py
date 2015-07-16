@@ -73,10 +73,9 @@ class MainController(object):
             self.passsafe.load(passphrase)
             self.filter = PassSafeFilter(self.passsafe.getSafe())
             self.mainWindow.hideLockFrame()
-            self.filter.doFilter()
             self.mainWindow.setunlockframe()
             print('unlock complete')
-            self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+            self.updateTitleBox()
             if 0 != self.option.gui.autolock:
                 self.startTimeControl()
             self.settimeback()
@@ -141,16 +140,14 @@ class MainController(object):
         print('save new password')
         self.passsafe.newPassObject(title, username, password, email, location, note)
         self.filter = PassSafeFilter(self.passsafe.getSafe())
-        self.filter.doFilter() 
-        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+        self.updateTitleBox()
         self.settimeback()
         
     def presschangepasssave(self, index, title, username, password, email, location, note):
         print('save passwordchanges')
         self.passsafe.changePassOb(index, title, username, password, email, location, note)
         self.filter = PassSafeFilter(self.passsafe.getSafe())
-        self.filter.doFilter()
-        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+        self.updateTitleBox()
         self.settimeback()
     
     def pressremovepass(self, index):
@@ -163,8 +160,7 @@ class MainController(object):
         
 
         self.filter = PassSafeFilter(self.passsafe.getSafe())
-        self.filter.doFilter()
-        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
+        self.updateTitleBox()
         self.settimeback()
         
     def pressViewHistory(self, index):
@@ -189,12 +185,20 @@ class MainController(object):
     
     def loadPassOb(self, index):
         print('load PasswordObject')
-        title = self.filter.getTitle(index)
-        username = self.filter.getUsername(index)
-        password = self.filter.getPassword(index)
-        email = self.filter.getEmail(index)
-        location = self.filter.getLocation(index)
-        note = self.filter.getNote(index)
+        if -1  != index:
+            title = self.filter.getTitle(index)
+            username = self.filter.getUsername(index)
+            password = self.filter.getPassword(index)
+            email = self.filter.getEmail(index)
+            location = self.filter.getLocation(index)
+            note = self.filter.getNote(index)
+        else:
+            title = ""
+            username = ""
+            password = ""
+            email = ""
+            location = ""
+            note = ""
         
         title = self.controlNone(title)
         username = self.controlNone(username)
@@ -234,9 +238,16 @@ class MainController(object):
     def updatefilter(self, filterstring='', filterattribute=[]):
         self.filter.setFilterstring(filterstring)
         self.filter.setFilterattribute(filterattribute)
+        self.updateTitleBox()
+        self.settimeback()
+        
+    def updateTitleBox(self):
         self.filter.doFilter()
         self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
-        self.settimeback()
+        if 0 != len(self.filter.getFilteredpasssafe()):
+            self.mainWindow.getunlockframe().setTitleBoxIndex(0)
+        else:
+            self.loadPassOb(-1)
     
     def settimeback(self):
         self.time = self.option.gui.autolock

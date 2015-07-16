@@ -23,7 +23,7 @@ class AboutFrame(object):
         
         self.mainFrame = tk.Frame(master=parent)
         self.labelPasswordSafe = tk.Label(master=self.mainFrame, text='PasswordSafe', font=('Arial 22 bold'))
-        self.labelInfo = tk.Label(master=self.mainFrame, text='Version 1.3.2')
+        self.labelInfo = tk.Label(master=self.mainFrame, text='Version 1.4.0')
         
         self.mainFrame.pack(expand=True, fill='both')
         self.labelPasswordSafe.pack(side='top', fill='both', expand=True, anchor='center')
