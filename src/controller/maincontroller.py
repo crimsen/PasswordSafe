@@ -113,9 +113,9 @@ class MainController(object):
                 self.pressOptionSave()
     
     def pressnewpass(self):
-        print('open newpassword')
         self.settimeback()
         self.newpasswindow = NewPassWindow(self)
+        self.newpasswindow.setTimeControl(self)
         self.newpasswindow.show()
         
     def presschangepass(self, index):
@@ -136,9 +136,9 @@ class MainController(object):
         note = self.passsafe.getNote(indexSafe)
         self.changepass = ChangePassWindow(self, indexSafe, title, username, password, email, location, note)
             
-    def pressnewpasssave(self, title, username, password, email, location, note):
+    def addPasswordObject(self, passwordObject):
         print('save new password')
-        self.passsafe.newPassObject(title, username, password, email, location, note)
+        self.passsafe.addPasswordObject(passwordObject)
         self.filter = PassSafeFilter(self.passsafe.getSafe())
         self.updateTitleBox()
         self.settimeback()
@@ -249,8 +249,12 @@ class MainController(object):
         else:
             self.loadPassOb(-1)
     
-    def settimeback(self):
+    def resetTime(self):
         self.time = self.option.gui.autolock
+
+    def settimeback(self):
+        #legacy
+        self.resetTime()
         
     def settimezero(self):
         self.time = 0

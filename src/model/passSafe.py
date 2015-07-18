@@ -16,20 +16,14 @@ class PasswordSafe(object):
         self.passwordSafe = []
         self.option = option
         self.gpg = gnupg.GPG()
-                 
+
     def newPassObject(self, title='', username='', password='', email='', location='', note='', createDate=None, history=[]):
         '''
         Create a new passwordobject
         And save it in RAM
         '''
         passOb = NewPasswordObject(title, username, password, email, location, note, createDate, history)
-        passOb.haveCreateDate()
-        self.passwordSafe.append(passOb)
-        self.passsafesort()
-        self.markFileModified(passOb)
-
-        #TODO: do we really want to safe everything when a new password is created?
-        self.save()
+        self.addNewPasswordObject(passOb)
         
     def loadPassObject(self, title, username, password, email, location, note, createDate, history):
         '''
@@ -47,6 +41,18 @@ class PasswordSafe(object):
         passOb.haveEndDate()
         return passOb
         
+    def addPasswordObject(self, passwordObject):
+        newPasswordObject = NewPasswordObject()
+        newPasswordObject.copyFrom(passwordObject)
+        self.addNewPasswordObject(newPasswordObject)
+    
+    def addNewPasswordObject(self, newPasswordObject):
+        newPasswordObject.haveCreateDate()
+        self.passwordSafe.append(newPasswordObject)
+        self.passsafesort()
+        self.markFileModified(newPasswordObject)
+        #TODO: do we really want to safe everything when a new password is created?
+        self.save()
     
     def load(self, passphrase):
         '''

@@ -21,7 +21,17 @@ class PasswordObject(object):
     def haveCreateDate(self):
         if self.createDate == None:
             self.createDate = date.today()
-            
+    
+    def copyFrom(self, passwordObject):
+        self.passwordFile = passwordObject.passwordFile
+        self.title = passwordObject.title
+        self.username = passwordObject.username
+        self.password = passwordObject.password
+        self.email = passwordObject.email
+        self.location = passwordObject.location
+        self.note = passwordObject.note
+        self.createDate = passwordObject.createDate
+    
     def setPasswordFile(self, passwordFile):
         self.passwordFile = passwordFile
     def setTitle(self, title):
