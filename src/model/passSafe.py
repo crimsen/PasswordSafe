@@ -40,6 +40,13 @@ class PasswordSafe(object):
         passOb.haveCreateDate()
         passOb.haveEndDate()
         return passOb
+    
+    def createHistoryPasswordObject(self, passwordObject):
+        retVal = HistoryPasswordObject()
+        retVal.copyFrom(passwordObject)
+        retVal.haveCreateDate()
+        retVal.haveEndDate()
+        return retVal
         
     def addPasswordObject(self, passwordObject):
         newPasswordObject = NewPasswordObject()
@@ -71,36 +78,17 @@ class PasswordSafe(object):
         
         self.passsafesort()
         
-    def changePassOb(self, index, title='', username='', password='', email='', location='', note=''):
+    def changePasswordObject(self, passwordObject, newPasswordObject):
         '''
         Change the attributes of the passwordobject
         And write it in a file
         '''
         
-        passOb=self.passwordSafe[index]
-        
-        titleOld = passOb.getTitle()
-        usernameOld = passOb.getUsername()
-        passwordOld = passOb.getPassword()
-        emailOld = passOb.getEmail()
-        locationOld = passOb.getLocation()
-        noteOld = passOb.getNote()
-        createDateOld = passOb.getCreateDate()
-        
-        passObOld = self.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld, createDateOld)
-        
-        passOb.addHistory(passObOld)
-        
-        passOb.setTitle(title)
-        passOb.setUsername(username)
-        passOb.setPassword(password)
-        passOb.setEmail(email)
-        passOb.setLocation(location)
-        passOb.setNote(note)
-        passOb.setCreateDate(date.today())
-        
-        self.markFileModified(passOb)
-           
+        historyPasswordObject = self.createHistoryPasswordObject(passwordObject)
+        passwordObject.copyFrom(newPasswordObject)
+        passwordObject.addHistory(historyPasswordObject)
+        passwordObject.setCreateDate(date.today())
+        self.markFileModified(passwordObject)
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()
                                    

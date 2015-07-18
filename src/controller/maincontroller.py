@@ -120,22 +120,11 @@ class MainController(object):
         
     def presschangepass(self, index):
         self.settimeback()
-        print('open changepassword')
-        
         passObFilter = self.filter.getFilteredpasssafe()[index]
-        indexSafe = 0
-        for passObSafe in self.passsafe.getSafe():
-            if passObFilter == passObSafe:
-                break
-            indexSafe += 1
-        title = self.passsafe.getTitle(indexSafe)
-        username = self.passsafe.getUsername(indexSafe)
-        password = self.passsafe.getPassword(indexSafe)
-        email = self.passsafe.getEmail(indexSafe)
-        location = self.passsafe.getLocation(indexSafe)
-        note = self.passsafe.getNote(indexSafe)
-        self.changepass = ChangePassWindow(self, indexSafe, title, username, password, email, location, note)
-            
+        self.changepass = ChangePassWindow(self, passObFilter)
+        self.changepass.setTimeControl(self)
+        self.changepass.show()
+
     def addPasswordObject(self, passwordObject):
         print('save new password')
         self.passsafe.addPasswordObject(passwordObject)
@@ -143,13 +132,13 @@ class MainController(object):
         self.updateTitleBox()
         self.settimeback()
         
-    def presschangepasssave(self, index, title, username, password, email, location, note):
+    def changePasswordObject(self, origPasswordObject, passwordObject):
         print('save passwordchanges')
-        self.passsafe.changePassOb(index, title, username, password, email, location, note)
+        self.passsafe.changePasswordObject(origPasswordObject, passwordObject)
         self.filter = PassSafeFilter(self.passsafe.getSafe())
         self.updateTitleBox()
         self.settimeback()
-    
+
     def pressremovepass(self, index):
         print('password deleted')
         
