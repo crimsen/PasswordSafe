@@ -189,6 +189,7 @@ class UnlockFrame(object):
         self.passMenu.add_command(label='Delete Password', underline=0, command=self.pressremovepass)
         self.passMenu.add_command(label='Change Password', underline=0, command=self.presschangepass)
         self.passMenu.add_command(label='View History', underline=0, command=self.pressViewHistory)
+        self.passMenu.add_command(label='Password Generator', underline=0, command=self.pressPassGen)
         self.menuBar.add_cascade(label='Password', underline=0, menu=self.passMenu)
         
         self.menuBar.add_command(label='About', underline=1, command=self.pressAbout)
@@ -314,6 +315,9 @@ class UnlockFrame(object):
             
     def pressAbout(self):
         self.mainController.pressAbout()
+        
+    def pressPassGen(self):
+        self.mainController.pressPassGen()
             
     def setTime(self, time):
         text = ''

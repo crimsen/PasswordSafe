@@ -16,6 +16,7 @@ from controller.filter import PassSafeFilter
 import sys
 from gui.ViewHistory import ViewHistory
 from gui.AboutFrame import AboutFrame
+from gui.PassGenWindow import PassGenWindow
 
 class MainController(object):
     '''
@@ -174,6 +175,9 @@ class MainController(object):
         
     def pressAbout(self):
         self.aboutFrame = AboutFrame()
+        
+    def pressPassGen(self):
+        self.passGenWindow = PassGenWindow(self, self.mainWindow)
     
     def loadoption(self):
         print('loadoptions')
