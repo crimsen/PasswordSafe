@@ -10,11 +10,7 @@ from model.OptionWriter import OptionWriter
 from model.Option import Option
 import os
 from gui.optionWindow import OptionWindow
-from gui.newPassWindow import NewPassWindow
-from gui.changePassWindow import ChangePassWindow
-from controller.filter import PassSafeFilter
 import sys
-from gui.ViewHistory import ViewHistory
 from gui.AboutFrame import AboutFrame
 
 class MainController(object):
@@ -31,6 +27,9 @@ class MainController(object):
         self.searchOptionFile()
         self.__initGUI__()
         self.time = 0
+        
+    def getMainWindow(self):
+        return self.mainWindow.getmainwindow()
         
     def searchOptionFile(self):
         '''
@@ -59,7 +58,7 @@ class MainController(object):
             self.pressoptions()
         else: self.loadoption()
         
-    def pressmainLock(self):
+    def pressLock(self):
         print('locking screen')
         self.settimezero()
         self.mainWindow.hideUnlockFrame()
@@ -71,11 +70,10 @@ class MainController(object):
         try:
             self.passsafe = PasswordSafe(self.option)
             self.passsafe.load(passphrase)
-            self.filter = PassSafeFilter(self.passsafe.getSafe())
+            #self.filter = PassSafeFilter(self.passsafe.getSafe())
             self.mainWindow.hideLockFrame()
             self.mainWindow.setunlockframe()
             print('unlock complete')
-            self.updateTitleBox()
             if 0 != self.option.gui.autolock:
                 self.startTimeControl()
             self.settimeback()
@@ -83,7 +81,7 @@ class MainController(object):
             print sys.exc_info()
             self.mainWindow.setlabelpassphrase()
             
-    def pressoptions(self):
+    def pressOptions(self):
         self.settimeback()
         print('open options')
         self.optionwindow = OptionWindow(self.option, self)
@@ -112,52 +110,7 @@ class MainController(object):
             else:
                 self.pressOptionSave()
     
-    def pressnewpass(self):
-        self.settimeback()
-        self.newpasswindow = NewPassWindow(self)
-        self.newpasswindow.setTimeControl(self)
-        self.newpasswindow.show()
-        
-    def presschangepass(self, index):
-        self.settimeback()
-        passObFilter = self.filter.getFilteredpasssafe()[index]
-        self.changepass = ChangePassWindow(self, passObFilter)
-        self.changepass.setTimeControl(self)
-        self.changepass.show()
-
-    def addPasswordObject(self, passwordObject):
-        print('save new password')
-        self.passsafe.addPasswordObject(passwordObject)
-        self.filter = PassSafeFilter(self.passsafe.getSafe())
-        self.updateTitleBox()
-        self.settimeback()
-        
-    def changePasswordObject(self, origPasswordObject, passwordObject):
-        print('save passwordchanges')
-        self.passsafe.changePasswordObject(origPasswordObject, passwordObject)
-        self.filter = PassSafeFilter(self.passsafe.getSafe())
-        self.updateTitleBox()
-        self.settimeback()
-
-    def pressremovepass(self, index):
-        print('password deleted')
-        
-        passObFilter = self.filter.getFilteredpasssafe()[index]
-        for passObSafe in self.passsafe.getSafe():
-            if passObFilter == passObSafe:
-                self.passsafe.removePassOb(passObSafe)
-        
-
-        self.filter = PassSafeFilter(self.passsafe.getSafe())
-        self.updateTitleBox()
-        self.settimeback()
-        
-    def pressViewHistory(self, index):
-        history = self.filter.getFilteredpasssafe()[index].getHistory()
-        self.viewHistory = ViewHistory(self, self.mainWindow, history)
-        self.viewHistory.show()
-        
-    def pressCopy(self, entry):
+    def copyToClipBoard(self, entry):
         self.mainWindow.mainWindow.clipboard_clear()
         self.mainWindow.mainWindow.clipboard_append(entry)
         
@@ -217,26 +170,12 @@ class MainController(object):
             print self.time
             if self.time <= 0:
                 if self.time !=-1:
-                    self.pressmainLock()
+                    self.pressLock()
             else:
                 self.mainWindow.setTime(self.time)
                 self.mainWindow.getmainwindow().after(1000, self.timecontrol)
         else:
             self.mainWindow.setTime(None)
-            
-    def updatefilter(self, filterstring='', filterattribute=[]):
-        self.filter.setFilterstring(filterstring)
-        self.filter.setFilterattribute(filterattribute)
-        self.updateTitleBox()
-        self.settimeback()
-        
-    def updateTitleBox(self):
-        self.filter.doFilter()
-        self.mainWindow.insertTitleBox(self.filter.getFilteredpasssafe())
-        if 0 != len(self.filter.getFilteredpasssafe()):
-            self.mainWindow.getunlockframe().setTitleBoxIndex(0)
-        else:
-            self.loadPassOb(-1)
     
     def resetTime(self):
         self.time = self.option.gui.autolock

@@ -30,12 +30,11 @@ class MainWindow(object):
         self.showlockframe()
         
     def __initUnlockFrame__(self):
-        self.unlockframe = UnlockFrame(self, self.maincontroller) 
+        self.unlockframe = UnlockFrame(self, self.maincontroller.passsafe) 
 
     def hideUnlockFrame(self):
         if(None != self.unlockframe):
-            self.unlockframe.hide()
-            self.unlockframe.destroy()
+            self.unlockframe.close()
             self.unlockframe=None
 
     def __initLockFrame__(self):
@@ -85,7 +84,8 @@ class MainWindow(object):
         self.maincontroller.pressmainUnlock(passphrase)
             
     def setlabelpassphrase(self):
-        self.lockframe.setlabelpassphrase()
+        if None != self.lockframe:
+            self.lockframe.setlabelpassphrase()
                 
     def setAccount(self, account):
         self.account = account

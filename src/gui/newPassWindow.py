@@ -43,7 +43,7 @@ class NewPasswordWindowView(object):
         self.buttonSave.pack(side='right', fill='both', padx=5, pady=5)
 
     def updateFromModel(self, passwordObject):
-        self.form.view.updateFromModel(passwordObject)
+        self.form.setModel(passwordObject)
 
     def show(self):
         self.window.mainloop()
@@ -59,6 +59,7 @@ class NewPasswordWindowController(object):
         view.buttonSave.configure(command=self.pressSave)
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
+        view.form.setClient(self)
         self.view.window.focus_force()
 
     def setTimeControl(self, timeControl):
@@ -79,6 +80,10 @@ class NewPasswordWindowController(object):
         if None != self.client:
             self.client.addPasswordObject(self.model)
         self.view.close()
+    
+    def copyToClipBoard(self, entry):
+        if None != self.client:
+            self.client.copyToClipBoard(entry)
 
 if __name__=='__main__':
     test = NewPassWindow(None)

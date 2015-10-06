@@ -10,8 +10,8 @@ class PassSafeFilter(object):
     classdocs
     '''
  
-    def __init__(self, passsafe):
-        self.passsafe = passsafe
+    def __init__(self, passwordSafe):
+        self.passwordSafe = passwordSafe
         self.filterstring = ''
         self.filterattribute = []
         self.filteredpasssafe = []
@@ -29,7 +29,7 @@ class PassSafeFilter(object):
     
     def doFilter(self):
         self.filteredpasssafe = []
-        self.filteredpasssafe = [ po for po in self.passsafe if self.checkAttributes(po) ]
+        self.filteredpasssafe = [ po for po in self.passwordSafe.getSafe() if self.checkAttributes(po) ]
     
     def checkAttributes(self, po):
         if self.filterstring == '' or self.filterstring == None:
@@ -43,7 +43,7 @@ class PassSafeFilter(object):
                     pass
         return False
             
-    def getFilteredpasssafe(self):
+    def getSafe(self):
         return self.filteredpasssafe
     
     def printFilteredpasssafe(self):

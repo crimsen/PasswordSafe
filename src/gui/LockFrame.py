@@ -77,7 +77,7 @@ class LockFrame(object):
         self.mainController.pressmainUnlock(passphrase)
         
     def pressoptions(self):
-        self.mainWindow.pressoptions()
+        self.mainController.pressOptions()
         
     def pressAbout(self):
         self.mainController.pressAbout()
