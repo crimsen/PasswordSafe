@@ -166,7 +166,7 @@ class UnlockFrameView(object):
         
 class UnlockFrameController(object):
     def __init__(self, view, model, client):
-        self.timeControl = None
+        self.timeControl = client
         self.view = view
         self.model = model
         self.client = client
@@ -205,6 +205,7 @@ class UnlockFrameController(object):
         self.updateFilter()
         view.updateFromModel(self.filter)
         view.passwordForm.setClient(self)
+        view.passwordForm.setTimeControl(self.timeControl)
         view.entryFilter.focus_force()
 
 #        self.buttonPasswordCopy.bind('<1>', self.pressCopy)
@@ -236,6 +237,7 @@ class UnlockFrameController(object):
 #            mainWindow.unbind('<Alt-c>')
 
     def updateFilter(self, *args):
+        self.resetTime()
         filterstring = self.view.filterEntry.get()
         filterattribute = [self.view.checkTitle.get(), self.view.checkUsername.get(), self.view.checkPassword.get(),\
                            self.view.checkEmail.get(), self.view.checkLocation.get(), self.view.checkNote.get()]
@@ -260,6 +262,7 @@ class UnlockFrameController(object):
         self.view.passwordForm.setModel(password)
         
     def setTitleBoxIndexUp(self, event):
+        self.resetTime()
         try:
             index = self.view.getTitleBoxIndex()
         except:
@@ -268,6 +271,7 @@ class UnlockFrameController(object):
             self.setCurrent(index - 1)
 
     def setTitleBoxIndexDown(self, event):
+        self.resetTime()
         try:
             index = self.view.getTitleBoxIndex()
         except:
@@ -276,6 +280,7 @@ class UnlockFrameController(object):
             self.setCurrent(index + 1)
 
     def selectedTitle(self, event):
+        self.resetTime()
         index = self.view.getTitleBoxIndex()
         self.setCurrent(index)    
         
@@ -284,10 +289,12 @@ class UnlockFrameController(object):
             self.client.pressLock() 
 
     def pressOptions(self):
+        self.resetTime()
         if None != self.client:
             self.client.pressOptions()
         
     def pressRemovePass(self):
+        self.resetTime()
         try:
             index = self.view.getTitleBoxIndex()
             passObFilter = self.filter.getSafe()[index]
@@ -324,6 +331,7 @@ class UnlockFrameController(object):
         self.changePassWindow.show()
             
     def pressAbout(self):
+        self.resetTime()
         if None != self.client:
             self.client.pressAbout()
             
