@@ -6,6 +6,7 @@ Created on Jul 14, 2015
 
 import webbrowser
 import Tkinter as tk
+import ttk
 from Tkinter import StringVar
 
 class PasswordForm(object):
@@ -17,13 +18,16 @@ class PasswordForm(object):
         return self.view.frame;
 
     def validate(self):
-        self.view.updateModel()
+        self.controller.validate()
         
     def setTimeControl(self, timeControl):
         self.controller.setTimeControl(timeControl)
 
     def setClient(self, client):
         self.controller.setClient(client)
+
+    def setContext(self, context):
+        self.controller.setContext(context)
 
     def setMode(self, mode):
         self.view.setMode(mode)
@@ -32,6 +36,13 @@ class PasswordForm(object):
     def setModel(self, model):
         self.controller.setModel(model)
         self.view.updateFromModel(model)
+
+class PasswordFormContext(object):
+    def __init__(self, option):
+        self.option = option
+    
+    def getPasswordFiles(self):
+        return self.option.getFiles()
 
 class PasswordFormView(object):
     '''
@@ -42,6 +53,7 @@ class PasswordFormView(object):
         '''
         Constructor
         '''
+        self.comboFilePacked = False
         self.model = None
         self.varTitle = StringVar()
         self.varUsername = StringVar()
@@ -54,6 +66,8 @@ class PasswordFormView(object):
     def __buildFrame__(self, parent):
         self.frame = tk.Frame(master=parent)
         
+        self.comboFile = ttk.Combobox(master=self.frame, state='readonly')
+        self.showComboFile()
         frameLeft = tk.Frame(master=self.frame)
         self.labelTitle = tk.Label(master=frameLeft, text='Titel', anchor='w', font='Arial 20 bold')
         self.entryTitle = tk.Entry(master=frameLeft, textvariable=self.varTitle)
@@ -92,6 +106,7 @@ class PasswordFormView(object):
         self.mode = mode
         if 'edit' != mode:
             self.buttonPasswordCopy.pack(side='left', padx=5, pady=5)
+            self.comboFile['state'] = 'disabled'
             self.entryTitle.configure(state='readonly')
             self.entryUsername.configure(state='readonly')
             self.entryPassword.configure(state='readonly', show='*')
@@ -100,12 +115,23 @@ class PasswordFormView(object):
             self.textNote.configure(state='disabled')
         else:
             self.buttonPasswordCopy.pack_forget()
+            self.comboFile['state'] = 'readonly'
             self.entryTitle.configure(state='normal')
             self.entryUsername.configure(state='normal')
             self.entryPassword.configure(state='normal')
             self.entryEMail.configure(state='normal')
             self.entryLocation.configure(state='normal')
             self.textNote.configure(state='normal')
+
+    def showComboFile(self):
+        if not self.comboFilePacked:
+            self.comboFile.pack(side='top', padx=5, pady=5, fill='x')
+            self.comboFilePacked = True
+
+    def hideComboFile(self):
+        if self.comboFilePacked:
+            self.comboFile.pack_forget()
+            self.comboFilePacked = False
 
     def updateFromModel(self, passwordObject):
         self.model = passwordObject
@@ -115,6 +141,7 @@ class PasswordFormView(object):
         self.updateEmail(passwordObject)
         self.updateLocation(passwordObject)
         self.updateNote(passwordObject)
+        self.updateFile(passwordObject)
     
     def updateTitle(self, passwordObj):
         self.updateVar(self.varTitle, passwordObj.getTitle())
@@ -141,7 +168,15 @@ class PasswordFormView(object):
         self.textNote.insert('end', note)
         if 'edit' != self.mode:
             self.textNote.configure(state='disabled')
-        
+
+    def updateFile(self, passwordObj):
+        fileOption = passwordObj.getPasswordFile()
+        fileName = ""
+        if None == fileOption:
+            fileName = "Default"
+        else:
+            fileName = fileOption.getLabel()
+        self.comboFile.set(fileName)
 
     def updateVar(self, var, text):
         if None == text:
@@ -162,6 +197,7 @@ class PasswordFormController(object):
         self.view = view
         self.model = model
         self.client = client
+        self.passwordFiles = [] #stores possible values for combo passwordfile
         view.buttonPasswordCopy.bind('<1>', self.pressCopy)
         view.varTitle.trace('w', self.resetTime)
         view.varUsername.trace('w', self.resetTime)
@@ -202,6 +238,25 @@ class PasswordFormController(object):
     
     def setClient(self, client):
         self.client = client
+    
+    def setContext(self, context):
+        self.updateFromContext(context)
+
+    def validate(self):
+        self.view.updateModel()
+        passwordFileIdx = self.view.comboFile.current()
+        if passwordFileIdx >= 0 and passwordFileIdx < len(self.passwordFiles):
+            self.model.setPasswordFile(self.passwordFiles[passwordFileIdx])
+
+    def updateFromContext(self, context):
+        #we need to keep the passwordFiles because in combobox only the labels are stored 
+        self.passwordFiles = context.getPasswordFiles()
+        if len(self.passwordFiles) <= 1:
+            self.view.hideComboFile()
+        else:
+            self.view.showComboFile()
+            passwordFileLabels = [ passwordFile.getLabel() for passwordFile in self.passwordFiles ]
+            self.view.comboFile['values'] = passwordFileLabels
 
 if __name__=='__main__':
     window = tk.Tk()

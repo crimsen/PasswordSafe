@@ -5,6 +5,7 @@ Created on 12.05.2015
 '''
 
 from PasswordForm import PasswordForm
+from PasswordForm import PasswordFormContext
 from controller.filter import PassSafeFilter
 import Tkinter as tk
 import webbrowser
@@ -36,6 +37,13 @@ class UnlockFrame(object):
         
     def setTime(self, time):
         self.view.setTime(time)
+
+class UnlockFrameContext(object):
+    def __init__(self, client):
+        self.option = client.getOption()
+        
+    def getOption(self):
+        return self.option
 
 class UnlockFrameModel(object):
     def __init__(self, passwordSafe):
@@ -170,6 +178,7 @@ class UnlockFrameController(object):
         self.view = view
         self.model = model
         self.client = client
+        self.context = UnlockFrameContext(client)
         self.filter = PassSafeFilter(model.getSafe())
 
         view.filterEntry.trace('w', self.updateFilter)
@@ -282,7 +291,7 @@ class UnlockFrameController(object):
     def selectedTitle(self, event):
         self.resetTime()
         index = self.view.getTitleBoxIndex()
-        self.setCurrent(index)    
+        self.setCurrent(index)
         
     def pressLock(self, *args):
         if None != self.client:
@@ -368,6 +377,9 @@ class UnlockFrameController(object):
     def copyToClipBoard(self,entry):
         if None != self.client:
             self.client.copyToClipBoard(entry)
+    
+    def getContext(self):
+        return PasswordFormContext(self.context.getOption())
 
 class Test(object):
     def __init__(self):
