@@ -12,6 +12,7 @@ import os
 from gui.optionWindow import OptionWindow
 import sys
 from gui.AboutFrame import AboutFrame
+from gui.PassGenWindow import PassGenWindow
 
 class MainController(object):
     '''
@@ -116,6 +117,9 @@ class MainController(object):
         
     def pressAbout(self):
         self.aboutFrame = AboutFrame()
+        
+    def pressPassGen(self):
+        self.passGenWindow = PassGenWindow(self, self.mainWindow)
     
     def loadoption(self):
         print('loadoptions')

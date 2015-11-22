@@ -125,6 +125,7 @@ class UnlockFrameView(object):
         self.menuBar.add_cascade(label='File', underline=0, menu=self.fileMenu)
         
         self.passMenu = tk.Menu(master=self.menuBar, tearoff=0)      
+
         self.menuBar.add_cascade(label='Password', underline=0, menu=self.passMenu)
         
         self.parent.config(menu=self.menuBar)
