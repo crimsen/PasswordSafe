@@ -57,7 +57,7 @@ class PasswordSafe(object):
         newPasswordObject.haveCreateDate()
         self.passwordSafe.append(newPasswordObject)
         self.passsafesort()
-        self.markFileModified(newPasswordObject)
+        self.markModified(newPasswordObject)
         #TODO: do we really want to safe everything when a new password is created?
         self.save()
     
@@ -85,10 +85,13 @@ class PasswordSafe(object):
         '''
         
         historyPasswordObject = self.createHistoryPasswordObject(passwordObject)
+        origPasswordFile = passwordObject.getPasswordFile()
         passwordObject.copyFrom(newPasswordObject)
         passwordObject.addHistory(historyPasswordObject)
         passwordObject.setCreateDate(date.today())
-        self.markFileModified(passwordObject)
+        self.markModified(passwordObject)
+        if origPasswordFile <> passwordObject.getPasswordFile():
+            self.markFileModified(origPasswordFile)
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()
                                    
@@ -99,7 +102,7 @@ class PasswordSafe(object):
         '''
         self.passwordSafe.remove(passOb)
         
-        self.markFileModified(passOb)
+        self.markModified(passOb)
 
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()
@@ -156,10 +159,11 @@ class PasswordSafe(object):
     def close(self):
         del self.passwordSafe
                 
-    def markFileModified(self, passwordObject):
+    def markModified(self, passwordObject):
         passwordFile = passwordObject.getPasswordFile()
+        self.markFileModified(passwordFile)
+
+    def markFileModified(self, passwordFile):
         if None == passwordFile:
             passwordFile = self.option.getDefaultPasswordFile()
         passwordFile.setChanged(True)
-
-    

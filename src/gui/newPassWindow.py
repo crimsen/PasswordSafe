@@ -60,6 +60,7 @@ class NewPasswordWindowController(object):
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
         view.form.setClient(self)
+        view.form.setContext(self.client.getContext())
         self.view.window.focus_force()
 
     def setTimeControl(self, timeControl):

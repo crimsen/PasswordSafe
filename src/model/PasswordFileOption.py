@@ -27,8 +27,15 @@ class PasswordFileOption(object):
     def getEncodeId(self):
         return self.encodeId
     
+    def getLabel(self):
+        retVal = self.filename
+        if None == retVal:
+            retVal = 'Default'
+        return retVal
+    
     def setChanged(self, val):
         self.isChanged = val
 
     def resetChanged(self):
         self.isChanged = False
+    

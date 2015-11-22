@@ -31,6 +31,9 @@ class MainController(object):
         
     def getMainWindow(self):
         return self.mainWindow.getmainwindow()
+    
+    def getOption(self):
+        return self.option
         
     def searchOptionFile(self):
         '''
