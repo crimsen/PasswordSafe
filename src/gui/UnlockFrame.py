@@ -14,6 +14,7 @@ from gui.newPassWindow import NewPassWindow
 from gui.changePassWindow import ChangePassWindow
 from gui.ViewHistory import ViewHistory
 from model.passObject import PasswordObject
+from gui.PassGenWindow import PassGenWindow
 
 class UnlockFrame(object):
     '''
@@ -223,6 +224,7 @@ class UnlockFrameController(object):
         self.view.passMenu.add_command(label='Delete Password', underline=0, command=self.pressRemovePass)
         self.view.passMenu.add_command(label='Change Password', underline=0, command=self.pressChangePass)
         self.view.passMenu.add_command(label='View History', underline=0, command=self.pressViewHistory)
+        self.view.passMenu.add_command(label='Passwordgenerator', underline=0, command=self.pressPassGen)
         self.view.menuBar.add_command(label='About', underline=1, command=self.pressAbout)
 
     def cleanUp(self):
@@ -330,6 +332,11 @@ class UnlockFrameController(object):
         self.changePassWindow = ChangePassWindow(self, passObFilter)
         self.changePassWindow.setTimeControl(self.timeControl)    
         self.changePassWindow.show()
+        
+    def pressPassGen(self):
+        self.resetTime()
+        self.passGenWindow = PassGenWindow(self)
+        self.passGenWindow.show()
             
     def pressAbout(self):
         self.resetTime()

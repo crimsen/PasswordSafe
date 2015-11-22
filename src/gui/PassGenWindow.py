@@ -6,22 +6,30 @@ Created on 21.07.2015
 import Tkinter as Tk
 from Tkinter import StringVar
 from controller.PasswordGen import PasswordGen
+from model.PasswordSymbols import PasswordSymbols
 
 class PassGenWindow(object):
+    def __init__(self, client):
+        self.view = PassGenWindowView()
+        self.model = PasswordSymbols()
+        self.passGen = PasswordGen(self.model)
+        self.controller = PassGenWindowController(self.view, self.model, client, self.passGen)
+    
+    def show(self):
+        self.view.show()
+        
+class PassGenWindowView(object):
     '''
     classdocs
     '''
 
-    def __init__(self, mainController, mainWindow):
+    def __init__(self):
         '''
         Constructor
         '''
         
-        self.mainController = mainController
-        self.mainWindow = mainWindow
-        self.passGen = PasswordGen()
-        self.root = Tk.Toplevel()
-        self.root.title('Password Generator')
+        self.window = Tk.Toplevel()
+        self.window.title('Password Generator')
         
         self.checkLowerCase = StringVar()
         self.checkUpperCase = StringVar()
@@ -30,7 +38,7 @@ class PassGenWindow(object):
         self.checkSpecialSign = StringVar()
         self.checkNumbers = StringVar()
         
-        self.__buildFrame__(self.root)
+        self.__buildFrame__(self.window)
         
     def __buildFrame__(self, parent):
         
@@ -38,7 +46,7 @@ class PassGenWindow(object):
         self.entryGenPass = Tk.Entry(master=self.mainFrame)
         self.__buildAttributFrame__(self.mainFrame)
         
-        self.buttonGen = Tk.Button(master=self.mainFrame, command=self.pressGen, text='generate Password')
+        self.buttonGen = Tk.Button(master=self.mainFrame, text='generate Password')
         
         self.frameLength = Tk.Frame(master=self.mainFrame)
         
@@ -70,8 +78,41 @@ class PassGenWindow(object):
         self.specialSignButton.grid(row=0, column=2, sticky='w')
         self.numbersButton.grid(row=1, column=2, sticky='w')
         
-    def pressGen(self):
+    def show(self):
+        self.window.mainloop()
         
+    def close(self):
+        self.window.destroy()
+        
+class PassGenWindowController(object):
+    
+    def __init__(self, view, model, client, passGen):
+        self.view = view
+        self.model = model
+        self.client = client
+        self.passGen = passGen
+        view.buttonGen.configure(command=self.pressGen)
+        self.checkLowerCase = self.view.checkLowerCase
+        self.checkUpperCase = self.view.checkUpperCase
+        self.checkLowerSpecialCaseDE = self.view.checkLowerSpecialCaseDE
+        self.checkUpperSpecialCaseDE = self.view.checkUpperSpecialCaseDE
+        self.checkSpecialSign = self.view.checkSpecialSign
+        self.checkNumbers = self.view.checkNumbers
+        self.entryGenPass = self.view.entryGenPass
+        self.entryLength = self.view.entryLength
+        
+        self.checkLowerCase.trace('w', self.resetTime)
+        self.checkUpperCase.trace('w', self.resetTime)
+        self.checkLowerSpecialCaseDE.trace('w', self.resetTime)
+        self.checkUpperSpecialCaseDE.trace('w', self.resetTime)
+        self.checkSpecialSign.trace('w', self.resetTime)
+        self.checkNumbers.trace('w', self.resetTime)
+        self.entryGenPass.trace('w', self.resetTime)
+        self.entryLength.trace('w', self.resetTime)
+    
+        
+    def pressGen(self):
+        self.resetTime()
         attributs = [self.checkLowerCase.get(), self.checkUpperCase.get(), self.checkLowerSpecialCaseDE.get(), self.checkUpperSpecialCaseDE.get(), self.checkSpecialSign.get(), self.checkNumbers.get()]
         length = int(self.entryLength.get())
         self.passGen.setUsedSymbols(attributs)
@@ -80,7 +121,10 @@ class PassGenWindow(object):
         self.entryGenPass.delete(0, 'end')
         self.entryGenPass.insert('end', password)
         
+    def resetTime(self, *args):
+        self.client.resetTime()
+        
 if __name__=='__main__':
-    passWindow = PassGenWindow(None, None)
-    passWindow.root.mainloop()
+    passWindow = PassGenWindow(None)
+    passWindow.show()
          

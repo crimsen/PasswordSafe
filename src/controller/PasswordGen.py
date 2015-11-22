@@ -3,7 +3,7 @@ Created on 21.07.2015
 
 @author: timgroger
 '''
-from model.PasswordSymbols import PasswordSymbols
+
 from random import randint
 
 class PasswordGen(object):
@@ -11,9 +11,9 @@ class PasswordGen(object):
     classdocs
     '''
 
-    def __init__(self):
+    def __init__(self, model):
         
-        self.passwordSymbols = PasswordSymbols()
+        self.passwordSymbols = model
         self.generatedPass = ''
         self.usedSymbols = []
         
