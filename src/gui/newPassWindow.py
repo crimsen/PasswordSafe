@@ -19,6 +19,9 @@ class NewPassWindow(object):
 
     def show(self):
         self.view.show()
+    
+    def close(self):
+        self.view.close()
         
 class NewPasswordWindowView(object):
         

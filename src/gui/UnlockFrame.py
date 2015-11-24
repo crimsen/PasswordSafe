@@ -13,9 +13,9 @@ from Tkinter import StringVar
 from tkMessageBox import showerror
 from gui.newPassWindow import NewPassWindow
 from gui.changePassWindow import ChangePassWindow
-from gui.ViewHistory import ViewHistory
 from model.passObject import PasswordObject
 from gui.PassGenWindow import PassGenWindow
+from gui.HistoryWindow import HistoryWindow
 
 class UnlockFrame(object):
     '''
@@ -30,10 +30,13 @@ class UnlockFrame(object):
         self.mainController = mainWindow.maincontroller
         self.model = UnlockFrameModel(model)
         self.view = UnlockFrameView(mainWindow.getmainwindow())
-        self.controller = UnlockFrameController(self.view, self.model, self.mainController)
+        self.openWindows = []
+        self.controller = UnlockFrameController(self.view, self.model, self.mainController, self.openWindows)
 
     def close(self):
         self.controller.cleanUp()
+        for openWindow in self.openWindows:
+            openWindow.close()
         self.view.close()
         
     def setTime(self, time):
@@ -175,11 +178,12 @@ class UnlockFrameView(object):
         self.labelTime.config(text=text)
         
 class UnlockFrameController(object):
-    def __init__(self, view, model, client):
+    def __init__(self, view, model, client, openWindows):
         self.timeControl = client
         self.view = view
         self.model = model
         self.client = client
+        self.openWindows = openWindows
         self.context = UnlockFrameContext(client)
         self.filter = PassSafeFilter(model.getSafe())
 
@@ -296,7 +300,7 @@ class UnlockFrameController(object):
         index = self.view.getTitleBoxIndex()
         self.setCurrent(index)
         
-    def pressLock(self, *args):
+    def pressLock(self, *args):            
         if None != self.client:
             self.client.pressLock() 
 
@@ -324,14 +328,15 @@ class UnlockFrameController(object):
         self.resetTime()
         self.newpasswindow = NewPassWindow(self)
         self.newpasswindow.setTimeControl(self.timeControl)
+        self.addWindow(self.newpasswindow)
         self.newpasswindow.show()
 
     def pressViewHistory(self):
         self.resetTime()
         index = self.view.getTitleBoxIndex()
         history = self.filter.getSafe()[index].getHistory()
-        mainWindow = self.client.getMainWindow()
-        self.historyWindow = ViewHistory(self, mainWindow, history)
+        self.historyWindow = HistoryWindow(self, history)
+        self.openWindows.append(self.historyWindow)
         self.historyWindow.show()
         
     def pressChangePass(self):
@@ -339,12 +344,14 @@ class UnlockFrameController(object):
         index = self.view.getTitleBoxIndex()
         passObFilter = self.filter.getSafe()[index]
         self.changePassWindow = ChangePassWindow(self, passObFilter)
-        self.changePassWindow.setTimeControl(self.timeControl)    
+        self.changePassWindow.setTimeControl(self.timeControl)
+        self.addWindow(self.changePassWindow)    
         self.changePassWindow.show()
         
     def pressPassGen(self):
         self.resetTime()
         self.passGenWindow = PassGenWindow(self)
+        self.addWindow(self.passGenWindow)
         self.passGenWindow.show()
             
     def pressAbout(self):
@@ -382,12 +389,15 @@ class UnlockFrameController(object):
         self.filter.doFilter()
         self.view.updateTitleBox(self.filter.getSafe())
     
-    def copyToClipBoard(self,entry):
+    def copyToClipBoard(self, entry):
         if None != self.client:
             self.client.copyToClipBoard(entry)
     
     def getContext(self):
         return PasswordFormContext(self.context.getOption())
+    
+    def addWindow(self, windowClass):
+        self.openWindows.append(windowClass)
 
 class Test(object):
     def __init__(self):

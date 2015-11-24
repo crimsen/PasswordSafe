@@ -55,6 +55,9 @@ class OptionWindow(object):
             self.optionWindow.destroy()
         except:
             showerror('Incorrect Setting', 'Any setting is incorrect. Check if you did choose an account.')
+            
+    def close(self):
+        self.optionWindow.destroy()
     
     def show(self):
         self.optionWindow.mainloop()
