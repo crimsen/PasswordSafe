@@ -40,6 +40,8 @@ class PassGenWindowView(object):
         self.checkUpperSpecialCaseDE = StringVar()
         self.checkSpecialSign = StringVar()
         self.checkNumbers = StringVar()
+        self.checkLength = IntVar()
+        self.varLength = IntVar()
         
         self.frameLengthAdvanced = None
         self.frameLengthEasy = None
@@ -72,22 +74,22 @@ class PassGenWindowView(object):
         
     def __buildLengthFrame__(self, parent):
         self.frameLength = Tk.Frame(master=parent)
-        self.checkLength = Tk.Checkbutton(master=self.frameLength, text='Advanced', onvalue=1, offvalue=0)
+        self.checkLengthButton = Tk.Checkbutton(master=self.frameLength, text='Advanced', onvalue=1, offvalue=0, variable=self.checkLength)
         self.labelLength = Tk.Label(master=self.frameLength, text='Length:')
         self.labelLength.pack(side='left')
-        self.checkLength.pack(side='left')
+        self.checkLengthButton.pack(side='left')
         self.frameLength.pack(side='top', padx=5, pady=5, anchor='w', expand=True)
         self.__buildLengthFrameEasy__()
     
     def __buildLengthFrameEasy__(self):            
         self.frameLengthEasy = Tk.Frame(master=self.frameLength)
-        self.scaleLength = Tk.Scale(master=self.frameLengthEasy, orient='horizontal', length=100, sliderlength=30, from_=1, to=30)
+        self.scaleLength = Tk.Scale(master=self.frameLengthEasy, orient='horizontal', length=100, sliderlength=30, from_=1, to=30, variable=self.varLength)
         self.frameLengthEasy.pack(side='left')
         self.scaleLength.pack(side='left')
     
     def __buildLengthFrameAdvanced__(self):    
         self.frameLengthAdvanced = Tk.Frame(master=self.frameLength)
-        self.entryLength = Tk.Entry(master=self.frameLengthAdvanced, justify='right', width=10)
+        self.entryLength = Tk.Entry(master=self.frameLengthAdvanced, justify='right', width=10, textvariable=self.varLength)
         self.frameLengthAdvanced.pack(side='left')
         self.entryLength.pack(side='left')
         
@@ -118,8 +120,6 @@ class PassGenWindowView(object):
 class PassGenWindowController(object):
     
     def __init__(self, view, model, client, passGen):
-        self.defaultLength = 8
-        
         self.view = view
         self.model = model
         self.client = client
@@ -132,19 +132,13 @@ class PassGenWindowController(object):
         self.checkUpperSpecialCaseDE = self.view.checkUpperSpecialCaseDE
         self.checkSpecialSign = self.view.checkSpecialSign
         self.checkNumbers = self.view.checkNumbers
-        self.entryGenPass = self.view.entryGenPass
-        
+        self.entryGenPass = self.view.entryGenPass        
         self.checkLength = self.view.checkLength
-        
-        self.varCheckLength = IntVar()
-        self.varLength = IntVar()
-        self.view.scaleLength.config(variable=self.varLength)
-        self.varLength.set(self.defaultLength)
-        self.entryLength = self.varLength
-        
-        self.checkLength.config(variable=self.varCheckLength)
-        self.varCheckLength.trace('w', self.controlCheckLength)
-        
+        self.varLength = self.view.varLength
+                
+        self.setDefault()
+       
+        self.checkLength.trace('w', self.controlCheckLength)
         self.checkLowerCase.trace('w', self.resetTime)
         self.checkUpperCase.trace('w', self.resetTime)
         self.checkLowerSpecialCaseDE.trace('w', self.resetTime)
@@ -152,13 +146,19 @@ class PassGenWindowController(object):
         self.checkSpecialSign.trace('w', self.resetTime)
         self.checkNumbers.trace('w', self.resetTime)
 #        self.entryGenPass.trace('w', self.resetTime)
-#        self.entryLength.trace('w', self.resetTime)
+        self.varLength.trace('w', self.resetTime)
     
+    def setDefault(self):
+        self.defaultLength = 8
+        self.varLength.set(self.defaultLength)
+        self.view.lowerCaseButton.select()
+        self.view.upperCaseButton.select()
+        self.view.numbersButton.select()
         
     def pressGen(self):
         self.resetTime()
         attributs = [self.checkLowerCase.get(), self.checkUpperCase.get(), self.checkLowerSpecialCaseDE.get(), self.checkUpperSpecialCaseDE.get(), self.checkSpecialSign.get(), self.checkNumbers.get()]
-        length = int(self.entryLength.get())
+        length = int(self.varLength.get())
         self.passGen.setUsedSymbols(attributs)
         self.passGen.genPassword(length)
         password = self.passGen.getGeneratedPass()
@@ -172,7 +172,7 @@ class PassGenWindowController(object):
             
     def controlCheckLength(self, *args):
         
-        if 0 != self.varCheckLength.get():
+        if 0 != self.checkLength.get():
             self.showAdvanced()
         else:
             self.showEasy()
@@ -202,7 +202,6 @@ class PassGenWindowController(object):
             self.view.__buildLengthFrameEasy__()
             self.view.scaleLength.config(variable = self.varLength)
             self.varLength.set(self.defaultLength)
-            self.entryLength = self.varLength
     
     def resetTime(self, *args):
         self.client.resetTime()
