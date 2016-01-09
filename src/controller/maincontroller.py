@@ -59,7 +59,7 @@ class MainController(object):
         print('init gui')
         self.mainWindow = MainWindow(self)
         if not self.existingFile(self.optionfile):
-            self.pressoptions()
+            self.pressOptions()
         else: self.loadoption()
         
     def pressLock(self):
