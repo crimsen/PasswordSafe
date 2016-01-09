@@ -7,7 +7,6 @@ Created on May 29, 2015
 import os
 from datetime import datetime
 import shutil
-import StringIO as StringStream
 import xml.dom.minidom
 
 class PasswordSafeWriter(object):
@@ -128,12 +127,9 @@ class PasswordSafeWriter(object):
                 doc.documentElement.appendChild(safeElem)
         
         datei = open(passwordFile.getFilename(), 'w')
-        noneencrypt = StringStream.StringIO()
-        b = doc.toxml(encoding='utf-8')
-        doc.writexml(noneencrypt, '\n', ' ')
-        s = noneencrypt.getvalue()
+        noneencrypt = doc.toprettyxml(' ','\n',encoding='UTF-8')
         encodeIds = [str(i) for i in passwordFile.getEncodeId()]
-        encrypt = self.gpg.encrypt(s, encodeIds, always_trust=True)
+        encrypt = self.gpg.encrypt(noneencrypt, encodeIds, always_trust=True)
         datei.write(str(encrypt))
         datei.close()
 
