@@ -5,9 +5,15 @@ Created on Jul 14, 2015
 '''
 
 import webbrowser
-import Tkinter as tk
-import ttk
-from Tkinter import StringVar
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+    import tkinter.ttk as ttk
+    from tkinter import StringVar
+else:
+    import Tkinter as tk
+    import ttk as ttk
+    from Tkinter import StringVar
 
 class PasswordForm(object):
     def __init__(self, parent, client=None):

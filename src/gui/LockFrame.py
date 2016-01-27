@@ -3,7 +3,11 @@ Created on 12.05.2015
 
 @author: timgroger
 '''
-import Tkinter as tk
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+else:
+    import Tkinter as tk
 
 class LockFrame(object):
     '''

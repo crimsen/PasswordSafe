@@ -32,10 +32,10 @@ class HistoryPasswordObject(PasswordObject):
 if __name__=='__main__':
     passw = HistoryPasswordObject('Title', 'Username', 'Password', 'Email', 'Location', 'Das\nist\neine\nNote')
     
-    print passw.getTitle()
-    print passw.getUsername()
-    print passw.getPassword()
-    print passw.getEmail()
-    print passw.getLocation()
-    print passw.getNote()
-    print passw.getEndDate()
+    print(passw.getTitle())
+    print(passw.getUsername())
+    print(passw.getPassword())
+    print(passw.getEmail())
+    print(passw.getLocation())
+    print(passw.getNote())
+    print(passw.getEndDate())

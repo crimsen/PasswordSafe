@@ -3,8 +3,13 @@ Created on 21.07.2015
 
 @author: timgroger
 '''
-import Tkinter as Tk
-from Tkinter import StringVar, IntVar
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as Tk
+    from tkinter import StringVar, IntVar
+else:
+    import Tkinter as Tk
+    from Tkinter import StringVar, IntVar
 from controller.PasswordGen import PasswordGen
 from model.PasswordSymbols import PasswordSymbols
 

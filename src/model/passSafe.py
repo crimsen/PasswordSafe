@@ -90,7 +90,7 @@ class PasswordSafe(object):
         passwordObject.addHistory(historyPasswordObject)
         passwordObject.setCreateDate(date.today())
         self.markModified(passwordObject)
-        if origPasswordFile <> passwordObject.getPasswordFile():
+        if origPasswordFile != passwordObject.getPasswordFile():
             self.markFileModified(origPasswordFile)
         #TODO: do we really want to save on each password change? Why dont we backup here?
         self.save()

@@ -4,12 +4,15 @@ Created on 09.05.2015
 @author: thomas
 '''
 
-from OptionPage import OptionPage
-import Tkinter as tk
+from gui.OptionPage import OptionPage
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+else:
+    import Tkinter as tk
 import webbrowser
 import gnupg
 import re
-import sys
 
 class AccountPage(OptionPage):
     '''
@@ -64,7 +67,7 @@ class AccountPage(OptionPage):
             currentIndex = accounts.index(self.option.getEmail())
             self.gpgBox.selection_set(currentIndex)
         except:
-            print sys.exc_info()
+            print(sys.exc_info())
 
     def updateWindow(self):
         '''

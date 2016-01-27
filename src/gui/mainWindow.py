@@ -3,10 +3,13 @@ Created on 15.04.2015
 
 @author: crimsen
 '''
-import Tkinter as tk
-from Tkinter import StringVar
-from gui.LockFrame import LockFrame
-from gui.UnlockFrame import UnlockFrame
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+else:
+    import Tkinter as tk
+from .LockFrame import LockFrame
+from .UnlockFrame import UnlockFrame
 
 class MainWindow(object):
     '''

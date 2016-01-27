@@ -3,8 +3,11 @@ Created on 09.07.2015
 
 @author: crimsen
 '''
-import Tkinter as tk
-
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+else:
+    import Tkinter as tk
 
 class AboutFrame(object):
     '''

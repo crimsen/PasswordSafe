@@ -4,8 +4,12 @@ Created on May 12, 2015
 @author: thomas
 '''
 
-from OptionPage import OptionPage
-import Tkinter as tk
+from gui.OptionPage import OptionPage
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+else:
+    import Tkinter as tk
 
 class FilesPage(OptionPage):
     '''

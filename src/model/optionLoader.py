@@ -7,8 +7,9 @@ Created on 16.04.2015
 import gnupg
 import os
 import string
+import sys
 import xml.dom
-from PasswordFileOption import PasswordFileOption
+from model.PasswordFileOption import PasswordFileOption
 
 class OptionLoader(object):
     '''
@@ -32,7 +33,9 @@ class OptionLoader(object):
         
         for account in uids:
             for email in account:
-                emailsplit = email.encode('utf-8').split(' ')
+                if sys.hexversion < 0x3000000:
+                    email = email.encode('utf-8')
+                emailsplit = email.split(' ')
                 emails.append(emailsplit[len(emailsplit)-1])
         return emails
     def cleanList(self, list):
@@ -102,7 +105,7 @@ class OptionLoader(object):
      
     
     def getaccounts(self):
-        print self.accounts
+        print(self.accounts)
         return self.accounts
 
     def getBoolean(self, boolstring):
@@ -123,4 +126,4 @@ class OptionLoader(object):
         return retVal
     
     def getList(self, liststring):
-        return string.split(liststring)
+        return liststring.split()

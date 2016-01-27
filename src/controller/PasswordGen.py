@@ -63,5 +63,5 @@ if __name__ == '__main__':
     passGen.setUsedSymbols(test)
     passGen.genPassword(8)
     
-    print passGen.getGeneratedPass()     
+    print(passGen.getGeneratedPass())     
         

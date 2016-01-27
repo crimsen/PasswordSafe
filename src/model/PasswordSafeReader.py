@@ -35,7 +35,7 @@ class PasswordSafeReader(object):
         '''
         dom = self.decryptFile(passwordFile.getFilename(), passPhrase)
         if None == dom:
-            print "decryption of %s failed" % passwordFile.getFilename()
+            print("decryption of %s failed" % passwordFile.getFilename())
             if passwordFile.isDefault:
                 raise Exception("decryption not possible")
         else:

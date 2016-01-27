@@ -82,7 +82,7 @@ class MainController(object):
                 self.startTimeControl()
             self.settimeback()
         except:
-            print sys.exc_info()
+            print(sys.exc_info())
             self.mainWindow.setlabelpassphrase()
             
     def pressOptions(self):
@@ -174,7 +174,7 @@ class MainController(object):
         # a self.timecontrol was queued
         if 0 != self.option.gui.autolock:
             self.time -= 1
-            print self.time
+            print(self.time)
             if self.time <= 0:
                 if self.time !=-1:
                     self.pressLock()

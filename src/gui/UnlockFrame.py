@@ -4,18 +4,24 @@ Created on 12.05.2015
 @author: timgroger
 '''
 
-from PasswordForm import PasswordForm
-from PasswordForm import PasswordFormContext
+from .PasswordForm import PasswordForm
+from .PasswordForm import PasswordFormContext
 from controller.filter import PassSafeFilter
-import Tkinter as tk
 import webbrowser
-from Tkinter import StringVar
-from tkMessageBox import showerror
-from gui.newPassWindow import NewPassWindow
-from gui.changePassWindow import ChangePassWindow
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+    from tkinter import StringVar
+    from tkinter.messagebox import showerror
+else:
+    import Tkinter as tk
+    from Tkinter import StringVar
+    from tkMessageBox import showerror
+from .newPassWindow import NewPassWindow
+from .changePassWindow import ChangePassWindow
 from model.passObject import PasswordObject
-from gui.PassGenWindow import PassGenWindow
-from gui.HistoryWindow import HistoryWindow
+from .PassGenWindow import PassGenWindow
+from .HistoryWindow import HistoryWindow
 
 class UnlockFrame(object):
     '''

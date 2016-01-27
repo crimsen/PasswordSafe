@@ -3,9 +3,14 @@ Created on 10.04.2015
 
 @author: crimsen
 '''
-from OptionTree import OptionTree
-import Tkinter as tk
-from tkMessageBox import showerror
+from gui.OptionTree import OptionTree
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+    from tkinter.messagebox import showerror
+else:
+    import Tkinter as tk
+    from tkMessageBox import showerror
 
 class OptionWindow(object):
     '''

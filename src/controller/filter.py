@@ -3,7 +3,7 @@ Created on 18.04.2015
 
 @author: crimsen
 '''
-from __builtin__ import True
+#from __builtin__ import True
 
 class PassSafeFilter(object):
     '''

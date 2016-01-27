@@ -3,7 +3,11 @@ Created on May 18, 2015
 
 @author: groegert
 '''
-import Tkinter as tk
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+else:
+    import Tkinter as tk
 
 
 class OptionPage(object):

@@ -3,9 +3,13 @@ Created on 16.04.2015
 
 @author: crimsen
 '''
-import PasswordForm
+import gui.PasswordForm
 from model.passObject import PasswordObject
-import Tkinter as tk
+import sys
+if sys.hexversion >= 0x3000000:
+    import tkinter as tk
+else:
+    import Tkinter as tk
 
 class ChangePassWindow(object):
     #Build a new Window for a new PasswordObject
@@ -35,7 +39,7 @@ class ChangePasswordWindowView(object):
         self.window.title('Change Password')
         self.window.geometry('640x400')
         parent = self.window
-        self.form = PasswordForm.PasswordForm(parent)
+        self.form = gui.PasswordForm.PasswordForm(parent)
         self.form.setMode('edit')
         
         buttonFrame = tk.Frame(master=parent)

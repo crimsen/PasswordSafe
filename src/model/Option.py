@@ -3,7 +3,7 @@ Created on May 8, 2015
 
 @author: groegert
 '''
-from GuiOption import GuiOption
+from model.GuiOption import GuiOption
 
 class Option(object):
     '''

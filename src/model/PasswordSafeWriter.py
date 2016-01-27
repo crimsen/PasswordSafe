@@ -139,7 +139,7 @@ class PasswordSafeWriter(object):
         filepart = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '-' + filepart
         backupFilename = os.path.join(directory, 'backup', filepart)
         self.assureDirectory(backupFilename)
-        print backupFilename
+        print(backupFilename)
         
         shutil.copy(filename, backupFilename)
         print ('backup completed')
