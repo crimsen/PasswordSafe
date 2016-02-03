@@ -29,7 +29,7 @@ class PassSafeFilter(object):
     
     def doFilter(self):
         self.filteredpasssafe = []
-        self.filteredpasssafe = [ po for po in self.passwordSafe.getSafe() if self.checkAttributes(po) ]
+        self.filteredpasssafe = [ po for po in self.passwordSafe.getSafe() if self.checkAttributes(po.getCurrentSecretObject()) ]
     
     def checkAttributes(self, po):
         if self.filterstring == '' or self.filterstring == None:
@@ -69,3 +69,7 @@ class PassSafeFilter(object):
     
     def getNote(self, index):
         return self.filteredpasssafe[index].getNote()
+    
+    def createItem(self):
+        # TODO: move to factory
+        return self.passwordSafe.createPasswordItem()

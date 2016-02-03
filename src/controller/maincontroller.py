@@ -13,6 +13,7 @@ from gui.optionWindow import OptionWindow
 import sys
 from gui.AboutFrame import AboutFrame
 from gui.PassGenWindow import PassGenWindow
+from edit.EditingDomain import EditingDomain
 
 class MainController(object):
     '''
@@ -26,6 +27,7 @@ class MainController(object):
         '''
         self.option = Option( )
         self.searchOptionFile()
+        self.editingDomain = EditingDomain()
         self.__initGUI__()
         self.time = 0
         
@@ -75,6 +77,7 @@ class MainController(object):
             self.passsafe = PasswordSafe(self.option)
             self.passsafe.load(passphrase)
             #self.filter = PassSafeFilter(self.passsafe.getSafe())
+            self.editingDomain.setModel(self.passsafe)
             self.mainWindow.hideLockFrame()
             self.mainWindow.setunlockframe()
             print('unlock complete')

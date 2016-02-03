@@ -5,6 +5,7 @@ Created on 28.03.2015
 '''
 import gui.PasswordForm
 import sys
+from edit.AddSafeItemCmd import AddSafeItemCmd
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
@@ -13,10 +14,11 @@ from model.passObject import PasswordObject
 
 class NewPassWindow(object):
     #Build a new Window for a new PasswordObject
-    def __init__(self, client):
+    def __init__(self, context):
+        self.context = context
         self.view = NewPasswordWindowView()
-        self.model = PasswordObject()
-        self.controller = NewPasswordWindowController(self.view, self.model, client)
+        self.model = context.master.createPasswordItem()
+        self.controller = NewPasswordWindowController(self.view, self.model, context)
 
     def setTimeControl(self, timeControl):
         self.controller.setTimeControl(timeControl)
@@ -26,6 +28,17 @@ class NewPassWindow(object):
     
     def close(self):
         self.view.close()
+
+class NewPasswordWindowContext(object):
+    def __init__(self, client, master, editingDomain):
+        self.client = client
+        self.master = master
+        self.editingDomain = editingDomain
+        
+    def getClient(self):
+        return self.client
+    def getEditingDomain(self):
+        return self.editingDomain
         
 class NewPasswordWindowView(object):
         
@@ -59,10 +72,11 @@ class NewPasswordWindowView(object):
         self.window.destroy()
         
 class NewPasswordWindowController(object):
-    def __init__(self, view, model, client):
+    def __init__(self, view, model, context):
         self.view = view
         self.model = model
-        self.client = client
+        self.client = context.getClient()
+        self.editingDomain = context.getEditingDomain()
         view.buttonSave.configure(command=self.pressSave)
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
@@ -85,8 +99,10 @@ class NewPasswordWindowController(object):
         And destroy the widget
         '''
         self.view.form.validate()
-        if None != self.client:
-            self.client.addPasswordObject(self.model)
+        if None != self.editingDomain:
+            self.editingDomain.executeCmd(AddSafeItemCmd(self.editingDomain.getModel(), self.model))
+            if None != self.client:
+                self.client.onSafeChanged()
         self.view.close()
     
     def copyToClipBoard(self, entry):

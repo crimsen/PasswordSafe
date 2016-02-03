@@ -6,6 +6,7 @@ Created on 16.04.2015
 import gui.PasswordForm
 from model.passObject import PasswordObject
 import sys
+from edit.SetSecretObjectCmd import SetSecretObjectCmd
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
@@ -13,12 +14,11 @@ else:
 
 class ChangePassWindow(object):
     #Build a new Window for a new PasswordObject
-    def __init__(self, client, passwordObject):
+    def __init__(self, context):
         self.view = ChangePasswordWindowView()
-        self.model = PasswordObject()
-        self.model.copyFrom(passwordObject)
-        self.model.createDate = None
-        self.controller = ChangePasswordWindowController(self.view, self.model, client, passwordObject)
+        self.model = context.getPasswordItem().clone()
+        self.model.getCurrentSecretObject().createDate = None
+        self.controller = ChangePasswordWindowController(self.view, self.model, context)
 
     def setTimeControl(self, timeControl):
         self.controller.setTimeControl(timeControl)
@@ -28,6 +28,18 @@ class ChangePassWindow(object):
         
     def close(self):
         self.view.close()
+
+class ChangePasswordWindowContext(object):
+    def __init__(self, client, editingDomain, passwordItem):
+        self.client = client
+        self.editingDomain = editingDomain
+        self.passwordItem = passwordItem
+    def getClient(self):
+        return self.client
+    def getEditingDomain(self):
+        return self.editingDomain
+    def getPasswordItem(self):
+        return self.passwordItem
         
 class ChangePasswordWindowView(object):
         
@@ -61,11 +73,12 @@ class ChangePasswordWindowView(object):
         self.window.destroy()
         
 class ChangePasswordWindowController(object):
-    def __init__(self, view, model, client, origModel):
+    def __init__(self, view, model, context):
         self.view = view
         self.model = model
-        self.client = client
-        self.origModel = origModel
+        self.client = context.getClient()
+        self.editingDomain = context.getEditingDomain()
+        self.origModel = context.getPasswordItem()
         view.buttonSave.configure(command=self.pressSave)
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
@@ -88,8 +101,10 @@ class ChangePasswordWindowController(object):
         And destroy the widget
         '''
         self.view.form.validate()
-        if None != self.client:
-            self.client.changePasswordObject(self.origModel, self.model)
+        if None != self.editingDomain:
+            self.editingDomain.executeCmd(SetSecretObjectCmd(self.origModel, self.model))
+            if None != self.client:
+                self.client.onSafeChanged()
         self.view.close()
 
     def copyToClipBoard(self, entry):

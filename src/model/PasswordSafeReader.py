@@ -92,11 +92,12 @@ class PasswordSafeReader(object):
                             for knotenName in elem2.getElementsByTagName('EndDate'):
                                 endDate = self.decodeDate(self.readText(knotenName))
                                 
-                            passObOld = passwordSafe.loadHistoryPassObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld, createDateOld, endDate)
+                            passObOld = passwordSafe.createPasswordObject(titleOld, usernameOld, passwordOld, emailOld, locationOld, noteOld, createDateOld, endDate)
                             history.append(passObOld)
                         
-                    passOb = passwordSafe.loadPassObject(title, username, password, email, location, note, createDate, history)
-                    passOb.setPasswordFile(passwordFile) 
+                    passOb = passwordSafe.createPasswordItem(title, username, password, email, location, note, createDate, history)
+                    passOb.setPasswordFile(passwordFile)
+                    passwordSafe.addSafeItem(passOb) 
 
     def decryptFile(self, filename, passPhrase):
         retVal = None
@@ -109,7 +110,6 @@ class PasswordSafeReader(object):
         return retVal
     
     def decodeDate(self, date):
-        retVal = None
         listDate = date.split('-')
         year = int(listDate[0])
         month = int(listDate[1])

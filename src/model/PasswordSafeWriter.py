@@ -41,41 +41,42 @@ class PasswordSafeWriter(object):
             
             if ((i.getPasswordFile() == passwordFile) or 
                 ((i.getPasswordFile() == None) and passwordFile.isDefault)) :
+                secretItem = i.getCurrentSecretObject()
                 safeElem = doc.createElement('Safe')
             
                 titleElem = doc.createElement('Title')
                 safeElem.appendChild(titleElem)
-                titleTextElem = doc.createTextNode(i.getTitle())
+                titleTextElem = doc.createTextNode(secretItem.getTitle())
                 titleElem.appendChild(titleTextElem)
             
                 usernameElem = doc.createElement('Username')
                 safeElem.appendChild(usernameElem)
-                usernameTextElem = doc.createTextNode(i.getUsername())
+                usernameTextElem = doc.createTextNode(secretItem.getUsername())
                 usernameElem.appendChild(usernameTextElem)
             
                 passwordElem = doc.createElement('Password')
                 safeElem.appendChild(passwordElem)
-                passwordTextElem = doc.createTextNode(i.getPassword())
+                passwordTextElem = doc.createTextNode(secretItem.getPassword())
                 passwordElem.appendChild(passwordTextElem)
             
                 emailElem = doc.createElement('EMail')
                 safeElem.appendChild(emailElem)
-                emailTextElem = doc.createTextNode(i.getEmail())
+                emailTextElem = doc.createTextNode(secretItem.getEmail())
                 emailElem.appendChild(emailTextElem)
             
                 locationElem = doc.createElement('URL')
                 safeElem.appendChild(locationElem)
-                locationTextElem = doc.createTextNode(i.getLocation())
+                locationTextElem = doc.createTextNode(secretItem.getLocation())
                 locationElem.appendChild(locationTextElem)
             
                 noteElem = doc.createElement('Note')
                 safeElem.appendChild(noteElem)
-                noteTextElem = doc.createTextNode(i.getNote())
+                noteTextElem = doc.createTextNode(secretItem.getNote())
                 noteElem.appendChild(noteTextElem)
                 
                 createDateElem = doc.createElement('CreateDate')
                 safeElem.appendChild(createDateElem)
-                createDateTextElem = doc.createTextNode(i.getCreateDate().isoformat())
+                createDateTextElem = doc.createTextNode(secretItem.getCreateDate().isoformat())
                 createDateElem.appendChild(createDateTextElem)
                 
                 historyElem = doc.createElement('History')

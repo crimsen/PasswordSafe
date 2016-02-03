@@ -141,12 +141,12 @@ class PasswordFormView(object):
 
     def updateFromModel(self, passwordObject):
         self.model = passwordObject
-        self.updateTitle(passwordObject)
-        self.updateUsername(passwordObject)
-        self.updatePassword(passwordObject)
-        self.updateEmail(passwordObject)
-        self.updateLocation(passwordObject)
-        self.updateNote(passwordObject)
+        self.updateTitle(passwordObject.getCurrentSecretObject())
+        self.updateUsername(passwordObject.getCurrentSecretObject())
+        self.updatePassword(passwordObject.getCurrentSecretObject())
+        self.updateEmail(passwordObject.getCurrentSecretObject())
+        self.updateLocation(passwordObject.getCurrentSecretObject())
+        self.updateNote(passwordObject.getCurrentSecretObject())
         self.updateFile(passwordObject)
     
     def updateTitle(self, passwordObj):
@@ -190,12 +190,12 @@ class PasswordFormView(object):
         var.set(text)
 
     def updateModel(self):
-        self.model.setTitle(self.varTitle.get())
-        self.model.setUsername(self.varUsername.get())
-        self.model.setPassword(self.varPassword.get())
-        self.model.setEmail(self.varEmail.get())
-        self.model.setLocation(self.varLocation.get())
-        self.model.setNote(self.textNote.get('1.0', 'end'))
+        self.model.getCurrentSecretObject().setTitle(self.varTitle.get())
+        self.model.getCurrentSecretObject().setUsername(self.varUsername.get())
+        self.model.getCurrentSecretObject().setPassword(self.varPassword.get())
+        self.model.getCurrentSecretObject().setEmail(self.varEmail.get())
+        self.model.getCurrentSecretObject().setLocation(self.varLocation.get())
+        self.model.getCurrentSecretObject().setNote(self.textNote.get('1.0', 'end'))
 
 class PasswordFormController(object):
     def __init__(self, view, model, client):
@@ -225,13 +225,13 @@ class PasswordFormController(object):
 
     def callLink(self, event):
         if None != self.model:
-            link = self.model.getLocation()
+            link = self.model.getCurrentSecretObject().getLocation()
             if None != link and "" != link:
                 webbrowser.open_new_tab(link)
 
     def pressCopy(self, event):
         if None != self.client and None != self.model:
-            entry = self.model.getPassword()
+            entry = self.model.getCurrentSecretObject().getPassword()
             if None != entry:
                 self.client.copyToClipBoard(entry)
 

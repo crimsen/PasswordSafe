@@ -4,12 +4,14 @@ Created on 15.04.2015
 @author: crimsen
 '''
 import sys
+from edit.EditingDomain import EditingDomain
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
     import Tkinter as tk
 from .LockFrame import LockFrame
 from .UnlockFrame import UnlockFrame
+from .UnlockFrame import UnlockFrameContext
 
 class MainWindow(object):
     '''
@@ -33,7 +35,11 @@ class MainWindow(object):
         self.showlockframe()
         
     def __initUnlockFrame__(self):
-        self.unlockframe = UnlockFrame(self, self.maincontroller.passsafe) 
+        context = UnlockFrameContext(self, self.maincontroller.editingDomain)
+        self.unlockframe = UnlockFrame(context) 
+
+    def getController(self):
+        return self.maincontroller
 
     def hideUnlockFrame(self):
         if(None != self.unlockframe):

@@ -7,8 +7,11 @@ Created on 12.05.2015
 from .PasswordForm import PasswordForm
 from .PasswordForm import PasswordFormContext
 from controller.filter import PassSafeFilter
+from edit.DeleteSafeItemCmd import DeleteSafeItemCmd
 import webbrowser
 import sys
+from gui.newPassWindow import NewPasswordWindowContext
+from gui.changePassWindow import ChangePasswordWindowContext
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
     from tkinter import StringVar
@@ -27,17 +30,16 @@ class UnlockFrame(object):
     '''
     classdocs
     '''
-    def __init__(self, mainWindow, model):
+    def __init__(self, context):
         '''
         Constructor
         '''
-        self.mainWindow = mainWindow
-        self.mainWindowFrame = self.mainWindow.getmainwindow()
-        self.mainController = mainWindow.maincontroller
-        self.model = UnlockFrameModel(model)
-        self.view = UnlockFrameView(mainWindow.getmainwindow())
+        self.context = context
+        self.mainController = context.getController()
+        self.model = UnlockFrameModel(context.getModel())
+        self.view = UnlockFrameView(context.getFrame())
         self.openWindows = []
-        self.controller = UnlockFrameController(self.view, self.model, self.mainController, self.openWindows)
+        self.controller = UnlockFrameController(self.view, self.model, self.context, self.openWindows)
 
     def close(self):
         self.controller.cleanUp()
@@ -49,11 +51,26 @@ class UnlockFrame(object):
         self.view.setTime(time)
 
 class UnlockFrameContext(object):
-    def __init__(self, client):
-        self.option = client.getOption()
-        
+    def __init__(self, parent, editingDomain):
+        self.parent = parent
+        self.editingDomain = editingDomain
+    
+    def getMainFrame(self):
+        return self.parent.getmainwindow()
+    def getFrame(self):
+        return self.parent.getmainwindow()
+    def getParent(self):
+        return self.parent
     def getOption(self):
-        return self.option
+        return self.parent.getController().getOption()
+    def getModel(self):
+        return self.editingDomain.getModel()
+    def getEditingDomain(self):
+        return self.editingDomain
+    def getController(self):
+        return self.parent.getController()
+    def getTimeControl(self):
+        return self.parent.getController()
 
 class UnlockFrameModel(object):
     def __init__(self, passwordSafe):
@@ -174,7 +191,7 @@ class UnlockFrameView(object):
             if -1 != index:
                 password = model.getSafe()[index]
         if None == password:
-            password = PasswordObject()
+            password = model.createItem()
         self.passwordForm.setModel(password)
 
     def setTime(self, time):
@@ -184,13 +201,13 @@ class UnlockFrameView(object):
         self.labelTime.config(text=text)
         
 class UnlockFrameController(object):
-    def __init__(self, view, model, client, openWindows):
-        self.timeControl = client
+    def __init__(self, view, model, context, openWindows):
+        self.timeControl = context.getTimeControl()
         self.view = view
         self.model = model
-        self.client = client
+        self.client = context.getController()
         self.openWindows = openWindows
-        self.context = UnlockFrameContext(client)
+        self.context = context
         self.filter = PassSafeFilter(model.getSafe())
 
         view.filterEntry.trace('w', self.updateFilter)
@@ -213,8 +230,8 @@ class UnlockFrameController(object):
         view.entryFilter.bind('<Up>', self.setTitleBoxIndexUp)
         view.entryFilter.bind('<Down>', self.setTitleBoxIndexDown)
 
-        if None != client:
-            mainWindow = client.getMainWindow()
+        if None != context:
+            mainWindow = context.getMainFrame()
             mainWindow.bind('<Alt-t>', lambda e: view.buttonFilterTitle.toggle())
             mainWindow.bind('<Alt-u>', lambda e: view.buttonFilterUsername.toggle())
             mainWindow.bind('<Alt-a>', lambda e: view.buttonFilterPassword.toggle())
@@ -320,19 +337,20 @@ class UnlockFrameController(object):
         try:
             index = self.view.getTitleBoxIndex()
             passObFilter = self.filter.getSafe()[index]
-            self.model.getSafe().removePassOb(passObFilter)
-            self.filter.doFilter()
-            self.view.updateTitleBox(self.filter.getSafe())
-            if index >= len(self.filter.getSafe()) :
-                index = len(self.filter.getSafe()) - 1
-            self.setCurrent(index)
-            self.resetTime()
+            if None <> passObFilter:
+                self.context.getEditingDomain().executeCmd(DeleteSafeItemCmd(self.model.getSafe(), passObFilter))
+                self.onSafeChanged()
+                self.view.updateTitleBox(self.filter.getSafe())
+                if index >= len(self.filter.getSafe()) :
+                    index = len(self.filter.getSafe()) - 1
+                self.setCurrent(index)
         except:
             self.showobjecterror()
             
     def pressNewPass(self):
         self.resetTime()
-        self.newpasswindow = NewPassWindow(self)
+        context = NewPasswordWindowContext(self, self.model.getSafe(), self.context.getEditingDomain())
+        self.newpasswindow = NewPassWindow(context)
         self.newpasswindow.setTimeControl(self.timeControl)
         self.addWindow(self.newpasswindow)
         self.newpasswindow.show()
@@ -349,7 +367,8 @@ class UnlockFrameController(object):
         self.resetTime()
         index = self.view.getTitleBoxIndex()
         passObFilter = self.filter.getSafe()[index]
-        self.changePassWindow = ChangePassWindow(self, passObFilter)
+        context = ChangePasswordWindowContext(self, self.context.getEditingDomain(), passObFilter)
+        self.changePassWindow = ChangePassWindow(context)
         self.changePassWindow.setTimeControl(self.timeControl)
         self.addWindow(self.changePassWindow)    
         self.changePassWindow.show()
@@ -385,16 +404,10 @@ class UnlockFrameController(object):
         if None!= self.timeControl:
             self.timeControl.resetTime()
     
-    def addPasswordObject(self, password):
-        self.model.getSafe().addPasswordObject(password)
+    def onSafeChanged(self):
         self.filter.doFilter()
         self.view.updateTitleBox(self.filter.getSafe())
 
-    def changePasswordObject(self, origPasswordObject, passwordObject):
-        self.model.getSafe().changePasswordObject(origPasswordObject, passwordObject)
-        self.filter.doFilter()
-        self.view.updateTitleBox(self.filter.getSafe())
-    
     def copyToClipBoard(self, entry):
         if None != self.client:
             self.client.copyToClipBoard(entry)

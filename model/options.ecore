@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" nsPrefix="">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="passwordsafe" nsPrefix="">
   <eClassifiers xsi:type="ecore:EClass" name="Option">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="gui" eType="#//GuiOption"/>
@@ -47,33 +47,27 @@
       <details key="archetype" value="Role"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="passwordSafe" upperBound="-1"
-        eType="#//NewPasswordObject"/>
+        eType="#//SafeItem"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="option" eType="#//Option"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewPasswordObject" eSuperTypes="#//PasswordObject">
+  <eClassifiers xsi:type="ecore:EClass" name="PasswordObject" eSuperTypes="#//SecretObject">
     <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
       <details key="archetype" value="Role"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="history" upperBound="-1"
-        eType="#//HistoryPasswordObject"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="HistoryPasswordObject" eSuperTypes="#//PasswordObject">
-    <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
-      <details key="archetype" value="Role"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PasswordObject">
-    <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
-      <details key="archetype" value="Role"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SecretObject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="note" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="passwordFile" eType="#//PasswordFileOption"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="createDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SafeItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secretObjects" lowerBound="1"
+        upperBound="-1" eType="#//SecretObject" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="passwordFile" eType="#//PasswordFileOption"/>
   </eClassifiers>
 </ecore:EPackage>
