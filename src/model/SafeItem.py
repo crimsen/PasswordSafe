@@ -17,8 +17,11 @@ class SafeItem(object):
         Constructor
         '''
         self.passwordFile = None
-        self.secretObjects = [secretObject]
-        self.secretObjects.extend(history)
+        if isinstance(secretObject, list):
+            self.secretObjects = secretObject
+        else:
+            self.secretObjects = [secretObject]
+            self.secretObjects.extend(history)
     
     def clone(self):
         secretItem = self.secretObjects[0].clone()

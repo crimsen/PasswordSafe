@@ -8,9 +8,9 @@ class PasswordFileOption(object):
     '''
     classdocs
     '''
+    defaultVersion = 2
 
-
-    def __init__(self, filename, encodeId, isDefault=False, needBackup=False):
+    def __init__(self, filename, encodeId, isDefault=False, needBackup=False, version=defaultVersion):
         '''
         Constructor
         '''
@@ -18,6 +18,8 @@ class PasswordFileOption(object):
         self.encodeId = encodeId
         self.isDefault = isDefault
         self.needBackup = needBackup
+        self.version = version
+        self.loadVersion = 0
         # per default the ischanged is true to save always
         self.resetChanged()
 
@@ -33,6 +35,14 @@ class PasswordFileOption(object):
             retVal = 'Default'
         return retVal
     
+    def getVersion(self):
+        return self.version
+    
+    def getLoadVersion(self):
+        return self.loadVersion
+    def setLoadVersion(self, version):
+        self.loadVersion = version
+
     def setChanged(self, val):
         self.isChanged = val
 

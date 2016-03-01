@@ -4,12 +4,13 @@ Created on 16.04.2015
 @author: timgroger
 '''
 
+from XmlReader import XmlReader
+from model.PasswordFileOption import PasswordFileOption
 import gnupg
 import os
 import string
 import sys
 import xml.dom
-from model.PasswordFileOption import PasswordFileOption
 
 class OptionLoader(object):
     '''
@@ -65,9 +66,10 @@ class OptionLoader(object):
                 filename = passwordFile.getAttribute('filename')
                 encodeId = self.getList(passwordFile.getAttribute('encodeid'))
                 encodeId.insert(0, option.getEmail())
-                isDefault = self.getBoolean(passwordFile.getAttribute('isdefault'))
-                needBackup = self.getBoolean(passwordFile.getAttribute('needbackup'))
-                passwordFileOption = PasswordFileOption(filename, encodeId, isDefault=isDefault, needBackup=needBackup)
+                isDefault = XmlReader.getBoolean(passwordFile.getAttribute('isdefault'))
+                needBackup = XmlReader.getBoolean(passwordFile.getAttribute('needbackup'))
+                version = XmlReader.getIntAttribute(passwordFile, 'version', 2)
+                passwordFileOption = PasswordFileOption(filename, encodeId, isDefault=isDefault, needBackup=needBackup, version=version)
                 option.files.append(passwordFileOption)
             self.readGuiOption(elem, option.gui)
         self.updateDefaultValues(option)
@@ -79,7 +81,7 @@ class OptionLoader(object):
 
     def readGuiOption(self, parent, gui):
         for element in parent.getElementsByTagName('gui'):
-            gui.autolock = self.getIntAttribute(element, 'autolock', gui.autolock)
+            gui.autolock = XmlReader.getIntAttribute(element, 'autolock', gui.autolock)
 
     def updateDefaultValues(self, option):
         '''
@@ -108,22 +110,5 @@ class OptionLoader(object):
         print(self.accounts)
         return self.accounts
 
-    def getBoolean(self, boolstring):
-        return boolstring in ['true']
-
-    def getBoolAttribute(self, element, attributeName, defaultValue):
-        retVal = defaultValue
-        attributeNode = element.getAttributeNode(attributeName)
-        if None != attributeNode:
-            retVal = self.getBoolean(attributeNode.value)
-        return retVal
-    
-    def getIntAttribute(self, element, attributeName, defaultValue):
-        retVal = defaultValue
-        attributeNode = element.getAttributeNode(attributeName)
-        if None != attributeNode:
-            retVal = int(attributeNode.value)
-        return retVal
-    
     def getList(self, liststring):
         return liststring.split()

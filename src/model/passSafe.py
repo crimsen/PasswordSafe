@@ -21,6 +21,10 @@ class PasswordSafe(object):
         self.option = option
         self.gpg = gnupg.GPG()
 
+    def createSafeItem(self, secretObjects):
+        retVal = SafeItem(secretObjects)
+        return retVal
+
     def createPasswordItem(self, title='', username='', password='', email='', location='', note='', createDate=None, history=[]):
         passwordObject = PasswordObject(title, username, password, email, location, note, createDate)
         passwordObject.haveCreateDate()
