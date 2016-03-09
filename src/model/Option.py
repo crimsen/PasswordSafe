@@ -15,6 +15,7 @@ class Option(object):
         self.email = None
         self.emailOld = None
         self.files = []
+        self.warnOnFileVersionDone = False
         self.gui = GuiOption()
     
     def getEmail(self):
@@ -32,3 +33,9 @@ class Option(object):
     def getDefaultPasswordFile(self):
         retVal = [i for i in self.files if i.isDefault]
         return retVal[0]
+
+    def getWarnOnFileVersionDone(self):
+        return self.warnOnFileVersionDone
+    
+    def setWarnOnFileVersionDone(self, val):
+        self.warnOnFileVersionDone = val

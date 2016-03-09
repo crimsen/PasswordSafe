@@ -14,6 +14,7 @@ import sys
 from gui.AboutFrame import AboutFrame
 from gui.PassGenWindow import PassGenWindow
 from edit.EditingDomain import EditingDomain
+from gui.MessageWindow import MessageWindow
 
 class MainController(object):
     '''
@@ -84,6 +85,7 @@ class MainController(object):
             if 0 != self.option.gui.autolock:
                 self.startTimeControl()
             self.settimeback()
+            self.warnOnFileVersion()
         except:
             print(sys.exc_info())
             self.mainWindow.setlabelpassphrase()
@@ -200,3 +202,18 @@ class MainController(object):
     def show(self):
         self.mainWindow.show()
     
+    def warnOnFileVersion(self):
+        if not self.option.getWarnOnFileVersionDone():
+            self.option.setWarnOnFileVersionDone(True)
+            fileNames = []
+            for f in self.option.getFiles():
+                if f.getLoadVersion() != f.getVersion():
+                    fileNames.append(f.getFilename())
+            if 0 < len(fileNames):
+                message = 'When safing PasswordFile'
+                if 1 < len(fileNames):
+                    message += 's'
+                message += ': \n'
+                message += ',\n'.join(fileNames)
+                message += ',\n then the file version will be upgraded.' 
+                MessageWindow(message)
