@@ -4,6 +4,7 @@ Created on 28.03.2015
 @author: crimsen
 '''
 import gui.PasswordForm
+from gui.PasswordForm import PasswordFormContext
 import sys
 from edit.AddSafeItemCmd import AddSafeItemCmd
 if sys.hexversion >= 0x3000000:
@@ -16,11 +17,12 @@ class NewPassWindow(object):
     #Build a new Window for a new PasswordObject
     def __init__(self, context):
         self.context = context
-        self.view = NewPasswordWindowView()
+        self.view = NewPasswordWindowView(context)
         self.model = context.master.createPasswordItem()
         self.controller = NewPasswordWindowController(self.view, self.model, context)
 
     def setTimeControl(self, timeControl):
+        #TODO: deprecated, use context
         self.controller.setTimeControl(timeControl)
 
     def show(self):
@@ -42,7 +44,12 @@ class NewPasswordWindowContext(object):
         
 class NewPasswordWindowView(object):
         
-    def __init__(self):
+    class PasswordFormContext(PasswordFormContext):
+        def __init__(self, parentContext):
+            PasswordFormContext.__init__(self, parentContext.client.context)
+
+    def __init__(self, context):
+        self.context = context
         self.__buildFrame__()
         
     def __buildFrame__(self):
@@ -50,7 +57,7 @@ class NewPasswordWindowView(object):
         self.window.title('New Password')
         self.window.geometry('640x400')
         parent = self.window
-        self.form = gui.PasswordForm.PasswordForm(parent)
+        self.form = gui.PasswordForm.PasswordForm(parent, NewPasswordWindowView.PasswordFormContext(self.context))
         self.form.setMode('edit')
         
         buttonFrame = tk.Frame(master=parent)
@@ -80,8 +87,8 @@ class NewPasswordWindowController(object):
         view.buttonSave.configure(command=self.pressSave)
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
-        view.form.setClient(self)
-        view.form.setContext(self.client.getContext())
+        #view.form.setClient(self)
+        #view.form.setContext(self.client.getContext())
         self.view.window.focus_force()
 
     def setTimeControl(self, timeControl):

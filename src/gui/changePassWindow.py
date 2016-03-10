@@ -7,6 +7,7 @@ import gui.PasswordForm
 from model.passObject import PasswordObject
 import sys
 from edit.SetSecretObjectCmd import SetSecretObjectCmd
+from gui.PasswordForm import PasswordFormContext
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
@@ -15,12 +16,13 @@ else:
 class ChangePassWindow(object):
     #Build a new Window for a new PasswordObject
     def __init__(self, context):
-        self.view = ChangePasswordWindowView()
+        self.view = ChangePasswordWindowView(context)
         self.model = context.getPasswordItem().clone()
         self.model.getCurrentSecretObject().createDate = None
         self.controller = ChangePasswordWindowController(self.view, self.model, context)
 
     def setTimeControl(self, timeControl):
+        #TODO: deprecated, use context
         self.controller.setTimeControl(timeControl)
 
     def show(self):
@@ -28,7 +30,7 @@ class ChangePassWindow(object):
         
     def close(self):
         self.view.close()
-
+    
 class ChangePasswordWindowContext(object):
     def __init__(self, client, editingDomain, passwordItem):
         self.client = client
@@ -42,8 +44,13 @@ class ChangePasswordWindowContext(object):
         return self.passwordItem
         
 class ChangePasswordWindowView(object):
+    
+    class PasswordFormContext(PasswordFormContext):
+        def __init__(self, parentContext):
+            PasswordFormContext.__init__(self, parentContext.client.context)
         
-    def __init__(self):
+    def __init__(self, context):
+        self.context = context
         self.__buildFrame__()
         
     def __buildFrame__(self):
@@ -51,7 +58,7 @@ class ChangePasswordWindowView(object):
         self.window.title('Change Password')
         self.window.geometry('640x400')
         parent = self.window
-        self.form = gui.PasswordForm.PasswordForm(parent)
+        self.form = gui.PasswordForm.PasswordForm(parent, ChangePasswordWindowView.PasswordFormContext(self.context))
         self.form.setMode('edit')
         
         buttonFrame = tk.Frame(master=parent)
@@ -82,11 +89,12 @@ class ChangePasswordWindowController(object):
         view.buttonSave.configure(command=self.pressSave)
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
-        view.form.setClient(self)
-        view.form.setContext(self.client.getContext())
+        #view.form.setClient(self)
+        #view.form.setContext(self.client.getContext())
         self.view.window.focus_force()
 
     def setTimeControl(self, timeControl):
+        # TODO: deprecated, use context
         self.view.form.setTimeControl(timeControl)
 
     def pressCancel(self):

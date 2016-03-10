@@ -5,13 +5,15 @@ Created on 12.05.2015
 '''
 
 from .PasswordForm import PasswordForm
-from .PasswordForm import PasswordFormContext
 from controller.filter import PassSafeFilter
 from edit.DeleteSafeItemCmd import DeleteSafeItemCmd
 import webbrowser
 import sys
 from gui.newPassWindow import NewPasswordWindowContext
 from gui.changePassWindow import ChangePasswordWindowContext
+from gui.CertificatePage import CertificatePage
+from gui.EmptyPage import EmptyPage
+from model.CertificateObject import CertificateObject
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
     from tkinter import StringVar
@@ -71,6 +73,8 @@ class UnlockFrameContext(object):
         return self.parent.getController()
     def getTimeControl(self):
         return self.parent.getController()
+    def getClipBoard(self):
+        return self.parent.getController()
 
 class UnlockFrameModel(object):
     def __init__(self, passwordSafe):
@@ -89,6 +93,8 @@ class UnlockFrameView(object):
         self.checkEmail = StringVar()
         self.checkLocation = StringVar()
         self.checkNote = StringVar()
+        self.currentPage = None
+        self.pageTypes = {}
         self.__buildFrame__(parent)
         self.unlockframe.pack(fill='both', expand=True)
         self.__setDefault__()
@@ -98,14 +104,16 @@ class UnlockFrameView(object):
         self.__buildMenuBar__(self.unlockframe)
         self.__buildFilterFrame__(self.unlockframe)
         self.__buildTitleBoxFrame__(self.unlockframe)
-        self.passwordForm = PasswordForm(self.unlockframe)
-        self.passwordForm.setMode('readonly')
+        #self.passwordForm = PasswordForm(self.unlockframe)
+        #self.passwordForm.setMode('readonly')
+        self.frameOption = tk.Frame(master=self.unlockframe)
         self.buttonLock = tk.Button(master=self.unlockframe, text='Lock', underline=0)
         self.labelTime = tk.Label(master=self.unlockframe, anchor='e')
 
         self.frameFilter.pack(side='top', fill='x', padx=5)
         self.frameTitleBox.pack(side='left', fill='both', padx=10, pady=10)
-        self.passwordForm.getFrame().pack(side='top', fill='both', expand=True, padx=5, pady=5)
+        #self.passwordForm.getFrame().pack(side='top', fill='both', expand=True, padx=5, pady=5)
+        self.frameOption.pack(side='top', fill='both', expand=True)
         self.labelTime.pack(side='bottom')
         self.buttonLock.pack(side='bottom', fill='both', padx=5, pady=5)  
 
@@ -185,20 +193,19 @@ class UnlockFrameView(object):
         self.titleBox.select_clear(0, 'end')
         self.titleBox.select_set(index)
 
-    def updateFromModel(self, model, index=-1):
-        password = None
-        if None != model.getSafe():
-            if -1 != index:
-                password = model.getSafe()[index]
-        if None == password:
-            password = model.createItem()
-        self.passwordForm.setModel(password)
-
     def setTime(self, time):
         text = ''
         if None != time:
             text = 'Autolock in '+str(time)+' seconds!'
         self.labelTime.config(text=text)
+        
+    def buildFormPage(self, pageDescription):
+        (pageType, context) = pageDescription
+        visibilityFrame = tk.Frame(master=self.frameOption)
+        visibilityFrame.pack(fill='both', expand=True)
+        pageContext = pageType.createContext(context)
+        formPage = pageType(visibilityFrame, pageContext)
+        return (visibilityFrame, formPage)
         
 class UnlockFrameController(object):
     def __init__(self, view, model, context, openWindows):
@@ -241,9 +248,9 @@ class UnlockFrameController(object):
 
         self.configureMenu()
         self.updateFilter()
-        view.updateFromModel(self.filter)
-        view.passwordForm.setClient(self)
-        view.passwordForm.setTimeControl(self.timeControl)
+        self.setCurrent(-1)
+#        view.passwordForm.setClient(self)
+#        view.passwordForm.setTimeControl(self.timeControl)
         view.entryFilter.focus_force()
 
 #        self.buttonPasswordCopy.bind('<1>', self.pressCopy)
@@ -298,7 +305,35 @@ class UnlockFrameController(object):
         if -1 != index:
             self.view.setTitleBoxIndex(index)
             password = self.filter.getSafe()[index]
-        self.view.passwordForm.setModel(password)
+        self.updateForm(password)
+    
+    def updateForm(self, item):
+        '''
+        function updates the form of the right side based on
+        the type of the item
+        '''
+        pageType = self.getPageType(item)
+        if None == self.view.currentPage or pageType != type(self.view.currentPage[1]):
+            formPage = None
+            if pageType in self.view.pageTypes:
+                formPage = self.view.pageTypes[pageType]
+            if None == formPage:
+                pageDescription = (pageType, self.context)
+                formPage = self.view.buildFormPage(pageDescription)
+            if None != self.view.currentPage:
+                self.view.currentPage[0].pack_forget()
+            self.view.currentPage = formPage
+            formPage[0].pack(fill='both', expand=True)
+        self.view.currentPage[1].setModel(item)
+    
+    def getPageType(self, item):
+        retVal = EmptyPage
+        secretObject = item.getCurrentSecretObject()
+        if type(secretObject) == PasswordObject:
+            retVal = PasswordForm
+        #elif type(item) == CertificateObject:
+        #    retVal = CertificatePage
+        return retVal
         
     def setTitleBoxIndexUp(self, event):
         self.resetTime()
@@ -412,8 +447,8 @@ class UnlockFrameController(object):
         if None != self.client:
             self.client.copyToClipBoard(entry)
     
-    def getContext(self):
-        return PasswordFormContext(self.context.getOption())
+#    def getContext(self):
+#        return PasswordFormContext(self.context.getOption())
     
     def addWindow(self, windowClass):
         self.openWindows.append(windowClass)

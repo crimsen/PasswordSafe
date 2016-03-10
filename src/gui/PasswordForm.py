@@ -4,6 +4,7 @@ Created on Jul 14, 2015
 @author: groegert
 '''
 
+from EmptyPage import EmptyPage
 import webbrowser
 import sys
 if sys.hexversion >= 0x3000000:
@@ -15,21 +16,32 @@ else:
     import ttk as ttk
     from Tkinter import StringVar
 
-class PasswordForm(object):
-    def __init__(self, parent, client=None):
+class PasswordForm(EmptyPage):
+
+    @staticmethod
+    def createContext(parentContext):
+        return PasswordFormContext(parentContext)
+
+    def __init__(self, parent, context):
         self.view = PasswordFormView(parent)
-        self.controller = PasswordFormController(self.view, None, client)
+        self.controller = PasswordFormController(self.view, context)
+
+    def apply(self):
+        self.controller.validate()
 
     def getFrame(self):
         return self.view.frame;
 
     def validate(self):
-        self.controller.validate()
+        #TODO: deprecated, use apply
+        self.apply()
         
     def setTimeControl(self, timeControl):
+        #TODO: deprecated, use context.getTimeControl()
         self.controller.setTimeControl(timeControl)
 
     def setClient(self, client):
+        #TODO: deprecated, use context.getClient() / context.getClipBoard()
         self.controller.setClient(client)
 
     def setContext(self, context):
@@ -44,11 +56,14 @@ class PasswordForm(object):
         self.view.updateFromModel(model)
 
 class PasswordFormContext(object):
-    def __init__(self, option):
-        self.option = option
-    
+    def __init__(self, parentContext):
+        self.parentContext = parentContext
+    def getTimeControl(self):
+        return self.parentContext.getTimeControl()
+    def getClipBoard(self):
+        return self.parentContext.getClipBoard()
     def getPasswordFiles(self):
-        return self.option.getFiles()
+        return self.parentContext.getOption().getFiles()
 
 class PasswordFormView(object):
     '''
@@ -68,6 +83,7 @@ class PasswordFormView(object):
         self.varLocation = StringVar()
         self.mode = 'normal'
         self.__buildFrame__(parent)
+        self.setMode(self.mode)
         
     def __buildFrame__(self, parent):
         self.frame = tk.Frame(master=parent)
@@ -107,6 +123,7 @@ class PasswordFormView(object):
         self.labelNote.pack(side='top', fill='both', padx=5, pady=5)
         self.textNote.pack(side='top', fill='both', padx=5, pady=5, expand=True)
         frameRight.pack(side='left', fill='both', expand=True, padx=5, pady=5)
+        self.frame.pack(side='top', fill='both', expand=True)
        
     def setMode(self, mode):
         self.mode = mode
@@ -124,7 +141,7 @@ class PasswordFormView(object):
             self.comboFile['state'] = 'readonly'
             self.entryTitle.configure(state='normal')
             self.entryUsername.configure(state='normal')
-            self.entryPassword.configure(state='normal')
+            self.entryPassword.configure(state='normal', show='')
             self.entryEMail.configure(state='normal')
             self.entryLocation.configure(state='normal')
             self.textNote.configure(state='normal')
@@ -198,11 +215,12 @@ class PasswordFormView(object):
         self.model.getCurrentSecretObject().setNote(self.textNote.get('1.0', 'end'))
 
 class PasswordFormController(object):
-    def __init__(self, view, model, client):
-        self.timeControl = None
+    def __init__(self, view, context):
+        self.model = None
         self.view = view
-        self.model = model
-        self.client = client
+        self.context = context
+        self.timeControl = context.getTimeControl()
+        self.clipBoard = context.getClipBoard()
         self.passwordFiles = [] #stores possible values for combo passwordfile
         view.buttonPasswordCopy.bind('<1>', self.pressCopy)
         view.varTitle.trace('w', self.resetTime)
@@ -211,6 +229,8 @@ class PasswordFormController(object):
         view.varEmail.trace('w', self.resetTime)
         view.varLocation.trace('w', self.resetTime)
         view.textNote.bind('<KeyPress>', self.resetTime)
+        self.setMode('normal')
+        self.updateFromContext(self.context)
 
     def setModel(self, model):
         self.model = model
@@ -230,24 +250,23 @@ class PasswordFormController(object):
                 webbrowser.open_new_tab(link)
 
     def pressCopy(self, event):
-        if None != self.client and None != self.model:
+        if None != self.clipBoard and None != self.model:
             entry = self.model.getCurrentSecretObject().getPassword()
             if None != entry:
-                self.client.copyToClipBoard(entry)
+                self.clipBoard.copyToClipBoard(entry)
 
     def resetTime(self, event, *args):
         if None != self.timeControl:
             self.timeControl.resetTime()
     
     def setTimeControl(self, timeControl):
+        # TODO: deprecated, use context.getTimeControl()
         self.timeControl = timeControl
     
     def setClient(self, client):
-        self.client = client
+        # TODO: deprecated, use conext.getClipBoard()
+        self.clipBoard = client
     
-    def setContext(self, context):
-        self.updateFromContext(context)
-
     def validate(self):
         self.view.updateModel()
         passwordFileIdx = self.view.comboFile.current()

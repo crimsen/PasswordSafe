@@ -21,11 +21,11 @@ class OptionWindow(object):
         self.maincontroller = controller
         self.optionWindow = tk.Toplevel()
         self.optionWindow.title('Preferences')
-        self.__buildFrames()
+        self.__buildFrame__()
         self.optionWindow.attributes('-topmost', True)
         self.optionPages={}
 
-    def __buildFrames(self):
+    def __buildFrame__(self):
         self.currentPage = None
         self.frameMain = tk.Frame(master=self.optionWindow)
         self.tree = OptionTree(self.frameMain, self.option)
