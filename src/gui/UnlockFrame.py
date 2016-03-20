@@ -9,7 +9,7 @@ from controller.filter import PassSafeFilter
 from edit.DeleteSafeItemCmd import DeleteSafeItemCmd
 import webbrowser
 import sys
-from gui.newPassWindow import NewPasswordWindowContext
+from gui.NewSafeItemWindow import NewSafeItemWindowContext
 from gui.changePassWindow import ChangePasswordWindowContext
 from gui.CertificatePage import CertificatePage
 from gui.EmptyPage import EmptyPage
@@ -22,7 +22,7 @@ else:
     import Tkinter as tk
     from Tkinter import StringVar
     from tkMessageBox import showerror
-from .newPassWindow import NewPassWindow
+from gui.NewSafeItemWindow import NewSafeItemWindow
 from .changePassWindow import ChangePassWindow
 from model.passObject import PasswordObject
 from .PassGenWindow import PassGenWindow
@@ -384,9 +384,8 @@ class UnlockFrameController(object):
             
     def pressNewPass(self):
         self.resetTime()
-        context = NewPasswordWindowContext(self, self.model.getSafe(), self.context.getEditingDomain())
-        self.newpasswindow = NewPassWindow(context)
-        self.newpasswindow.setTimeControl(self.timeControl)
+        context = NewSafeItemWindowContext(self, self.model.getSafe(), self.context.getEditingDomain())
+        self.newpasswindow = NewSafeItemWindow(context)
         self.addWindow(self.newpasswindow)
         self.newpasswindow.show()
 
