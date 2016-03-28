@@ -48,7 +48,6 @@ class PasswordForm(EmptyPage):
         self.controller.setContext(context)
 
     def setMode(self, mode):
-        self.view.setMode(mode)
         self.controller.setMode(mode)
         
     def setModel(self, model):
@@ -58,12 +57,15 @@ class PasswordForm(EmptyPage):
 class PasswordFormContext(object):
     def __init__(self, parentContext):
         self.parentContext = parentContext
+        self.mode = 'normal'
     def getTimeControl(self):
         return self.parentContext.getTimeControl()
     def getClipBoard(self):
         return self.parentContext.getClipBoard()
     def getPasswordFiles(self):
         return self.parentContext.getOption().getFiles()
+    def getMode(self):
+        return self.mode
 
 class PasswordFormView(object):
     '''
@@ -83,7 +85,6 @@ class PasswordFormView(object):
         self.varLocation = StringVar()
         self.mode = 'normal'
         self.__buildFrame__(parent)
-        self.setMode(self.mode)
         
     def __buildFrame__(self, parent):
         self.frame = tk.Frame(master=parent)
@@ -229,13 +230,14 @@ class PasswordFormController(object):
         view.varEmail.trace('w', self.resetTime)
         view.varLocation.trace('w', self.resetTime)
         view.textNote.bind('<KeyPress>', self.resetTime)
-        self.setMode('normal')
+        self.setMode(context.getMode())
         self.updateFromContext(self.context)
 
     def setModel(self, model):
         self.model = model
 
     def setMode(self, mode):
+        self.view.setMode(mode)
         if 'edit' != mode:
             self.view.entryLocation.bind('<1>', self.callLink)
             self.view.entryLocation.configure(fg='blue')
