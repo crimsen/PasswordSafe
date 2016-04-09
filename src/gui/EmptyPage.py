@@ -52,3 +52,5 @@ class EmptyPageController(object):
         self.context = context
     def apply(self):
         pass
+    def setModel(self, model):
+        self.model = model

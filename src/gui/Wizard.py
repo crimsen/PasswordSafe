@@ -3,35 +3,31 @@ Created on Mar 15, 2016
 
 @author: groegert
 '''
+from MasterDetailsForm import MasterDetailsForm
+from MasterDetailsForm import MasterDetailsFormView
+from MasterDetailsForm import MasterDetailsFormController
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
     import Tkinter as tk
 
-class Wizard(object):
+class Wizard(MasterDetailsForm):
     '''
     Wizard is a base class for top level windows to enter data in
     multiple formpages in a sequence.
     '''
     def __init__(self, context, model):
-        '''
-        Constructor
-        '''
-        self.context = context
-        self.model = model
+        MasterDetailsForm.__init__(self, context, model)
         
-class WizardView(object):
+class WizardView(MasterDetailsFormView):
     def __init__(self, context, viewModel):
-        self.context = context
-        self.viewModel = viewModel
-        self.pages = {}
-        self.currentPage = None
-    def __buildFrame__(self):
+        MasterDetailsFormView.__init__(self, context, viewModel)
+    def __buildFrame__(self, parent=None):
         self.window = tk.Toplevel()
         self.window.title('New Password')
         self.window.geometry('640x400')
-        self.formFrame = tk.Frame(master=self.window)
+        MasterDetailsFormView.__buildFrame__(self, self.window)
         self.buttonFrame = tk.Frame(master=self.window)
         self.buttonBack = tk.Button(master=self.buttonFrame, text='Back')
         self.buttonNext = tk.Button(master=self.buttonFrame, text='Next')
@@ -39,11 +35,10 @@ class WizardView(object):
         self.buttonCancel = tk.Button(master=self.buttonFrame, text='Cancel')
 
     def __packFrame__(self):
-        self.formFrame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
-        self.currentPage[0].pack(fill='both', expand=True)
         self.buttonFrame.pack(side='bottom', anchor='e')
         self.buttonCancel.pack(side='right', fill='both', padx=5, pady=5)
         self.updateButtonFrame()
+        MasterDetailsFormView.__packFrame__(self)
         
     def updateButtonFrame(self):
         '''
@@ -68,32 +63,6 @@ class WizardView(object):
         pass
     def close(self):
         self.window.destroy()
-    def setCurrentPageUnpacked(self, page):
-        '''
-        do not influence UI
-        update variables only
-        '''
-        self.lastPage = self.currentPage # safe the current page for later packing
-        self.currentPage = page
-    def finishCurrentPagePacked(self):
-        '''
-        ensures the correct form is packed
-        '''
-        if self.lastPage == self.currentPage:
-            self.lastPage = None
-        else:
-            if None != self.lastPage:
-                self.lastPage[0].pack_forget()
-                self.lastPage = None
-            self.currentPage[0].pack(fill='both', expand=True)
-
-    def addPage(self, page):
-        self.pages.append(page)
-    def buildFormPage(self, pageDescription):
-        (pageType, context) = pageDescription
-        visibilityFrame = tk.Frame(master=self.formFrame)
-        formPage = pageType(visibilityFrame, context)
-        return (visibilityFrame, formPage)
     def canApply(self):
         '''
         should be overwritten by child to specify whether the 'apply'-button should be displayed
@@ -110,11 +79,9 @@ class WizardView(object):
         '''
         return False
         
-class WizardController(object):
+class WizardController(MasterDetailsFormController):
     def __init__(self, view, model, context):
-        self.view = view
-        self.model = model
-        self.context = context
+        MasterDetailsFormController.__init__(self, view, model, context)
         self.client = context.getClient()
         self.editingDomain = context.getEditingDomain()
         view.buttonApply.configure(command=self.pressSave)

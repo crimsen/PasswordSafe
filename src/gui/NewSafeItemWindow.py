@@ -112,7 +112,6 @@ class NewSafeItemWindowView(WizardView):
             pageDescription = (None, None)
             if self.viewModel.canChangeSafeItemType and 0 == self.viewModel.currentPage:
                 pageDescription = (SafeItemPage, SafeItemPageContext(self.context.getOption()))
-                self.buildFormPage(pageDescription)
             elif SecretObjectEnum.password == safeItemType and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
                 pageDescription = (PasswordForm, NewSafeItemWindowView.PasswordFormContext(self.context))
             else:

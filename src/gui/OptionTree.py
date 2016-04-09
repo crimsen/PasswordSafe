@@ -69,11 +69,18 @@ class OptionTree(object):
         itemId = int(self.treeBox.selection()[0])
         for sink in self.eventSink:
             sink(itemId)
-    
+    def getModel(self, itemId):
+        retVal = None
+        item = findItem(itemId, self.content)
+        if None != item:
+            retVal = item.getModel()
+        return retVal
+        
     def getOptionPageDescription(self, itemId):
         retVal = None
         item = findItem(itemId, self.content)
         if None != item:
+            # TODO: here not item.getModel() but context has to be returned
             retVal = (item.getOptionPage(), item.getModel())
         return retVal
 

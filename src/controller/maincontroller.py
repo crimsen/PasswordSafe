@@ -9,7 +9,7 @@ from model.optionLoader import OptionLoader
 from model.OptionWriter import OptionWriter
 from model.Option import Option
 import os
-from gui.optionWindow import OptionWindow
+from gui.OptionWindow import OptionWindow
 import sys
 from gui.AboutFrame import AboutFrame
 from gui.PassGenWindow import PassGenWindow
