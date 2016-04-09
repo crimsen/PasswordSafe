@@ -186,7 +186,10 @@ class UnlockFrameView(object):
     
     def getTitleBoxIndex(self):
         index = self.titleBox.curselection()
-        index = index[0]
+        if 0 == len(index):
+            index = -1
+        else:
+            index = index[0]
         return int(index)
     
     def setTitleBoxIndex(self, index):
@@ -356,7 +359,8 @@ class UnlockFrameController(object):
     def selectedTitle(self, event):
         self.resetTime()
         index = self.view.getTitleBoxIndex()
-        self.setCurrent(index)
+        if -1 != index:
+            self.setCurrent(index)
         
     def pressLock(self, *args):            
         if None != self.client:
