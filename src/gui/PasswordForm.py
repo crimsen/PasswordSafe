@@ -4,7 +4,10 @@ Created on Jul 14, 2015
 @author: groegert
 '''
 
-from EmptyPage import EmptyPage
+from gui.EmptyPage import EmptyPage
+from gui.EmptyPage import EmptyPageContext
+from gui.EmptyPage import EmptyPageController
+from gui.EmptyPage import EmptyPageView
 import webbrowser
 import sys
 if sys.hexversion >= 0x3000000:
@@ -26,23 +29,8 @@ class PasswordForm(EmptyPage):
         self.view = PasswordFormView(parent)
         self.controller = PasswordFormController(self.view, context)
 
-    def apply(self):
-        self.controller.validate()
-
     def getFrame(self):
         return self.view.frame;
-
-    def validate(self):
-        #TODO: deprecated, use apply
-        self.apply()
-        
-    def setTimeControl(self, timeControl):
-        #TODO: deprecated, use context.getTimeControl()
-        self.controller.setTimeControl(timeControl)
-
-    def setClient(self, client):
-        #TODO: deprecated, use context.getClient() / context.getClipBoard()
-        self.controller.setClient(client)
 
     def setContext(self, context):
         self.controller.setContext(context)
@@ -54,8 +42,9 @@ class PasswordForm(EmptyPage):
         self.controller.setModel(model)
         self.view.updateFromModel(model)
 
-class PasswordFormContext(object):
+class PasswordFormContext(EmptyPageContext):
     def __init__(self, parentContext):
+        EmptyPageContext.__init__(self, parentContext.getOption())
         self.parentContext = parentContext
         self.mode = 'normal'
     def getTimeControl(self):
@@ -63,19 +52,15 @@ class PasswordFormContext(object):
     def getClipBoard(self):
         return self.parentContext.getClipBoard()
     def getPasswordFiles(self):
-        return self.parentContext.getOption().getFiles()
+        return self.option.getFiles()
     def getMode(self):
         return self.mode
 
-class PasswordFormView(object):
+class PasswordFormView(EmptyPageView):
     '''
     classdocs
     '''
-
     def __init__(self, parent):
-        '''
-        Constructor
-        '''
         self.comboFilePacked = False
         self.model = None
         self.varTitle = StringVar()
@@ -207,19 +192,18 @@ class PasswordFormView(object):
             text = ''
         var.set(text)
 
-    def updateModel(self):
-        self.model.getCurrentSecretObject().setTitle(self.varTitle.get())
-        self.model.getCurrentSecretObject().setUsername(self.varUsername.get())
-        self.model.getCurrentSecretObject().setPassword(self.varPassword.get())
-        self.model.getCurrentSecretObject().setEmail(self.varEmail.get())
-        self.model.getCurrentSecretObject().setLocation(self.varLocation.get())
-        self.model.getCurrentSecretObject().setNote(self.textNote.get('1.0', 'end'))
+    def updateModel(self, model):
+        model.getCurrentSecretObject().setTitle(self.varTitle.get())
+        model.getCurrentSecretObject().setUsername(self.varUsername.get())
+        model.getCurrentSecretObject().setPassword(self.varPassword.get())
+        model.getCurrentSecretObject().setEmail(self.varEmail.get())
+        model.getCurrentSecretObject().setLocation(self.varLocation.get())
+        model.getCurrentSecretObject().setNote(self.textNote.get('1.0', 'end'))
 
-class PasswordFormController(object):
+class PasswordFormController(EmptyPageController):
     def __init__(self, view, context):
+        EmptyPageController.__init__(self, view, context)
         self.model = None
-        self.view = view
-        self.context = context
         self.timeControl = context.getTimeControl()
         self.clipBoard = context.getClipBoard()
         self.passwordFiles = [] #stores possible values for combo passwordfile
@@ -231,10 +215,23 @@ class PasswordFormController(object):
         view.varLocation.trace('w', self.resetTime)
         view.textNote.bind('<KeyPress>', self.resetTime)
         self.setMode(context.getMode())
-        self.updateFromContext(self.context)
+        self.updateFromContext(context)
 
-    def setModel(self, model):
-        self.model = model
+    def apply(self):
+        self.view.updateModel(self.model)
+        passwordFileIdx = self.view.comboFile.current()
+        if passwordFileIdx >= 0 and passwordFileIdx < len(self.passwordFiles):
+            self.model.setPasswordFile(self.passwordFiles[passwordFileIdx])
+
+    def updateFromContext(self, context):
+        #we need to keep the passwordFiles because in combobox only the labels are stored 
+        self.passwordFiles = context.getPasswordFiles()
+        if len(self.passwordFiles) <= 1:
+            self.view.hideComboFile()
+        else:
+            self.view.showComboFile()
+            passwordFileLabels = [ passwordFile.getLabel() for passwordFile in self.passwordFiles ]
+            self.view.comboFile['values'] = passwordFileLabels
 
     def setMode(self, mode):
         self.view.setMode(mode)
@@ -261,30 +258,6 @@ class PasswordFormController(object):
         if None != self.timeControl:
             self.timeControl.resetTime()
     
-    def setTimeControl(self, timeControl):
-        # TODO: deprecated, use context.getTimeControl()
-        self.timeControl = timeControl
-    
-    def setClient(self, client):
-        # TODO: deprecated, use conext.getClipBoard()
-        self.clipBoard = client
-    
-    def validate(self):
-        self.view.updateModel()
-        passwordFileIdx = self.view.comboFile.current()
-        if passwordFileIdx >= 0 and passwordFileIdx < len(self.passwordFiles):
-            self.model.setPasswordFile(self.passwordFiles[passwordFileIdx])
-
-    def updateFromContext(self, context):
-        #we need to keep the passwordFiles because in combobox only the labels are stored 
-        self.passwordFiles = context.getPasswordFiles()
-        if len(self.passwordFiles) <= 1:
-            self.view.hideComboFile()
-        else:
-            self.view.showComboFile()
-            passwordFileLabels = [ passwordFile.getLabel() for passwordFile in self.passwordFiles ]
-            self.view.comboFile['values'] = passwordFileLabels
-
 if __name__=='__main__':
     window = tk.Tk()
     window.title('PasswordForm')

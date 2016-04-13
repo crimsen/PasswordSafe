@@ -21,10 +21,6 @@ class ChangePassWindow(object):
         self.model.getCurrentSecretObject().createDate = None
         self.controller = ChangePasswordWindowController(self.view, self.model, context)
 
-    def setTimeControl(self, timeControl):
-        #TODO: deprecated, use context
-        self.controller.setTimeControl(timeControl)
-
     def show(self):
         self.view.show()
         
@@ -89,13 +85,8 @@ class ChangePasswordWindowController(object):
         view.buttonSave.configure(command=self.pressSave)
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
-        #view.form.setClient(self)
         #view.form.setContext(self.client.getContext())
         self.view.window.focus_force()
-
-    def setTimeControl(self, timeControl):
-        # TODO: deprecated, use context
-        self.view.form.setTimeControl(timeControl)
 
     def pressCancel(self):
         '''
@@ -108,7 +99,7 @@ class ChangePasswordWindowController(object):
         Set a new passwordobject
         And destroy the widget
         '''
-        self.view.form.validate()
+        self.view.form.apply()
         if None != self.editingDomain:
             self.editingDomain.executeCmd(SetSecretObjectCmd(self.origModel, self.model))
             if None != self.client:
