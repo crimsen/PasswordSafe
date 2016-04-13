@@ -12,7 +12,7 @@ from gui.PasswordForm import PasswordForm
 from gui.PasswordForm import PasswordFormContext
 from gui.SafeItemPage import SafeItemPage
 from gui.SafeItemPage import SafeItemPageContext
-from model.NewSaveItemWindowOption import NewSafeItemWindowOption
+from model.NewSafeItemWindowOption import NewSafeItemWindowOption
 from model.passObject import PasswordObject
 from model.SecretObjectEnum import SecretObjectEnum
 from edit.AddSafeItemCmd import AddSafeItemCmd

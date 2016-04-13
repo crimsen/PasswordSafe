@@ -8,6 +8,7 @@ from XmlMapping import XmlMapping
 from XmlReader import XmlReader
 from SecretObjectEnum import SecretObjectEnum
 from model.passObject import PasswordObject
+from model.CertificateObject import CertificateObject
 import logging
 
 class Version2Reader(object):
@@ -44,6 +45,8 @@ class Version2Reader(object):
         stype = XmlReader.getEnumAttribute(element, XmlMapping.type, SecretObjectEnum, None)
         if SecretObjectEnum.password == stype:
             retVal = self.readPasswordObject(element)
+        elif SecretObjectEnum.smime == stype:
+            retVal = self.readSMimeObject(element)
         retVal.setTitle(title)
         retVal.setPassword(password)
         retVal.setNote(note)
@@ -59,4 +62,8 @@ class Version2Reader(object):
         retVal.setUsername(username)
         retVal.setEmail(email)
         retVal.setLocation(location)
+        return retVal
+
+    def readSMimeObject(self, element):
+        retVal = CertificateObject()
         return retVal

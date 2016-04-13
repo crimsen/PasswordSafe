@@ -50,7 +50,7 @@ class MasterDetailsFormView(object):
         do not influence UI
         update variables only
         '''
-        self.lastPage = self.currentPage # safe the current page for later packing
+        self.lastPage = self.currentPage # save the current page for later packing
         self.currentPage = page
     def finishCurrentPagePacked(self):
         '''

@@ -217,8 +217,8 @@ class UnlockFrameView(MasterDetailsFormView):
         secretObject = item.getCurrentSecretObject()
         if type(secretObject) == PasswordObject:
             retVal = PasswordForm
-        #elif type(item) == CertificateObject:
-        #    retVal = CertificatePage
+        elif type(secretObject) == CertificateObject:
+            retVal = CertificatePage
         return retVal
         
 class UnlockFrameController(MasterDetailsFormController):

@@ -39,6 +39,8 @@ class Version2Writer(object):
         XmlWriter.setDateAttribute(secretElement, XmlMapping.endDate, obj.getEndDate())
         if SecretObjectEnum.password == secretObjectEnum:
             self.writePasswordObject(doc, secretElement, obj)
+        elif SecretObjectEnum.smime == secretObjectEnum:
+            self.writeSMimeObject(doc, secretElement, obj)
         else:
             logging.error('unknown secret object type \'%s\'' % obj)
         element.appendChild(secretElement)
@@ -47,4 +49,6 @@ class Version2Writer(object):
         XmlWriter.setStrAttribute(element, XmlMapping.username, obj.getUsername())
         XmlWriter.setStrAttribute(element, XmlMapping.email, obj.getEmail())
         XmlWriter.setStrAttribute(element, XmlMapping.location, obj.getLocation())
-    
+        
+    def writeSMimeObject(self, doc, element, obj):
+        pass
