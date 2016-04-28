@@ -8,6 +8,7 @@ from XmlWriter import XmlWriter
 from model.passObject import PasswordObject
 from SecretObjectEnum import SecretObjectEnum
 import logging
+from model.CertificateObject import CertificateObject
 
 class Version2Writer(object):
     '''
@@ -31,6 +32,8 @@ class Version2Writer(object):
         secretObjectEnum = None
         if type(obj) == PasswordObject:
             secretObjectEnum = SecretObjectEnum.password
+        elif type(obj) == CertificateObject:
+            secretObjectEnum = SecretObjectEnum.smime
         XmlWriter.setEnumAttribute(secretElement, XmlMapping.type, secretObjectEnum)
         XmlWriter.setStrAttribute(secretElement, XmlMapping.title, obj.getTitle())
         XmlWriter.setStrAttribute(secretElement, XmlMapping.password, obj.getPassword())
@@ -51,4 +54,11 @@ class Version2Writer(object):
         XmlWriter.setStrAttribute(element, XmlMapping.location, obj.getLocation())
         
     def writeSMimeObject(self, doc, element, obj):
-        pass
+        secretKeyFileElement = doc.createElement(XmlMapping.secretKey)
+        XmlWriter.setStrAttribute(secretKeyFileElement, XmlMapping.fileName, obj.getSecretKeyFileName())
+        XmlWriter.setText(doc, secretKeyFileElement, obj.getSecretKey())
+        element.appendChild(secretKeyFileElement)
+        publicKeyFileElement = doc.createElement(XmlMapping.publicKey)
+        XmlWriter.setStrAttribute(publicKeyFileElement, XmlMapping.fileName, obj.getPublicKeyFileName())
+        XmlWriter.setText(doc, publicKeyFileElement, obj.getPublicKey())
+        element.appendChild(publicKeyFileElement)

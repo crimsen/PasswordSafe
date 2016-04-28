@@ -7,6 +7,7 @@ import gui.PasswordForm
 from model.passObject import PasswordObject
 import sys
 from edit.SetSecretObjectCmd import SetSecretObjectCmd
+from gui.CertificatePage import CertificatePageContext
 from gui.PasswordForm import PasswordFormContext
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
@@ -44,6 +45,9 @@ class ChangePasswordWindowView(object):
     class PasswordFormContext(PasswordFormContext):
         def __init__(self, parentContext):
             PasswordFormContext.__init__(self, parentContext.client.context)
+    class CertificatePageContext(CertificatePageContext):
+        def __init__(self, parentContext):
+            CertificatePageContext.__init__(self, parentContext.client.context)
         
     def __init__(self, context):
         self.context = context

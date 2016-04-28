@@ -24,6 +24,10 @@ class XmlMapping(object):
     secretObject = 'secretobject'
     safeItem = 'safe'
 
+    fileName = 'filename'
+    secretKey = 'secretkey'
+    publicKey = 'publickey'
+
     def __init__(self):
         '''
         Constructor

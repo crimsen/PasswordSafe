@@ -6,12 +6,15 @@ Created on 28.03.2015
 from gui.Wizard import Wizard
 from gui.Wizard import WizardView
 from gui.Wizard import WizardController
+from gui.CertificatePage import CertificatePage
+from gui.CertificatePage import CertificatePageContext
 from gui.EmptyPage import EmptyPage
 from gui.EmptyPage import EmptyPageContext
 from gui.PasswordForm import PasswordForm
 from gui.PasswordForm import PasswordFormContext
 from gui.SafeItemPage import SafeItemPage
 from gui.SafeItemPage import SafeItemPageContext
+from model.CertificateObject import CertificateObject
 from model.NewSafeItemWindowOption import NewSafeItemWindowOption
 from model.passObject import PasswordObject
 from model.SecretObjectEnum import SecretObjectEnum
@@ -60,6 +63,10 @@ class NewSafeItemWindowView(WizardView):
     class PasswordFormContext(PasswordFormContext):
         def __init__(self, parentContext):
             PasswordFormContext.__init__(self, parentContext.client.context)
+            self.mode = 'edit'
+    class CertificatePageContext(CertificatePageContext):
+        def __init__(self, parentContext):
+            CertificatePageContext.__init__(self, parentContext.client.context)
             self.mode = 'edit'
 
     def __init__(self, context, viewModel):
@@ -114,6 +121,8 @@ class NewSafeItemWindowView(WizardView):
                 pageDescription = (SafeItemPage, SafeItemPageContext(self.context.getOption()))
             elif SecretObjectEnum.password == safeItemType and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
                 pageDescription = (PasswordForm, NewSafeItemWindowView.PasswordFormContext(self.context))
+            elif SecretObjectEnum.smime == safeItemType and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
+                pageDescription = (CertificatePage, NewSafeItemWindowView.CertificatePageContext(self.context))
             else:
                 pageDescription = (EmptyPage, EmptyPageContext(self.context.getOption()))
             page = self.buildFormPage(pageDescription)
@@ -127,7 +136,7 @@ class NewSafeItemWindowView(WizardView):
         safeItemType = self.viewModel.safeItemType
         if self.viewModel.canChangeSafeItemType and 0 == self.viewModel.currentPage:
             retVal = self.viewModel
-        elif SecretObjectEnum.password == safeItemType and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
+        elif (SecretObjectEnum.password == safeItemType or SecretObjectEnum.smime == safeItemType) and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
             retVal = self.viewModel.safeItem
         return retVal
 
@@ -144,11 +153,16 @@ class NewSafeItemWindowController(WizardController):
             if model.safeItemType == SecretObjectEnum.password:
                 if type(model.safeItem.getCurrentSecretObject()) != PasswordObject:
                     model.safeItem = None
+            elif model.safeItemType == SecretObjectEnum.smime:
+                if type(model.safeItem.getCurrentSecretObject()) != CertificateObject:
+                    model.safeItem = None
             else:
                 model.safeItem = None
         if None == model.safeItem:
             if SecretObjectEnum.password == model.safeItemType:
                 model.safeItem = context.master.createPasswordItem()
+            elif SecretObjectEnum.smime == model.safeItemType:
+                model.safeItem = context.master.createSmimeItem()
 
     def pressSave(self):
         '''

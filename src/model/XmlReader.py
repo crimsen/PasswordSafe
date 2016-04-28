@@ -6,6 +6,7 @@ Created on Feb 12, 2016
 
 import logging
 import datetime
+import xml.dom
 
 class XmlReader(object):
     '''
@@ -72,4 +73,12 @@ class XmlReader(object):
             except KeyError as e:
                 logging.error('element \'%s\' does not support type \'%s\'' % (element.name, attributeNode.value))
                 pass
+        return retVal
+
+    @staticmethod
+    def getText(element):
+        retVal = ''
+        for node in element.childNodes:
+            if xml.dom.Node.TEXT_NODE == node.nodeType:
+                retVal += node.data
         return retVal

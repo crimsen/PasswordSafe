@@ -66,4 +66,14 @@ class Version2Reader(object):
 
     def readSMimeObject(self, element):
         retVal = CertificateObject()
+        for secretKeyElement in element.getElementsByTagName(XmlMapping.secretKey):
+            fileName = XmlReader.getStrAttribute(secretKeyElement, XmlMapping.fileName, '')
+            secretKey = XmlReader.getText(secretKeyElement)
+            retVal.setSecretKeyFileName(fileName)
+            retVal.setSecretKey(secretKey)
+        for publicKeyElement in element.getElementsByTagName(XmlMapping.publicKey):
+            fileName = XmlReader.getStrAttribute(publicKeyElement, XmlMapping.fileName, '')
+            publicKey = XmlReader.getText(publicKeyElement)
+            retVal.setPublicKeyFileName(fileName)
+            retVal.setPublicKey(publicKey)
         return retVal

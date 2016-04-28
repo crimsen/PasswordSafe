@@ -35,3 +35,9 @@ class XmlWriter(object):
     def setEnumAttribute(element, attributeName, val):
         if None != val:
             element.setAttribute(attributeName, val.name)
+
+    @staticmethod
+    def setText(doc, element, val):
+        if None != val:
+            textNode = doc.createTextNode(val)
+            element.appendChild(textNode)

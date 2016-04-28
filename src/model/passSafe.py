@@ -9,6 +9,7 @@ from model.PasswordSafeWriter import PasswordSafeWriter
 from model.SafeItem import SafeItem
 from model.passObject import PasswordObject
 import gnupg
+from model.CertificateObject import CertificateObject
 
 class PasswordSafe(object):
     '''
@@ -29,6 +30,12 @@ class PasswordSafe(object):
         passwordObject = PasswordObject(title, username, password, email, location, note, createDate)
         passwordObject.haveCreateDate()
         retVal = SafeItem(passwordObject, history)
+        return retVal
+    
+    def createSmimeItem(self):
+        certificateObject = CertificateObject()
+        certificateObject.haveCreateDate()
+        retVal = SafeItem(certificateObject, [])
         return retVal
     
     def createPasswordObject(self, title, username, password, email, location, note, createDate=None, endDate=None):
