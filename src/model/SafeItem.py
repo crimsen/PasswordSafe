@@ -3,6 +3,9 @@ Created on Jan 29, 2016
 
 @author: groegert
 '''
+from model.CertificateObject import CertificateObject
+from model.passObject import PasswordObject
+from model.SecretObjectEnum import  SecretObjectEnum
 
 class SafeItem(object):
     '''
@@ -47,3 +50,13 @@ class SafeItem(object):
     def getTitle(self):
         return self.secretObjects[0].getTitle()
     
+    def getType(self):
+        retVal = None
+        obj = self.getCurrentSecretObject()
+        if type(obj) == PasswordObject:
+            retVal = SecretObjectEnum.password
+        elif type(obj) == CertificateObject:
+            retVal = SecretObjectEnum.smime
+        return retVal
+            
+        

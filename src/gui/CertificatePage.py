@@ -251,8 +251,9 @@ class CertificatePageController(EmptyPageController):
         fileName = self.view.varSecretKeyFileName.get()
         certificateObject = self.model.getCurrentSecretObject()
         (fileName, key) = self.loadKey(fileName)
-        certificateObject.setSecretKey(key)
-        self.view.varSecretKeyFileName.set(os.path.basename(fileName))
+        if None != fileName:
+            certificateObject.setSecretKey(key)
+            self.view.varSecretKeyFileName.set(os.path.basename(fileName))
 
     def pressSaveSecretKey(self, event):
         fileName = self.view.varSecretKeyFileName.get()
@@ -263,8 +264,9 @@ class CertificatePageController(EmptyPageController):
         fileName = self.view.varPublicKeyFileName.get()
         certificateObject = self.model.getCurrentSecretObject()
         (fileName, key) = self.loadKey(fileName)
-        certificateObject.setPublicKey(key)
-        self.view.varPublicKeyFileName.set(os.path.basename(fileName))
+        if None != fileName:
+            certificateObject.setPublicKey(key)
+            self.view.varPublicKeyFileName.set(os.path.basename(fileName))
 
     def pressSavePublicKey(self, event):
         fileName = self.view.varPublicKeyFileName.get()

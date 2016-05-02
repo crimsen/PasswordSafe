@@ -3,12 +3,14 @@ Created on 16.04.2015
 
 @author: crimsen
 '''
-import gui.PasswordForm
+from edit.SetSecretObjectCmd import SetSecretObjectCmd
+from gui.CertificatePage import CertificatePage
+from gui.CertificatePage import CertificatePageContext
+from gui.PasswordForm import PasswordForm
+from gui.PasswordForm import PasswordFormContext
 from model.passObject import PasswordObject
 import sys
-from edit.SetSecretObjectCmd import SetSecretObjectCmd
-from gui.CertificatePage import CertificatePageContext
-from gui.PasswordForm import PasswordFormContext
+from model.SecretObjectEnum import SecretObjectEnum
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
@@ -17,10 +19,10 @@ else:
 class ChangeSafeItemWindow(object):
     #Build a new Window for a new PasswordObject
     def __init__(self, context):
+        viewModel = context.getSafeItem().clone()
+        viewModel.getCurrentSecretObject().createDate = None
         self.view = ChangeSafeItemWindowView(context)
-        self.model = context.getPasswordItem().clone()
-        self.model.getCurrentSecretObject().createDate = None
-        self.controller = ChangeSafeItemWindowController(self.view, self.model, context)
+        self.controller = ChangeSafeItemWindowController(self.view, viewModel, context)
 
     def show(self):
         self.view.show()
@@ -29,25 +31,27 @@ class ChangeSafeItemWindow(object):
         self.view.close()
     
 class ChangeSafeItemWindowContext(object):
-    def __init__(self, client, editingDomain, passwordItem):
+    def __init__(self, client, editingDomain, safeItem):
         self.client = client
         self.editingDomain = editingDomain
-        self.passwordItem = passwordItem
+        self.safeItem = safeItem
     def getClient(self):
         return self.client
     def getEditingDomain(self):
         return self.editingDomain
-    def getPasswordItem(self):
-        return self.passwordItem
+    def getSafeItem(self):
+        return self.safeItem
         
 class ChangeSafeItemWindowView(object):
     
     class PasswordFormContext(PasswordFormContext):
         def __init__(self, parentContext):
             PasswordFormContext.__init__(self, parentContext.client.context)
+            self.mode = 'edit'
     class CertificatePageContext(CertificatePageContext):
         def __init__(self, parentContext):
             CertificatePageContext.__init__(self, parentContext.client.context)
+            self.mode = 'edit'
         
     def __init__(self, context):
         self.context = context
@@ -55,11 +59,18 @@ class ChangeSafeItemWindowView(object):
         
     def __buildFrame__(self):
         self.window = tk.Toplevel()
-        self.window.title('Change Password')
         self.window.geometry('640x400')
         parent = self.window
-        self.form = gui.PasswordForm.PasswordForm(parent, ChangeSafeItemWindowView.PasswordFormContext(self.context))
-        self.form.setMode('edit')
+        itemType = self.getSafeItemType()
+        if SecretObjectEnum.password == itemType:
+            self.window.title('Change Password')
+            self.form = PasswordForm(parent, ChangeSafeItemWindowView.PasswordFormContext(self.context))
+        elif SecretObjectEnum.smime == itemType:
+            self.window.title('Change SMime')
+            self.form = CertificatePage(parent, ChangeSafeItemWindowView.CertificatePageContext(self.context))
+        else:
+            self.window.title('Change Unknown Type')
+            self.form = None
         
         buttonFrame = tk.Frame(master=parent)
         self.buttonSave = tk.Button(master=buttonFrame, text='Save')
@@ -69,15 +80,14 @@ class ChangeSafeItemWindowView(object):
         buttonFrame.pack(side='bottom', anchor='e')
         self.buttonCancel.pack(side='right', fill='both', padx=5, pady=5)
         self.buttonSave.pack(side='right', fill='both', padx=5, pady=5)
-
-    def updateFromModel(self, passwordObject):
-        self.form.setModel(passwordObject)
-
+    def updateFromModel(self, safeItem):
+        self.form.setModel(safeItem)
     def show(self):
-        self.window.mainloop()
-        
+        pass
     def close(self):
         self.window.destroy()
+    def getSafeItemType(self):
+        return self.context.getSafeItem().getType()
         
 class ChangeSafeItemWindowController(object):
     def __init__(self, view, model, context):
@@ -85,11 +95,10 @@ class ChangeSafeItemWindowController(object):
         self.model = model
         self.client = context.getClient()
         self.editingDomain = context.getEditingDomain()
-        self.origModel = context.getPasswordItem()
+        self.origModel = context.getSafeItem()
         view.buttonSave.configure(command=self.pressSave)
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
-        #view.form.setContext(self.client.getContext())
         self.view.window.focus_force()
 
     def pressCancel(self):
