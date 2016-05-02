@@ -14,7 +14,7 @@ from edit.DeleteSafeItemCmd import DeleteSafeItemCmd
 import webbrowser
 import sys
 from gui.NewSafeItemWindow import NewSafeItemWindowContext
-from gui.changePassWindow import ChangePasswordWindowContext
+from gui.ChangeSafeItemWindow import ChangeSafeItemWindowContext
 from gui.CertificatePage import CertificatePage
 from gui.EmptyPage import EmptyPage
 from model.CertificateObject import CertificateObject
@@ -27,7 +27,7 @@ else:
     from Tkinter import StringVar
     from tkMessageBox import showerror
 from gui.NewSafeItemWindow import NewSafeItemWindow
-from .changePassWindow import ChangePassWindow
+from gui.ChangeSafeItemWindow import ChangeSafeItemWindow
 from model.passObject import PasswordObject
 from .PassGenWindow import PassGenWindow
 from .HistoryWindow import HistoryWindow
@@ -373,8 +373,8 @@ class UnlockFrameController(MasterDetailsFormController):
         self.resetTime()
         index = self.view.getTitleBoxIndex()
         passObFilter = self.filter.getSafe()[index]
-        context = ChangePasswordWindowContext(self, self.context.getEditingDomain(), passObFilter)
-        self.changePassWindow = ChangePassWindow(context)
+        context = ChangeSafeItemWindowContext(self, self.context.getEditingDomain(), passObFilter)
+        self.changePassWindow = ChangeSafeItemWindow(context)
         self.addWindow(self.changePassWindow)    
         self.changePassWindow.show()
         

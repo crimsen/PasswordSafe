@@ -14,13 +14,13 @@ if sys.hexversion >= 0x3000000:
 else:
     import Tkinter as tk
 
-class ChangePassWindow(object):
+class ChangeSafeItemWindow(object):
     #Build a new Window for a new PasswordObject
     def __init__(self, context):
-        self.view = ChangePasswordWindowView(context)
+        self.view = ChangeSafeItemWindowView(context)
         self.model = context.getPasswordItem().clone()
         self.model.getCurrentSecretObject().createDate = None
-        self.controller = ChangePasswordWindowController(self.view, self.model, context)
+        self.controller = ChangeSafeItemWindowController(self.view, self.model, context)
 
     def show(self):
         self.view.show()
@@ -28,7 +28,7 @@ class ChangePassWindow(object):
     def close(self):
         self.view.close()
     
-class ChangePasswordWindowContext(object):
+class ChangeSafeItemWindowContext(object):
     def __init__(self, client, editingDomain, passwordItem):
         self.client = client
         self.editingDomain = editingDomain
@@ -40,7 +40,7 @@ class ChangePasswordWindowContext(object):
     def getPasswordItem(self):
         return self.passwordItem
         
-class ChangePasswordWindowView(object):
+class ChangeSafeItemWindowView(object):
     
     class PasswordFormContext(PasswordFormContext):
         def __init__(self, parentContext):
@@ -58,7 +58,7 @@ class ChangePasswordWindowView(object):
         self.window.title('Change Password')
         self.window.geometry('640x400')
         parent = self.window
-        self.form = gui.PasswordForm.PasswordForm(parent, ChangePasswordWindowView.PasswordFormContext(self.context))
+        self.form = gui.PasswordForm.PasswordForm(parent, ChangeSafeItemWindowView.PasswordFormContext(self.context))
         self.form.setMode('edit')
         
         buttonFrame = tk.Frame(master=parent)
@@ -79,7 +79,7 @@ class ChangePasswordWindowView(object):
     def close(self):
         self.window.destroy()
         
-class ChangePasswordWindowController(object):
+class ChangeSafeItemWindowController(object):
     def __init__(self, view, model, context):
         self.view = view
         self.model = model
@@ -115,5 +115,5 @@ class ChangePasswordWindowController(object):
             self.client.copyToClipBoard(entry)
 
 if __name__=='__main__':
-    test = ChangePassWindow(None)
+    test = ChangeSafeItemWindow(None)
     test.show()
