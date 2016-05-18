@@ -8,6 +8,7 @@ from gui.Wizard import WizardView
 from gui.Wizard import WizardController
 from gui.CertificatePage import CertificatePage
 from gui.CertificatePage import CertificatePageContext
+from gui.CloseWindowEventSrc import CloseWindowEventSrc
 from gui.EmptyPage import EmptyPage
 from gui.EmptyPage import EmptyPageContext
 from gui.PasswordForm import PasswordForm
@@ -44,7 +45,10 @@ class NewSafeItemWindow(Wizard):
         self.view.show()
     
     def close(self):
-        self.view.close()
+        self.controller.closeWindow()
+        
+    def addCloseWindowListener(self, listener):
+        return self.controller.addCloseWindowListener(listener)
 
 class NewSafeItemWindowContext(object):
     def __init__(self, client, master, editingDomain):

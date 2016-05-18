@@ -6,6 +6,7 @@ Created on 16.04.2015
 from edit.SetSecretObjectCmd import SetSecretObjectCmd
 from gui.CertificatePage import CertificatePage
 from gui.CertificatePage import CertificatePageContext
+from gui.CloseWindowEventSrc import CloseWindowEventSrc
 from gui.PasswordForm import PasswordForm
 from gui.PasswordForm import PasswordFormContext
 from model.passObject import PasswordObject
@@ -28,7 +29,9 @@ class ChangeSafeItemWindow(object):
         self.view.show()
         
     def close(self):
-        self.view.close()
+        self.controller.closeWindow()
+    def addCloseWindowListener(self, listener):
+        return self.controller.addCloseWindowListener(listener)
     
 class ChangeSafeItemWindowContext(object):
     def __init__(self, client, editingDomain, safeItem):
@@ -89,8 +92,9 @@ class ChangeSafeItemWindowView(object):
     def getSafeItemType(self):
         return self.context.getSafeItem().getType()
         
-class ChangeSafeItemWindowController(object):
+class ChangeSafeItemWindowController(CloseWindowEventSrc):
     def __init__(self, view, model, context):
+        CloseWindowEventSrc.__init__(self)
         self.view = view
         self.model = model
         self.client = context.getClient()
@@ -100,12 +104,17 @@ class ChangeSafeItemWindowController(object):
         view.buttonCancel.configure(comman=self.pressCancel)
         view.updateFromModel(model)
         self.view.window.focus_force()
+        self.view.window.protocol("WM_DELETE_WINDOW",self.closeWindow)
+        
+    def closeWindow(self):
+        CloseWindowEventSrc.fireCloseWindow(self)
+        self.view.close()
 
     def pressCancel(self):
         '''
         Destroy the widget
         '''
-        self.view.close()
+        self.closeWindow()
     
     def pressSave(self):
         '''
@@ -117,7 +126,7 @@ class ChangeSafeItemWindowController(object):
             self.editingDomain.executeCmd(SetSecretObjectCmd(self.origModel, self.model))
             if None != self.client:
                 self.client.onSafeChanged()
-        self.view.close()
+        self.closeWindow()
 
     def copyToClipBoard(self, entry):
         if None != self.client:

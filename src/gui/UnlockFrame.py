@@ -17,7 +17,12 @@ from gui.NewSafeItemWindow import NewSafeItemWindowContext
 from gui.ChangeSafeItemWindow import ChangeSafeItemWindowContext
 from gui.CertificatePage import CertificatePage
 from gui.EmptyPage import EmptyPage
+from gui.TreeView import TreeView
+from gui.TreeView import TreeViewContext
 from model.CertificateObject import CertificateObject
+from model.PasswordSafeContentProvider import PasswordSafeContentProvider
+from model.PasswordSafeLabelProvider import PasswordSafeLabelProvider
+from model.SafeItem import SafeItem
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
     from tkinter import StringVar
@@ -83,7 +88,6 @@ class UnlockFrameView(MasterDetailsFormView):
     def __init__(self, context, viewModel):
         MasterDetailsFormView.__init__(self, context, viewModel)
         self.parent = context.getFrame()
-        self.filterEntry = StringVar()
         self.checkTitle = StringVar()
         self.checkUsername = StringVar()
         self.checkPassword = StringVar()
@@ -97,15 +101,16 @@ class UnlockFrameView(MasterDetailsFormView):
         self.formFrame = tk.Frame(master=parent)
         self.__buildMenuBar__(self.formFrame)
         self.__buildFilterFrame__(self.formFrame)
-        self.__buildTitleBoxFrame__(self.formFrame)
+        self.treeView = TreeView(TreeViewContext(self.formFrame))
+        self.treeView.setLabelProvider(PasswordSafeLabelProvider())
         self.frameOption = tk.Frame(master=self.formFrame)
         self.buttonLock = tk.Button(master=self.formFrame, text='Lock', underline=0)
         self.labelTime = tk.Label(master=self.formFrame, anchor='e')
         self.__packFrame__()
 
     def __packFrame__(self):
-        self.frameFilter.pack(side='top', fill='x', padx=5)
-        self.frameTitleBox.pack(side='left', fill='both', padx=10, pady=10)
+        self.frameFilter.pack(side='top', fill='x', pady=10)
+        self.treeView.getFrame().pack(side='left', fill='both', padx=10, pady=10)
         self.frameOption.pack(side='top', fill='both', expand=True)
         self.labelTime.pack(side='bottom')
         self.buttonLock.pack(side='bottom', fill='both', padx=5, pady=5)
@@ -122,7 +127,6 @@ class UnlockFrameView(MasterDetailsFormView):
     def __buildFilterFrame__(self, parent):
         self.frameFilter = tk.Frame(master=parent)
         
-        self.entryFilter = tk.Entry(master=self.frameFilter, textvariable=self.filterEntry)
         self.buttonFilterTitle = tk.Checkbutton(master=self.frameFilter, variable=self.checkTitle, onvalue='title', offvalue='', text='Title', underline=0)
         self.buttonFilterUsername = tk.Checkbutton(master=self.frameFilter, variable=self.checkUsername, onvalue='username', offvalue='', text='Username', underline=0)
         self.buttonFilterPassword = tk.Checkbutton(master=self.frameFilter, variable=self.checkPassword, onvalue='password', offvalue='', text='Password', underline=1)
@@ -130,7 +134,6 @@ class UnlockFrameView(MasterDetailsFormView):
         self.buttonFilterLocation = tk.Checkbutton(master=self.frameFilter, variable=self.checkLocation, onvalue='location', offvalue='', text='Location', underline=1)
         self.buttonFilterNote = tk.Checkbutton(master=self.frameFilter, variable=self.checkNote, onvalue='note', offvalue='', text='Note', underline=0)
         
-        self.entryFilter.pack(side='left', padx=5)
         self.buttonFilterTitle.pack(side='left')
         self.buttonFilterUsername.pack(side='left')
         self.buttonFilterPassword.pack(side='left')
@@ -138,19 +141,6 @@ class UnlockFrameView(MasterDetailsFormView):
         self.buttonFilterLocation.pack(side='left')
         self.buttonFilterNote.pack(side='left')
         
-    def __buildTitleBoxFrame__(self, parent):
-        '''
-        Build the TitleBox
-        Show all passwordobjects
-        '''
-        self.frameTitleBox = tk.Frame(master=parent)
-        self.titleBox = tk.Listbox(master=self.frameTitleBox, selectmode='single', width=30)
-        self.scrollbar = tk.Scrollbar(master=self.frameTitleBox)
-        self.titleBox.config(yscrollcommand=self.scrollbar.set)
-        self.scrollbar.config(command=self.titleBox.yview)
-        self.titleBox.pack(side='left', fill='both', expand=True)
-        self.scrollbar.pack(side='left', fill='y')
-
     def __buildMenuBar__(self, parent):
         '''
         Build the MenuBar
@@ -165,38 +155,19 @@ class UnlockFrameView(MasterDetailsFormView):
     def close(self):
         self.formFrame.destroy()
 
-    def updateTitleBox(self, passSafe):
-        '''
-        Reloaded the TitleBox if some Objects will be removed or changed
-        '''
-        self.titleBox.delete(0, 'end')
-        for passOb in passSafe:
-            self.titleBox.insert('end', passOb.getTitle())
-    
-    def getTitleBoxIndex(self):
-        index = self.titleBox.curselection()
-        if 0 == len(index):
-            index = -1
-        else:
-            index = index[0]
-        return int(index)
-    
-    def setTitleBoxIndex(self, index):
-        self.titleBox.select_clear(0, 'end')
-        self.titleBox.select_set(index)
-
     def setTime(self, time):
         text = ''
         if None != time:
             text = 'Autolock in '+str(time)+' seconds!'
         self.labelTime.config(text=text)
         
-    def updateFromModel(self, item):
+    def setDetail(self, item):
         self.updatePages(item)
         childViewModel = item
         self.currentPage[1].setModel(childViewModel)
         self.finishCurrentPagePacked()
-
+    def updateFromModel(self, model):
+        self.treeView.setModel(model.getSafe())
     def updatePages(self, item):
         '''
         function updates the form of the right side based on
@@ -214,7 +185,9 @@ class UnlockFrameView(MasterDetailsFormView):
     
     def getPageType(self, item):
         retVal = EmptyPage
-        secretObject = item.getCurrentSecretObject()
+        secretObject = item
+        if isinstance(item, SafeItem):
+            secretObject = item.getCurrentSecretObject()
         if type(secretObject) == PasswordObject:
             retVal = PasswordForm
         elif type(secretObject) == CertificateObject:
@@ -224,12 +197,12 @@ class UnlockFrameView(MasterDetailsFormView):
 class UnlockFrameController(MasterDetailsFormController):
     def __init__(self, view, model, context):
         MasterDetailsFormController.__init__(self, view, model, context)
+        self.detail = None
         self.timeControl = context.getTimeControl()
         self.client = context.getController()
-        self.openWindows = []
-        self.filter = PassSafeFilter(model.getSafe())
+        self.openWindows = {}
+        self.filter = PassSafeFilter(None)
 
-        view.filterEntry.trace('w', self.updateFilter)
         view.checkTitle.trace('w', self.updateFilter)
         view.checkUsername.trace('w', self.updateFilter)
         view.checkPassword.trace('w', self.updateFilter)
@@ -239,12 +212,6 @@ class UnlockFrameController(MasterDetailsFormController):
         
         view.buttonLock.configure(command=self.pressLock)
         view.formFrame.bind('<Escape>', self.pressLock)
-        view.titleBox.bind('<Escape>', self.pressLock)
-        view.titleBox.bind('<<ListboxSelect>>', self.selectedTitle)
-        view.titleBox.bind('<Up>', self.setTitleBoxIndexUp)
-        view.titleBox.bind('<Down>', self.setTitleBoxIndexDown)
-        view.entryFilter.bind('<Up>', self.setTitleBoxIndexUp)
-        view.entryFilter.bind('<Down>', self.setTitleBoxIndexDown)
 
         if None != context:
             mainWindow = context.getMainFrame()
@@ -257,8 +224,10 @@ class UnlockFrameController(MasterDetailsFormController):
 
         self.configureMenu()
         self.updateFilter()
-        self.setCurrent(-1)
-        view.entryFilter.focus_force()
+        self.view.treeView.setContentProvider(PasswordSafeContentProvider(self.filter))
+        self.view.treeView.addEventSink(self.onItemSelected)
+        self.view.treeView.setModel(model.getSafe())
+        self.view.treeView.setFocus()
 
     def configureMenu(self):
         self.view.fileMenu.add_command(label='Options', underline=0, command=self.pressOptions)
@@ -278,18 +247,17 @@ class UnlockFrameController(MasterDetailsFormController):
             mainWindow.unbind('<Alt-e>')
             mainWindow.unbind('<Alt-o>')
             mainWindow.unbind('<Alt-n>')
-        for openWindow in self.openWindows:
+        openWindows = self.openWindows
+        self.openWindows = {}
+        for openWindow in openWindows.values():
             openWindow.close()
 
     def updateFilter(self, *args):
         self.resetTime()
-        filterstring = self.view.filterEntry.get()
         filterattribute = [self.view.checkTitle.get(), self.view.checkUsername.get(), self.view.checkPassword.get(),\
                            self.view.checkEmail.get(), self.view.checkLocation.get(), self.view.checkNote.get()]
-        self.filter.setFilterstring(filterstring)
         self.filter.setFilterattribute(filterattribute)
-        self.filter.doFilter()
-        self.view.updateTitleBox(self.filter.getSafe())
+        self.onSafeChanged()
 
     def getMainWindow(self):
         retVal = None
@@ -297,39 +265,6 @@ class UnlockFrameController(MasterDetailsFormController):
             retVal = self.client.getMainWindow()
         return retVal
 
-    def setCurrent(self, index):
-        password = None
-        if -1 == index and 0 != len(self.filter.getSafe()):
-            index = 0
-        if -1 != index:
-            self.view.setTitleBoxIndex(index)
-            password = self.filter.getSafe()[index]
-        self.view.updateFromModel(password)
-    
-    def setTitleBoxIndexUp(self, event):
-        self.resetTime()
-        try:
-            index = self.view.getTitleBoxIndex()
-        except:
-            index = len(self.view.titleBox.get(0, 'end')) - 1
-        if index != 0:
-            self.setCurrent(index - 1)
-
-    def setTitleBoxIndexDown(self, event):
-        self.resetTime()
-        try:
-            index = self.view.getTitleBoxIndex()
-        except:
-            index = 0
-        if index != (len(self.view.titleBox.get(0, 'end')) - 1):
-            self.setCurrent(index + 1)
-
-    def selectedTitle(self, event):
-        self.resetTime()
-        index = self.view.getTitleBoxIndex()
-        if -1 != index:
-            self.setCurrent(index)
-        
     def pressLock(self, *args):            
         if None != self.client:
             self.client.pressLock() 
@@ -342,15 +277,9 @@ class UnlockFrameController(MasterDetailsFormController):
     def pressRemovePass(self):
         self.resetTime()
         try:
-            index = self.view.getTitleBoxIndex()
-            passObFilter = self.filter.getSafe()[index]
-            if None <> passObFilter:
-                self.context.getEditingDomain().executeCmd(DeleteSafeItemCmd(self.model.getSafe(), passObFilter))
+            if None <> self.detail:
+                self.context.getEditingDomain().executeCmd(DeleteSafeItemCmd(self.model.getSafe(), self.detail))
                 self.onSafeChanged()
-                self.view.updateTitleBox(self.filter.getSafe())
-                if index >= len(self.filter.getSafe()) :
-                    index = len(self.filter.getSafe()) - 1
-                self.setCurrent(index)
         except:
             self.showobjecterror()
             
@@ -363,20 +292,25 @@ class UnlockFrameController(MasterDetailsFormController):
 
     def pressViewHistory(self):
         self.resetTime()
-        index = self.view.getTitleBoxIndex()
-        history = self.filter.getSafe()[index].getHistory()
-        self.historyWindow = HistoryWindow(self, history)
-        self.openWindows.append(self.historyWindow)
-        self.historyWindow.show()
+        item = self.getSafeItem(self.detail)
+        if None == item:
+            showerror('Unsupported action', 'Selected Password doesn\'t have a history.\nOnly the latest version of a Password do have a history.')
+        else:
+            history = self.detail.getHistory()
+            self.historyWindow = HistoryWindow(self, history)
+            self.addWindow(self.historyWindow)
+            self.historyWindow.show()
         
     def pressChangePass(self):
         self.resetTime()
-        index = self.view.getTitleBoxIndex()
-        passObFilter = self.filter.getSafe()[index]
-        context = ChangeSafeItemWindowContext(self, self.context.getEditingDomain(), passObFilter)
-        self.changePassWindow = ChangeSafeItemWindow(context)
-        self.addWindow(self.changePassWindow)    
-        self.changePassWindow.show()
+        item = self.getSafeItem(self.detail)
+        if None == item:
+            showerror('Unsupported action', 'Selected Password can\'t be changed.\nOnly the latest version of a Password can be changed.')
+        else:
+            context = ChangeSafeItemWindowContext(self, self.context.getEditingDomain(), self.detail)
+            self.changePassWindow = ChangeSafeItemWindow(context)
+            self.addWindow(self.changePassWindow)    
+            self.changePassWindow.show()
         
     def pressPassGen(self):
         self.resetTime()
@@ -410,15 +344,26 @@ class UnlockFrameController(MasterDetailsFormController):
             self.timeControl.resetTime()
     
     def onSafeChanged(self):
-        self.filter.doFilter()
-        self.view.updateTitleBox(self.filter.getSafe())
+        self.view.updateFromModel(self.model)
+
+    def onItemSelected(self, item):
+        self.detail = item
+        self.view.setDetail(item)
 
     def copyToClipBoard(self, entry):
         if None != self.client:
             self.client.copyToClipBoard(entry)
     
-    def addWindow(self, windowClass):
-        self.openWindows.append(windowClass)
+    def addWindow(self, window):
+        cookie = window.addCloseWindowListener(self.onCloseWindow)
+        self.openWindows[cookie] = window
+    def onCloseWindow(self, cookie):
+        self.openWindows.pop(cookie, None)
+    def getSafeItem(self, item):
+        retVal = None
+        if type(item) == SafeItem:
+            retVal = item
+        return retVal
 
 class Test(object):
     def __init__(self):

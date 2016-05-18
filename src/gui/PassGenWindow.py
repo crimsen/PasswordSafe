@@ -3,6 +3,7 @@ Created on 21.07.2015
 
 @author: timgroger
 '''
+from gui.CloseWindowEventSrc import CloseWindowEventSrc
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as Tk
@@ -24,7 +25,9 @@ class PassGenWindow(object):
         self.view.show()
     
     def close(self):
-        self.view.close()
+        self.controller.closeWindow()
+    def addCloseWindowListener(self, listener):
+        return self.controller.addCloseWindowListener(listener)
         
 class PassGenWindowView(object):
     '''
@@ -117,14 +120,15 @@ class PassGenWindowView(object):
         self.numbersButton.grid(row=1, column=2, sticky='w')
         
     def show(self):
-        self.window.mainloop()
+        pass
         
     def close(self):
         self.window.destroy()
         
-class PassGenWindowController(object):
+class PassGenWindowController(CloseWindowEventSrc):
     
     def __init__(self, view, model, client, passGen):
+        CloseWindowEventSrc.__init__(self)
         self.view = view
         self.model = model
         self.client = client
@@ -152,6 +156,11 @@ class PassGenWindowController(object):
         self.checkNumbers.trace('w', self.resetTime)
 #        self.entryGenPass.trace('w', self.resetTime)
         self.varLength.trace('w', self.resetTime)
+        self.view.window.protocol("WM_DELETE_WINDOW",self.closeWindow)
+        
+    def closeWindow(self):
+        CloseWindowEventSrc.fireCloseWindow(self)
+        self.view.close()
     
     def setDefault(self):
         self.defaultLength = 8
@@ -211,9 +220,6 @@ class PassGenWindowController(object):
     def resetTime(self, *args):
         self.client.resetTime()
     
-    def close(self):
-        self.view.close()
-        
 if __name__=='__main__':
     passWindow = PassGenWindow(None)
     passWindow.show()

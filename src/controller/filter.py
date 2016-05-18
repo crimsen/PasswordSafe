@@ -16,9 +16,10 @@ class PassSafeFilter(object):
         self.filterattribute = []
         self.filteredpasssafe = []
         
-    def setFilterstring(self, keystring):
+    def setFilterString(self, keystring):
         self.filterstring = keystring
-        self.doFilter()
+        if None != self.passwordSafe:
+            self.doFilter()
     
     def setFilterattribute(self, attributlist):
         self.filterattribute = []
@@ -30,6 +31,10 @@ class PassSafeFilter(object):
     def doFilter(self):
         self.filteredpasssafe = []
         self.filteredpasssafe = [ po for po in self.passwordSafe.getSafe() if self.checkAttributes(po.getCurrentSecretObject()) ]
+    
+    def doFilterSafe(self, safe):
+        retVal = [ po for po in safe if self.checkAttributes(po.getCurrentSecretObject()) ]
+        return retVal
     
     def checkAttributes(self, po):
         if self.filterstring == '' or self.filterstring == None:

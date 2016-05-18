@@ -3,6 +3,8 @@ Created on 24.11.2015
 
 @author: crimsen
 '''
+from gui.CloseWindowEventSrc import CloseWindowEventSrc
+from model.passObject import PasswordObject
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
@@ -26,7 +28,9 @@ class HistoryWindow(object):
         self.view.show()
         
     def close(self):
-        self.controller.close()
+        self.controller.closeWindow()
+    def addCloseWindowListener(self, listener):
+        return self.controller.addCloseWindowListener(listener)
         
 class HistoryWindowModel(tk.Frame):
     
@@ -42,11 +46,16 @@ class HistoryWindowModel(tk.Frame):
         self.endDate = passOb.getEndDate().isoformat()
         self.createDate = passOb.getCreateDate().isoformat()
         self.title = passOb.getTitle()
-        self.username = passOb.getUsername()
         self.password = passOb.getPassword()
-        self.email = passOb.getEmail()
-        self.location = passOb.getLocation()
         self.note = passOb.getNote()
+        if type(passOb) == PasswordObject:
+            self.username = passOb.getUsername()
+            self.email = passOb.getEmail()
+            self.location = passOb.getLocation()
+        else:
+            self.username = ''
+            self.email = ''
+            self.location = ''
         
         self.data = [self.createDate, self.title, self.username,
                      self.password, self.email, self.location, self.note]
@@ -160,14 +169,15 @@ class HistoryWindowView(object):
             historyOb.setController(controller)
     
     def show(self):
-        self.window.mainloop()
+        pass
         
     def close(self):
         self.window.destroy()
         
-class HistoryWindowController(object):
+class HistoryWindowController(CloseWindowEventSrc):
     
     def __init__(self, view, client, history):
+        CloseWindowEventSrc.__init__(self)
         self.view = view
         self.client = client
         self.history = history
@@ -182,8 +192,12 @@ class HistoryWindowController(object):
         self.canvas.bind_all('<Escape>', self.close)
         
         self.view.setController(self)
+        self.view.window.protocol("WM_DELETE_WINDOW",self.closeWindow)
         
-        
+    def closeWindow(self):
+        self.cleanUp()
+        CloseWindowEventSrc.fireCloseWindow(self)
+        self.view.close()
     def up(self, event):
         self.canvas.yview_scroll(-1, 'units')
     
@@ -194,8 +208,7 @@ class HistoryWindowController(object):
         self.canvas.yview_scroll(-1*event.delta, 'units')
     
     def close(self, *args):
-        self.cleanUp()
-        self.view.close()
+        self.closeWindow()
     
     def cleanUp(self):
         self.canvas.unbind_all('<MouseWheel>')

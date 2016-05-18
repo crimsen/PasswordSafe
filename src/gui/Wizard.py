@@ -7,6 +7,7 @@ from MasterDetailsForm import MasterDetailsForm
 from MasterDetailsForm import MasterDetailsFormView
 from MasterDetailsForm import MasterDetailsFormController
 import sys
+from gui.CloseWindowEventSrc import CloseWindowEventSrc
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
@@ -79,8 +80,9 @@ class WizardView(MasterDetailsFormView):
         '''
         return False
         
-class WizardController(MasterDetailsFormController):
+class WizardController(MasterDetailsFormController, CloseWindowEventSrc):
     def __init__(self, view, model, context):
+        CloseWindowEventSrc.__init__(self)
         MasterDetailsFormController.__init__(self, view, model, context)
         self.client = context.getClient()
         self.editingDomain = context.getEditingDomain()
@@ -89,15 +91,20 @@ class WizardController(MasterDetailsFormController):
         view.buttonNext.configure(command=self.pressNext)
         view.buttonBack.configure(command=self.pressPrev)
         self.view.window.focus_force()
+        self.view.window.protocol("WM_DELETE_WINDOW",self.closeWindow)
+
+    def closeWindow(self):
+        CloseWindowEventSrc.fireCloseWindow(self)
+        self.view.close()
 
     def pressCancel(self):
         '''
         Destroy the widget
         '''
-        self.view.close()
+        self.closeWindow()
     
     def pressSave(self):
-        self.view.close()
+        self.closeWindow()
     def pressNext(self):
         pass
     def pressPrev(self):

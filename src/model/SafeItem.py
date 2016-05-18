@@ -15,6 +15,13 @@ class SafeItem(object):
     The other items are history objects
     '''
 
+    @staticmethod
+    def getSecretObject(item):
+        retVal = item
+        if type(item) == SafeItem:
+            retVal = item.getCurrentSecretObject()
+        return retVal
+
     def __init__(self, secretObject, history=[]):
         '''
         Constructor

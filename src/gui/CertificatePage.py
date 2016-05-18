@@ -7,6 +7,7 @@ from gui.EmptyPage import EmptyPage
 from gui.EmptyPage import EmptyPageContext
 from gui.EmptyPage import EmptyPageController
 from gui.EmptyPage import EmptyPageView
+from model.SafeItem import SafeItem
 import sys
 import os
 if sys.hexversion >= 0x3000000:
@@ -149,14 +150,15 @@ class CertificatePageView(EmptyPageView):
             self.comboFilePacked = False
 
     def updateFromModel(self, model):
-        self.updateTitle(model.getCurrentSecretObject())
-        self.updatePassword(model.getCurrentSecretObject())
-        self.updateNote(model.getCurrentSecretObject())
+        secretObject = SafeItem.getSecretObject(model)
+        self.updateTitle(secretObject)
+        self.updatePassword(secretObject)
+        self.updateNote(secretObject)
         self.updateFile(model)
-        self.updateSecretKeyFileName(model.getCurrentSecretObject())
-        self.updateSecretKey(model.getCurrentSecretObject())
-        self.updatePublicKeyFileName(model.getCurrentSecretObject())
-        self.updatePublicKey(model.getCurrentSecretObject())
+        self.updateSecretKeyFileName(secretObject)
+        self.updateSecretKey(secretObject)
+        self.updatePublicKeyFileName(secretObject)
+        self.updatePublicKey(secretObject)
     
     def updateTitle(self, secretObj):
         self.updateVar(self.varTitle, secretObj.getTitle())
@@ -176,7 +178,9 @@ class CertificatePageView(EmptyPageView):
             self.textNote.configure(state='disabled')
 
     def updateFile(self, safeItem):
-        fileOption = safeItem.getPasswordFile()
+        fileOption = None
+        if type(safeItem) == SafeItem:
+            fileOption = safeItem.getPasswordFile()
         fileName = ""
         if None == fileOption:
             fileName = "Default"
@@ -199,7 +203,7 @@ class CertificatePageView(EmptyPageView):
         var.set(text)
 
     def updateModel(self, model):
-        certificateObject = model.getCurrentSecretObject() 
+        certificateObject = SafeItem.getSecretObject(model) 
         certificateObject.setTitle(self.varTitle.get())
         certificateObject.setPassword(self.varPassword.get())
         certificateObject.setNote(self.textNote.get('1.0', 'end'))
@@ -223,9 +227,10 @@ class CertificatePageController(EmptyPageController):
 
     def apply(self):
         self.view.updateModel(self.model)
-        passwordFileIdx = self.view.comboFile.current()
-        if passwordFileIdx >= 0 and passwordFileIdx < len(self.passwordFiles):
-            self.model.setPasswordFile(self.passwordFiles[passwordFileIdx])
+        if type(self.model) == SafeItem:
+            passwordFileIdx = self.view.comboFile.current()
+            if passwordFileIdx >= 0 and passwordFileIdx < len(self.passwordFiles):
+                self.model.setPasswordFile(self.passwordFiles[passwordFileIdx])
 
     def updateFromContext(self, context):
         #we need to keep the passwordFiles because in combobox only the labels are stored 
@@ -243,13 +248,13 @@ class CertificatePageController(EmptyPageController):
     def pressCopy(self, event):
         clipBoard = self.context.getClipBoard()
         if None != clipBoard and None != self.model:
-            entry = self.model.getCurrentSecretObject().getPassword()
+            entry = SafeItem.getSecretObject(self.model).getPassword()
             if None != entry:
                 clipBoard.copyToClipBoard(entry)
 
     def pressLoadSecretKey(self, event):
         fileName = self.view.varSecretKeyFileName.get()
-        certificateObject = self.model.getCurrentSecretObject()
+        certificateObject = SafeItem.getSecretObject(self.model)
         (fileName, key) = self.loadKey(fileName)
         if None != fileName:
             certificateObject.setSecretKey(key)
@@ -257,12 +262,12 @@ class CertificatePageController(EmptyPageController):
 
     def pressSaveSecretKey(self, event):
         fileName = self.view.varSecretKeyFileName.get()
-        certificateObject = self.model.getCurrentSecretObject()
+        certificateObject = SafeItem.getSecretObject(self.model)
         self.saveKey(fileName, certificateObject.getSecretKey())
 
     def pressLoadPublicKey(self, event):
         fileName = self.view.varPublicKeyFileName.get()
-        certificateObject = self.model.getCurrentSecretObject()
+        certificateObject = SafeItem.getSecretObject(self.model)
         (fileName, key) = self.loadKey(fileName)
         if None != fileName:
             certificateObject.setPublicKey(key)
@@ -270,7 +275,7 @@ class CertificatePageController(EmptyPageController):
 
     def pressSavePublicKey(self, event):
         fileName = self.view.varPublicKeyFileName.get()
-        certificateObject = self.model.getCurrentSecretObject()
+        certificateObject = SafeItem.getSecretObject(self.model)
         self.saveKey(fileName, certificateObject.getPublicKey())
 
     def loadKey(self, fileName):

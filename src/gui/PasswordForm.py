@@ -8,6 +8,7 @@ from gui.EmptyPage import EmptyPage
 from gui.EmptyPage import EmptyPageContext
 from gui.EmptyPage import EmptyPageController
 from gui.EmptyPage import EmptyPageView
+from model.SafeItem import SafeItem
 import webbrowser
 import sys
 if sys.hexversion >= 0x3000000:
@@ -144,12 +145,13 @@ class PasswordFormView(EmptyPageView):
 
     def updateFromModel(self, passwordObject):
         self.model = passwordObject
-        self.updateTitle(passwordObject.getCurrentSecretObject())
-        self.updateUsername(passwordObject.getCurrentSecretObject())
-        self.updatePassword(passwordObject.getCurrentSecretObject())
-        self.updateEmail(passwordObject.getCurrentSecretObject())
-        self.updateLocation(passwordObject.getCurrentSecretObject())
-        self.updateNote(passwordObject.getCurrentSecretObject())
+        secretObject = SafeItem.getSecretObject(passwordObject)
+        self.updateTitle(secretObject)
+        self.updateUsername(secretObject)
+        self.updatePassword(secretObject)
+        self.updateEmail(secretObject)
+        self.updateLocation(secretObject)
+        self.updateNote(secretObject)
         self.updateFile(passwordObject)
     
     def updateTitle(self, passwordObj):
@@ -179,7 +181,9 @@ class PasswordFormView(EmptyPageView):
             self.textNote.configure(state='disabled')
 
     def updateFile(self, passwordObj):
-        fileOption = passwordObj.getPasswordFile()
+        fileOption = None
+        if type(passwordObj) == SafeItem:
+            fileOption = passwordObj.getPasswordFile()
         fileName = ""
         if None == fileOption:
             fileName = "Default"
@@ -193,12 +197,13 @@ class PasswordFormView(EmptyPageView):
         var.set(text)
 
     def updateModel(self, model):
-        model.getCurrentSecretObject().setTitle(self.varTitle.get())
-        model.getCurrentSecretObject().setUsername(self.varUsername.get())
-        model.getCurrentSecretObject().setPassword(self.varPassword.get())
-        model.getCurrentSecretObject().setEmail(self.varEmail.get())
-        model.getCurrentSecretObject().setLocation(self.varLocation.get())
-        model.getCurrentSecretObject().setNote(self.textNote.get('1.0', 'end'))
+        secretObject = SafeItem.getSecretObject(model)
+        secretObject.setTitle(self.varTitle.get())
+        secretObject.setUsername(self.varUsername.get())
+        secretObject.setPassword(self.varPassword.get())
+        secretObject.setEmail(self.varEmail.get())
+        secretObject.setLocation(self.varLocation.get())
+        secretObject.setNote(self.textNote.get('1.0', 'end'))
 
 class PasswordFormController(EmptyPageController):
     def __init__(self, view, context):
@@ -219,9 +224,10 @@ class PasswordFormController(EmptyPageController):
 
     def apply(self):
         self.view.updateModel(self.model)
-        passwordFileIdx = self.view.comboFile.current()
-        if passwordFileIdx >= 0 and passwordFileIdx < len(self.passwordFiles):
-            self.model.setPasswordFile(self.passwordFiles[passwordFileIdx])
+        if type(self.model) == SafeItem:
+            passwordFileIdx = self.view.comboFile.current()
+            if passwordFileIdx >= 0 and passwordFileIdx < len(self.passwordFiles):
+                self.model.setPasswordFile(self.passwordFiles[passwordFileIdx])
 
     def updateFromContext(self, context):
         #we need to keep the passwordFiles because in combobox only the labels are stored 
@@ -244,13 +250,13 @@ class PasswordFormController(EmptyPageController):
 
     def callLink(self, event):
         if None != self.model:
-            link = self.model.getCurrentSecretObject().getLocation()
+            link = SafeItem.getSecretObject(self.model).getLocation()
             if None != link and "" != link:
                 webbrowser.open_new_tab(link)
 
     def pressCopy(self, event):
         if None != self.clipBoard and None != self.model:
-            entry = self.model.getCurrentSecretObject().getPassword()
+            entry = SafeItem.getSecretObject(self.model).getPassword()
             if None != entry:
                 self.clipBoard.copyToClipBoard(entry)
 
