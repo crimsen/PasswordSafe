@@ -71,6 +71,9 @@ class ChangeSafeItemWindowView(object):
         elif SecretObjectEnum.smime == itemType:
             self.window.title('Change SMime')
             self.form = CertificatePage(parent, ChangeSafeItemWindowView.CertificatePageContext(self.context))
+        elif SecretObjectEnum.gpg == itemType:
+            self.window.title('Change GPG')
+            self.form = CertificatePage(parent, ChangeSafeItemWindowView.CertificatePageContext(self.context))
         else:
             self.window.title('Change Unknown Type')
             self.form = None

@@ -23,17 +23,13 @@ class Version2Writer(object):
 
     def writeSafeItem(self, doc, item):
         safeElement = doc.createElement(XmlMapping.safeItem)
+        secretObjectEnum = item.getType()
         for obj in item.secretObjects:
-            self.writeSecretObject(doc, safeElement, obj)
+            self.writeSecretObject(doc, safeElement, obj, secretObjectEnum)
         doc.documentElement.appendChild(safeElement)
     
-    def writeSecretObject(self, doc, element, obj):
+    def writeSecretObject(self, doc, element, obj, secretObjectEnum):
         secretElement = doc.createElement(XmlMapping.secretObject)
-        secretObjectEnum = None
-        if type(obj) == PasswordObject:
-            secretObjectEnum = SecretObjectEnum.password
-        elif type(obj) == CertificateObject:
-            secretObjectEnum = SecretObjectEnum.smime
         XmlWriter.setEnumAttribute(secretElement, XmlMapping.type, secretObjectEnum)
         XmlWriter.setStrAttribute(secretElement, XmlMapping.title, obj.getTitle())
         XmlWriter.setStrAttribute(secretElement, XmlMapping.password, obj.getPassword())
@@ -42,8 +38,8 @@ class Version2Writer(object):
         XmlWriter.setDateAttribute(secretElement, XmlMapping.endDate, obj.getEndDate())
         if SecretObjectEnum.password == secretObjectEnum:
             self.writePasswordObject(doc, secretElement, obj)
-        elif SecretObjectEnum.smime == secretObjectEnum:
-            self.writeSMimeObject(doc, secretElement, obj)
+        elif SecretObjectEnum.smime == secretObjectEnum or SecretObjectEnum.gpg == secretObjectEnum:
+            self.writeCertificateObject(doc, secretElement, obj)
         else:
             logging.error('unknown secret object type \'%s\'' % obj)
         element.appendChild(secretElement)
@@ -53,7 +49,7 @@ class Version2Writer(object):
         XmlWriter.setStrAttribute(element, XmlMapping.email, obj.getEmail())
         XmlWriter.setStrAttribute(element, XmlMapping.location, obj.getLocation())
         
-    def writeSMimeObject(self, doc, element, obj):
+    def writeCertificateObject(self, doc, element, obj):
         secretKeyFileElement = doc.createElement(XmlMapping.secretKey)
         XmlWriter.setStrAttribute(secretKeyFileElement, XmlMapping.fileName, obj.getSecretKeyFileName())
         XmlWriter.setText(doc, secretKeyFileElement, obj.getSecretKey())

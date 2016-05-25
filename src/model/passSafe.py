@@ -7,6 +7,7 @@ Created on 28.03.2015
 from model.PasswordSafeReader import PasswordSafeReader
 from model.PasswordSafeWriter import PasswordSafeWriter
 from model.SafeItem import SafeItem
+from model.SecretObjectEnum import SecretObjectEnum
 from model.passObject import PasswordObject
 import gnupg
 from model.CertificateObject import CertificateObject
@@ -22,20 +23,26 @@ class PasswordSafe(object):
         self.option = option
         self.gpg = gnupg.GPG()
 
-    def createSafeItem(self, secretObjects):
-        retVal = SafeItem(secretObjects)
+    def createSafeItem(self, secretObjects, secretObjectEnum):
+        retVal = SafeItem(secretObjects, secretObjectEnum)
         return retVal
 
     def createPasswordItem(self, title='', username='', password='', email='', location='', note='', createDate=None, history=[]):
         passwordObject = PasswordObject(title, username, password, email, location, note, createDate)
         passwordObject.haveCreateDate()
-        retVal = SafeItem(passwordObject, history)
+        retVal = SafeItem(passwordObject, SecretObjectEnum.password, history)
         return retVal
     
     def createSmimeItem(self):
         certificateObject = CertificateObject()
         certificateObject.haveCreateDate()
-        retVal = SafeItem(certificateObject, [])
+        retVal = SafeItem(certificateObject, SecretObjectEnum.smime, [])
+        return retVal
+
+    def createGpgItem(self):
+        certificateObject = CertificateObject()
+        certificateObject.haveCreateDate()
+        retVal = SafeItem(certificateObject, SecretObjectEnum.gpg, [])
         return retVal
     
     def createPasswordObject(self, title, username, password, email, location, note, createDate=None, endDate=None):

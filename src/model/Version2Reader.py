@@ -25,12 +25,16 @@ class Version2Reader(object):
     def readSafe(self, element, passwordSafe, passwordFile):
         for elem1 in element.getElementsByTagName(XmlMapping.safeItem):
             secretObjects = []
+            secretObjectEnum = None
+
             for elem2 in elem1.getElementsByTagName(XmlMapping.secretObject):
+                if None == secretObjectEnum:
+                    secretObjectEnum = XmlReader.getEnumAttribute(elem2, XmlMapping.type, SecretObjectEnum, None)
                 secretObjects.append(self.readSecretObject(elem2))
             if 0 >= len(secretObjects):
                 logging.error('there is an safeitem without objects')
             else:
-                safeItem = passwordSafe.createSafeItem(secretObjects)
+                safeItem = passwordSafe.createSafeItem(secretObjects, secretObjectEnum)
                 safeItem.setPasswordFile(passwordFile)
             passwordSafe.addSafeItem(safeItem)
         
@@ -45,8 +49,8 @@ class Version2Reader(object):
         stype = XmlReader.getEnumAttribute(element, XmlMapping.type, SecretObjectEnum, None)
         if SecretObjectEnum.password == stype:
             retVal = self.readPasswordObject(element)
-        elif SecretObjectEnum.smime == stype:
-            retVal = self.readSMimeObject(element)
+        elif SecretObjectEnum.smime == stype or SecretObjectEnum.gpg == stype:
+            retVal = self.readCertificateObject(element)
         retVal.setTitle(title)
         retVal.setPassword(password)
         retVal.setNote(note)
@@ -64,7 +68,7 @@ class Version2Reader(object):
         retVal.setLocation(location)
         return retVal
 
-    def readSMimeObject(self, element):
+    def readCertificateObject(self, element):
         retVal = CertificateObject()
         for secretKeyElement in element.getElementsByTagName(XmlMapping.secretKey):
             fileName = XmlReader.getStrAttribute(secretKeyElement, XmlMapping.fileName, '')

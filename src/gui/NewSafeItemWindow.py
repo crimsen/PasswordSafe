@@ -125,7 +125,7 @@ class NewSafeItemWindowView(WizardView):
                 pageDescription = (SafeItemPage, SafeItemPageContext(self.context.getOption()))
             elif SecretObjectEnum.password == safeItemType and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
                 pageDescription = (PasswordForm, NewSafeItemWindowView.PasswordFormContext(self.context))
-            elif SecretObjectEnum.smime == safeItemType and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
+            elif (SecretObjectEnum.smime == safeItemType or SecretObjectEnum.gpg == safeItemType) and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
                 pageDescription = (CertificatePage, NewSafeItemWindowView.CertificatePageContext(self.context))
             else:
                 pageDescription = (EmptyPage, EmptyPageContext(self.context.getOption()))
@@ -140,7 +140,7 @@ class NewSafeItemWindowView(WizardView):
         safeItemType = self.viewModel.safeItemType
         if self.viewModel.canChangeSafeItemType and 0 == self.viewModel.currentPage:
             retVal = self.viewModel
-        elif (SecretObjectEnum.password == safeItemType or SecretObjectEnum.smime == safeItemType) and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
+        elif (SecretObjectEnum.password == safeItemType or SecretObjectEnum.smime == safeItemType or SecretObjectEnum.gpg == safeItemType) and 0 == self.viewModel.currentPage - 1 * self.viewModel.canChangeSafeItemType:
             retVal = self.viewModel.safeItem
         return retVal
 
@@ -154,19 +154,15 @@ class NewSafeItemWindowController(WizardController):
             model.safeItemType = SecretObjectEnum.password
         if None != model.safeItem:
             # if the type does not match the safeitem
-            if model.safeItemType == SecretObjectEnum.password:
-                if type(model.safeItem.getCurrentSecretObject()) != PasswordObject:
-                    model.safeItem = None
-            elif model.safeItemType == SecretObjectEnum.smime:
-                if type(model.safeItem.getCurrentSecretObject()) != CertificateObject:
-                    model.safeItem = None
-            else:
+            if model.safeItemType != model.safeItem.getType():
                 model.safeItem = None
         if None == model.safeItem:
             if SecretObjectEnum.password == model.safeItemType:
                 model.safeItem = context.master.createPasswordItem()
             elif SecretObjectEnum.smime == model.safeItemType:
                 model.safeItem = context.master.createSmimeItem()
+            elif SecretObjectEnum.gpg == model.safeItemType:
+                model.safeItem = context.master.createGpgItem()
 
     def pressSave(self):
         '''

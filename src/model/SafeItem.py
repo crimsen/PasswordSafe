@@ -22,11 +22,12 @@ class SafeItem(object):
             retVal = item.getCurrentSecretObject()
         return retVal
 
-    def __init__(self, secretObject, history=[]):
+    def __init__(self, secretObject, secretObjectEnum, history=[]):
         '''
         Constructor
         '''
         self.passwordFile = None
+        self.secretObjectEnum = secretObjectEnum
         if isinstance(secretObject, list):
             self.secretObjects = secretObject
         else:
@@ -35,7 +36,7 @@ class SafeItem(object):
     
     def clone(self):
         secretItem = self.secretObjects[0].clone()
-        retVal = SafeItem(secretItem)
+        retVal = SafeItem(secretItem, self.secretObjectEnum)
         retVal.setPasswordFile(self.getPasswordFile())
         return retVal
 
@@ -58,12 +59,6 @@ class SafeItem(object):
         return self.secretObjects[0].getTitle()
     
     def getType(self):
-        retVal = None
-        obj = self.getCurrentSecretObject()
-        if type(obj) == PasswordObject:
-            retVal = SecretObjectEnum.password
-        elif type(obj) == CertificateObject:
-            retVal = SecretObjectEnum.smime
-        return retVal
+        return self.secretObjectEnum
             
         
