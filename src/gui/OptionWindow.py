@@ -7,14 +7,13 @@ from MasterDetailsForm import MasterDetailsForm
 from MasterDetailsForm import MasterDetailsFormContext
 from MasterDetailsForm import MasterDetailsFormView
 from MasterDetailsForm import MasterDetailsFormController
+from gui.MessageWindow import MessageWindow
 from gui.OptionTree import OptionTree
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
-    from tkinter.messagebox import showerror
 else:
     import Tkinter as tk
-    from tkMessageBox import showerror
 
 class OptionWindow(MasterDetailsForm):
     '''
@@ -108,7 +107,7 @@ class OptionWindowController(MasterDetailsFormController):
             self.context.getMainController().controlOptionSave()
             self.view.optionWindow.destroy()
         except:
-            showerror('Incorrect Setting', 'Any setting is incorrect. Check if you did choose an account.')
+            MessageWindow('Incorrect Setting', 'Any setting is incorrect. Check if you did choose an account.')
             
 #http://stackoverflow.com/questions/16514617/python-tkinter-notebook-widget
     def itemSelected(self, itemId):

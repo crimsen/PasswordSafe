@@ -210,10 +210,10 @@ class MainController(object):
                 if f.getLoadVersion() != f.getVersion():
                     fileNames.append(f.getFilename())
             if 0 < len(fileNames):
-                message = 'When safing PasswordFile'
+                message = 'When saving PasswordFile'
                 if 1 < len(fileNames):
                     message += 's'
                 message += ': \n'
                 message += ',\n'.join(fileNames)
                 message += ',\n then the file version will be upgraded.' 
-                MessageWindow(message)
+                MessageWindow('Upgrading File Version', message)

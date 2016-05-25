@@ -14,6 +14,7 @@ from edit.DeleteSafeItemCmd import DeleteSafeItemCmd
 import webbrowser
 import sys
 from gui.NewSafeItemWindow import NewSafeItemWindowContext
+from gui.MessageWindow import MessageWindow
 from gui.ChangeSafeItemWindow import ChangeSafeItemWindowContext
 from gui.CertificatePage import CertificatePage
 from gui.EmptyPage import EmptyPage
@@ -26,11 +27,9 @@ from model.SafeItem import SafeItem
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
     from tkinter import StringVar
-    from tkinter.messagebox import showerror
 else:
     import Tkinter as tk
     from Tkinter import StringVar
-    from tkMessageBox import showerror
 from gui.NewSafeItemWindow import NewSafeItemWindow
 from gui.ChangeSafeItemWindow import ChangeSafeItemWindow
 from model.passObject import PasswordObject
@@ -294,7 +293,7 @@ class UnlockFrameController(MasterDetailsFormController):
         self.resetTime()
         item = self.getSafeItem(self.detail)
         if None == item:
-            showerror('Unsupported action', 'Selected Password doesn\'t have a history.\nOnly the latest version of a Password do have a history.')
+            MessageWindow('Unsupported action', 'Selected Password doesn\'t have a history.\nOnly the latest version of a Password do have a history.')
         else:
             history = self.detail.getHistory()
             self.historyWindow = HistoryWindow(self, history)
@@ -305,7 +304,7 @@ class UnlockFrameController(MasterDetailsFormController):
         self.resetTime()
         item = self.getSafeItem(self.detail)
         if None == item:
-            showerror('Unsupported action', 'Selected Password can\'t be changed.\nOnly the latest version of a Password can be changed.')
+            MessageWindow('Unsupported action', 'Selected Password can\'t be changed.\nOnly the latest version of a Password can be changed.')
         else:
             context = ChangeSafeItemWindowContext(self, self.context.getEditingDomain(), self.detail)
             self.changePassWindow = ChangeSafeItemWindow(context)
@@ -324,10 +323,10 @@ class UnlockFrameController(MasterDetailsFormController):
             self.client.pressAbout()
             
     def showoptionerror(self):
-        showerror('Error 404-File not found', 'No Options found.\nPlease open Options, choose an account\nand save it.')
+        MessageWindow('Error 404-File not found', 'No Options found.\nPlease open Options, choose an account\nand save it.')
         
     def showobjecterror(self):
-        showerror('Error', 'No Object is chosen.\nPleas choose an Object!')
+        MessageWindow('Error', 'No Object is chosen.\nPleas choose an Object!')
         
     def destroy(self):
         self.formFrame.destroy()
