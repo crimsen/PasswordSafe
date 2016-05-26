@@ -120,8 +120,8 @@ class MainController(object):
                 self.pressOptionSave()
     
     def copyToClipBoard(self, entry):
-        self.mainWindow.MainWindow.clipboard_clear()
-        self.mainWindow.MainWindow.clipboard_append(entry)
+        self.getMainWindow().clipboard_clear()
+        self.getMainWindow().clipboard_append(entry)
         
     def pressAbout(self):
         self.aboutFrame = AboutFrame()
