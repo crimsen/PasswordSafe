@@ -5,7 +5,7 @@ Created on Feb 18, 2016
 '''
 from XmlMapping import XmlMapping
 from XmlWriter import XmlWriter
-from model.passObject import PasswordObject
+from model.PasswordObject import PasswordObject
 from SecretObjectEnum import SecretObjectEnum
 import logging
 from model.CertificateObject import CertificateObject

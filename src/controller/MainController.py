@@ -3,9 +3,9 @@ Created on 15.04.2015
 
 @author: crimsen
 '''
-from gui.mainWindow import MainWindow
-from model.passSafe import PasswordSafe
-from model.optionLoader import OptionLoader
+from gui.MainWindow import MainWindow
+from model.PasswordSafe import PasswordSafe
+from model.OptionLoader import OptionLoader
 from model.OptionWriter import OptionWriter
 from model.Option import Option
 import os
@@ -120,8 +120,8 @@ class MainController(object):
                 self.pressOptionSave()
     
     def copyToClipBoard(self, entry):
-        self.mainWindow.mainWindow.clipboard_clear()
-        self.mainWindow.mainWindow.clipboard_append(entry)
+        self.mainWindow.MainWindow.clipboard_clear()
+        self.mainWindow.MainWindow.clipboard_append(entry)
         
     def pressAbout(self):
         self.aboutFrame = AboutFrame()

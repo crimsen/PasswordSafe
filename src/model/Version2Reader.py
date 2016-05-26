@@ -7,7 +7,7 @@ Created on Feb 16, 2016
 from XmlMapping import XmlMapping
 from XmlReader import XmlReader
 from SecretObjectEnum import SecretObjectEnum
-from model.passObject import PasswordObject
+from model.PasswordObject import PasswordObject
 from model.CertificateObject import CertificateObject
 import logging
 

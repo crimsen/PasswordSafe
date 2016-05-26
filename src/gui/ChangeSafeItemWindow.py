@@ -9,7 +9,7 @@ from gui.CertificatePage import CertificatePageContext
 from gui.CloseWindowEventSrc import CloseWindowEventSrc
 from gui.PasswordForm import PasswordForm
 from gui.PasswordForm import PasswordFormContext
-from model.passObject import PasswordObject
+from model.PasswordObject import PasswordObject
 import sys
 from model.SecretObjectEnum import SecretObjectEnum
 if sys.hexversion >= 0x3000000:

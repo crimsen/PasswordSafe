@@ -9,7 +9,7 @@ from MasterDetailsForm import MasterDetailsFormContext
 from MasterDetailsForm import MasterDetailsFormView
 from MasterDetailsForm import MasterDetailsFormController
 from .PasswordForm import PasswordForm
-from controller.filter import PassSafeFilter
+from controller.PasswordSafeFilter import PasswordSafeFilter
 from edit.DeleteSafeItemCmd import DeleteSafeItemCmd
 import webbrowser
 import sys
@@ -32,7 +32,7 @@ else:
     from Tkinter import StringVar
 from gui.NewSafeItemWindow import NewSafeItemWindow
 from gui.ChangeSafeItemWindow import ChangeSafeItemWindow
-from model.passObject import PasswordObject
+from model.PasswordObject import PasswordObject
 from .PassGenWindow import PassGenWindow
 from .HistoryWindow import HistoryWindow
 
@@ -200,7 +200,7 @@ class UnlockFrameController(MasterDetailsFormController):
         self.timeControl = context.getTimeControl()
         self.client = context.getController()
         self.openWindows = {}
-        self.filter = PassSafeFilter(None)
+        self.filter = PasswordSafeFilter(None)
 
         view.checkTitle.trace('w', self.updateFilter)
         view.checkUsername.trace('w', self.updateFilter)

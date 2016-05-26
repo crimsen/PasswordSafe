@@ -1,0 +1,6 @@
+see https://www.python.org/dev/peps/pep-0008/
+
+with the exception:
+Naming Convention
+- module names: CamelCase (because modules should contain one class only)
+- variables, functions: mixedCase

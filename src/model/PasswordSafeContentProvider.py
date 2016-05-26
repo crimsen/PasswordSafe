@@ -3,7 +3,7 @@ Created on May 3, 2016
 
 @author: groegert
 '''
-from model.passSafe import PasswordSafe
+from model.PasswordSafe import PasswordSafe
 from model.SafeItem import SafeItem
 
 class PasswordSafeContentProvider(object):

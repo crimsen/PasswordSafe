@@ -8,7 +8,7 @@ from model.PasswordSafeReader import PasswordSafeReader
 from model.PasswordSafeWriter import PasswordSafeWriter
 from model.SafeItem import SafeItem
 from model.SecretObjectEnum import SecretObjectEnum
-from model.passObject import PasswordObject
+from model.PasswordObject import PasswordObject
 import gnupg
 from model.CertificateObject import CertificateObject
 

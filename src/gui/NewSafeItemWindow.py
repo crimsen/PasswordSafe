@@ -17,7 +17,7 @@ from gui.SafeItemPage import SafeItemPage
 from gui.SafeItemPage import SafeItemPageContext
 from model.CertificateObject import CertificateObject
 from model.NewSafeItemWindowOption import NewSafeItemWindowOption
-from model.passObject import PasswordObject
+from model.PasswordObject import PasswordObject
 from model.SecretObjectEnum import SecretObjectEnum
 from edit.AddSafeItemCmd import AddSafeItemCmd
 

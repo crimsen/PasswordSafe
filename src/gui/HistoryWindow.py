@@ -4,7 +4,7 @@ Created on 24.11.2015
 @author: crimsen
 '''
 from gui.CloseWindowEventSrc import CloseWindowEventSrc
-from model.passObject import PasswordObject
+from model.PasswordObject import PasswordObject
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as tk

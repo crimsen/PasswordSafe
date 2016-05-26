@@ -5,7 +5,7 @@ Created on 27.03.2015
 
 @author: crimsen
 '''
-from controller.maincontroller import MainController
+from controller.MainController import MainController
 
 if __name__ == '__main__':
     

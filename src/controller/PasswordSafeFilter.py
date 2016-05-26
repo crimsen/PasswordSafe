@@ -5,7 +5,7 @@ Created on 18.04.2015
 '''
 #from __builtin__ import True
 
-class PassSafeFilter(object):
+class PasswordSafeFilter(object):
     '''
     classdocs
     '''
