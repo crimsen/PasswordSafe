@@ -276,7 +276,7 @@ class UnlockFrameController(MasterDetailsFormController):
     def pressRemovePass(self):
         self.resetTime()
         try:
-            if None <> self.detail:
+            if None != self.detail:
                 self.context.getEditingDomain().executeCmd(DeleteSafeItemCmd(self.model.getSafe(), self.detail))
                 self.onSafeChanged()
         except:

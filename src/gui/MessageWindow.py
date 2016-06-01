@@ -6,7 +6,7 @@ Created on Mar 3, 2016
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
-    import tkinter.messagebox
+    import tkinter.messagebox as messagebox
 else:
     import Tkinter as tk
     import tkMessageBox as messagebox
