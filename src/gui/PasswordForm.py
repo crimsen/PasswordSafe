@@ -9,8 +9,8 @@ from gui.EmptyPage import EmptyPageContext
 from gui.EmptyPage import EmptyPageController
 from gui.EmptyPage import EmptyPageView
 from model.SafeItem import SafeItem
-import webbrowser
 import sys
+import webbrowser
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
     import tkinter.ttk as ttk

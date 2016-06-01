@@ -3,7 +3,7 @@ Created on Jan 29, 2016
 
 @author: groegert
 '''
-from .Cmd import Cmd
+from edit.Cmd import Cmd
 from datetime import date
 
 class SetSecretObjectCmd(Cmd):

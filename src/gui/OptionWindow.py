@@ -3,10 +3,10 @@ Created on 10.04.2015
 
 @author: crimsen
 '''
-from MasterDetailsForm import MasterDetailsForm
-from MasterDetailsForm import MasterDetailsFormContext
-from MasterDetailsForm import MasterDetailsFormView
-from MasterDetailsForm import MasterDetailsFormController
+from gui.MasterDetailsForm import MasterDetailsForm
+from gui.MasterDetailsForm import MasterDetailsFormContext
+from gui.MasterDetailsForm import MasterDetailsFormController
+from gui.MasterDetailsForm import MasterDetailsFormView
 from gui.MessageWindow import MessageWindow
 from gui.OptionTree import OptionTree
 import sys

@@ -3,7 +3,9 @@ Created on 21.07.2015
 
 @author: timgroger
 '''
+from controller.PasswordGen import PasswordGen
 from gui.CloseWindowEventSrc import CloseWindowEventSrc
+from model.PasswordSymbols import PasswordSymbols
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as Tk
@@ -11,8 +13,6 @@ if sys.hexversion >= 0x3000000:
 else:
     import Tkinter as Tk
     from Tkinter import StringVar, IntVar
-from controller.PasswordGen import PasswordGen
-from model.PasswordSymbols import PasswordSymbols
 
 class PassGenWindow(object):
     def __init__(self, client):

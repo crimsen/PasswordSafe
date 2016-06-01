@@ -4,8 +4,8 @@ Created on Feb 12, 2016
 @author: groegert
 '''
 
-import logging
 import datetime
+import logging
 import xml.dom
 
 class XmlReader(object):

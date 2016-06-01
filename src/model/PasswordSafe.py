@@ -4,13 +4,13 @@ Created on 28.03.2015
 @author: crimsen
 '''
 
+from model.CertificateObject import CertificateObject
+from model.PasswordObject import PasswordObject
 from model.PasswordSafeReader import PasswordSafeReader
 from model.PasswordSafeWriter import PasswordSafeWriter
 from model.SafeItem import SafeItem
 from model.SecretObjectEnum import SecretObjectEnum
-from model.PasswordObject import PasswordObject
 import gnupg
-from model.CertificateObject import CertificateObject
 
 class PasswordSafe(object):
     '''

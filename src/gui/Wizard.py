@@ -3,11 +3,11 @@ Created on Mar 15, 2016
 
 @author: groegert
 '''
-from MasterDetailsForm import MasterDetailsForm
-from MasterDetailsForm import MasterDetailsFormView
-from MasterDetailsForm import MasterDetailsFormController
-import sys
 from gui.CloseWindowEventSrc import CloseWindowEventSrc
+from gui.MasterDetailsForm import MasterDetailsForm
+from gui.MasterDetailsForm import MasterDetailsFormView
+from gui.MasterDetailsForm import MasterDetailsFormController
+import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:

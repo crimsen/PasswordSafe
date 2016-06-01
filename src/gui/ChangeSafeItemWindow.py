@@ -10,8 +10,8 @@ from gui.CloseWindowEventSrc import CloseWindowEventSrc
 from gui.PasswordForm import PasswordForm
 from gui.PasswordForm import PasswordFormContext
 from model.PasswordObject import PasswordObject
-import sys
 from model.SecretObjectEnum import SecretObjectEnum
+import sys
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:

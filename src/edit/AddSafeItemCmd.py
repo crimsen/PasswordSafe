@@ -3,7 +3,7 @@ Created on Feb 1, 2016
 
 @author: groegert
 '''
-from .Cmd import Cmd
+from edit.Cmd import Cmd
 
 class AddSafeItemCmd(Cmd):
     '''

@@ -4,12 +4,12 @@ Created on May 28, 2015
 @author: thomas
 '''
 
-from Version2Reader import Version2Reader
-from XmlReader import XmlReader
-from XmlMapping import XmlMapping
+from model.Version2Reader import Version2Reader
+from model.XmlReader import XmlReader
+from model.XmlMapping import XmlMapping
+import datetime
 import os
 import xml.dom.minidom
-import datetime
 
 class PasswordSafeReader(object):
     '''

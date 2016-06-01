@@ -3,12 +3,12 @@ Created on Feb 18, 2016
 
 @author: groegert
 '''
-from XmlMapping import XmlMapping
-from XmlWriter import XmlWriter
-from model.PasswordObject import PasswordObject
-from SecretObjectEnum import SecretObjectEnum
-import logging
 from model.CertificateObject import CertificateObject
+from model.PasswordObject import PasswordObject
+from model.SecretObjectEnum import SecretObjectEnum
+from model.XmlMapping import XmlMapping
+from model.XmlWriter import XmlWriter
+import logging
 
 class Version2Writer(object):
     '''

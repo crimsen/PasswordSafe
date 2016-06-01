@@ -4,3 +4,9 @@ with the exception:
 Naming Convention
 - module names: CamelCase (because modules should contain one class only)
 - variables, functions: mixedCase
+
+Imports
+Imports should be ordered:
+- first: local
+- second: alphabetic
+- third: conditional modules

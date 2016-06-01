@@ -3,7 +3,7 @@ Created on Mar 14, 2016
 
 @author: groegert
 '''
-from EmptyPage import EmptyPage
+from gui.EmptyPage import EmptyPage
 from model.SecretObjectEnum import SecretObjectEnum
 import sys
 if sys.hexversion >= 0x3000000:

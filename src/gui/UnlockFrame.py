@@ -4,37 +4,37 @@ Created on 12.05.2015
 @author: timgroger
 '''
 
-from MasterDetailsForm import MasterDetailsForm
-from MasterDetailsForm import MasterDetailsFormContext
-from MasterDetailsForm import MasterDetailsFormView
-from MasterDetailsForm import MasterDetailsFormController
-from .PasswordForm import PasswordForm
 from controller.PasswordSafeFilter import PasswordSafeFilter
 from edit.DeleteSafeItemCmd import DeleteSafeItemCmd
-import webbrowser
-import sys
-from gui.NewSafeItemWindow import NewSafeItemWindowContext
-from gui.MessageWindow import MessageWindow
-from gui.ChangeSafeItemWindow import ChangeSafeItemWindowContext
 from gui.CertificatePage import CertificatePage
+from gui.ChangeSafeItemWindow import ChangeSafeItemWindow
+from gui.ChangeSafeItemWindow import ChangeSafeItemWindowContext
 from gui.EmptyPage import EmptyPage
+from gui.HistoryWindow import HistoryWindow
+from gui.NewSafeItemWindow import NewSafeItemWindow
+from gui.NewSafeItemWindow import NewSafeItemWindowContext
+from gui.MasterDetailsForm import MasterDetailsForm
+from gui.MasterDetailsForm import MasterDetailsFormContext
+from gui.MasterDetailsForm import MasterDetailsFormController
+from gui.MasterDetailsForm import MasterDetailsFormView
+from gui.MessageWindow import MessageWindow
+from gui.PassGenWindow import PassGenWindow
+from gui.PasswordForm import PasswordForm
 from gui.TreeView import TreeView
 from gui.TreeView import TreeViewContext
 from model.CertificateObject import CertificateObject
 from model.PasswordSafeContentProvider import PasswordSafeContentProvider
 from model.PasswordSafeLabelProvider import PasswordSafeLabelProvider
+from model.PasswordObject import PasswordObject
 from model.SafeItem import SafeItem
+import sys
+import webbrowser
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
     from tkinter import StringVar
 else:
     import Tkinter as tk
     from Tkinter import StringVar
-from gui.NewSafeItemWindow import NewSafeItemWindow
-from gui.ChangeSafeItemWindow import ChangeSafeItemWindow
-from model.PasswordObject import PasswordObject
-from .PassGenWindow import PassGenWindow
-from .HistoryWindow import HistoryWindow
 
 class UnlockFrame(MasterDetailsForm):
     '''

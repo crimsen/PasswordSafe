@@ -3,9 +3,7 @@ Created on 28.03.2015
 
 @author: crimsen
 '''
-from gui.Wizard import Wizard
-from gui.Wizard import WizardView
-from gui.Wizard import WizardController
+from edit.AddSafeItemCmd import AddSafeItemCmd
 from gui.CertificatePage import CertificatePage
 from gui.CertificatePage import CertificatePageContext
 from gui.CloseWindowEventSrc import CloseWindowEventSrc
@@ -15,11 +13,13 @@ from gui.PasswordForm import PasswordForm
 from gui.PasswordForm import PasswordFormContext
 from gui.SafeItemPage import SafeItemPage
 from gui.SafeItemPage import SafeItemPageContext
+from gui.Wizard import Wizard
+from gui.Wizard import WizardController
+from gui.Wizard import WizardView
 from model.CertificateObject import CertificateObject
 from model.NewSafeItemWindowOption import NewSafeItemWindowOption
 from model.PasswordObject import PasswordObject
 from model.SecretObjectEnum import SecretObjectEnum
-from edit.AddSafeItemCmd import AddSafeItemCmd
 
 class NewSafeItemWindow(Wizard):
     '''

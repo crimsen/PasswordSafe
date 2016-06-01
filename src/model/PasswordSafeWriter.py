@@ -4,12 +4,12 @@ Created on May 29, 2015
 @author: thomas
 '''
 
+from model.PasswordFileOption import PasswordFileOption
+from model.Version2Writer import Version2Writer
 from model.XmlMapping import XmlMapping
-from Version2Writer import Version2Writer
-from XmlWriter import XmlWriter
-from PasswordFileOption import PasswordFileOption
-import os
+from model.XmlWriter import XmlWriter
 from datetime import datetime
+import os
 import shutil
 import xml.dom.minidom
 

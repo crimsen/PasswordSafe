@@ -3,15 +3,15 @@ Created on May 12, 2015
 
 @author: thomas
 '''
+from gui.AccountPage import AccountPage
+from gui.FilesPage import FilesPage
+from gui.GuiPage import GuiPage
+from gui.TreeItem import TreeItem
 import sys
 if sys.hexversion >= 0x3000000:
     import tkinter.ttk as tk
 else:
     import ttk as tk
-from gui.TreeItem import TreeItem
-from gui.AccountPage import AccountPage
-from gui.FilesPage import FilesPage
-from gui.GuiPage import GuiPage
 
 class OptionTree(object):
     '''

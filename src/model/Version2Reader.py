@@ -4,11 +4,11 @@ Created on Feb 16, 2016
 @author: groegert
 '''
 
-from XmlMapping import XmlMapping
-from XmlReader import XmlReader
-from SecretObjectEnum import SecretObjectEnum
-from model.PasswordObject import PasswordObject
 from model.CertificateObject import CertificateObject
+from model.PasswordObject import PasswordObject
+from model.SecretObjectEnum import SecretObjectEnum
+from model.XmlMapping import XmlMapping
+from model.XmlReader import XmlReader
 import logging
 
 class Version2Reader(object):

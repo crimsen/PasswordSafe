@@ -4,8 +4,8 @@ Created on 16.04.2015
 @author: timgroger
 '''
 
-from XmlReader import XmlReader
 from model.PasswordFileOption import PasswordFileOption
+from model.XmlReader import XmlReader
 import gnupg
 import os
 import string

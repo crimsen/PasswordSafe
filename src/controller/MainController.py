@@ -3,18 +3,18 @@ Created on 15.04.2015
 
 @author: crimsen
 '''
+from edit.EditingDomain import EditingDomain
+from gui.AboutFrame import AboutFrame
 from gui.MainWindow import MainWindow
+from gui.MessageWindow import MessageWindow
+from gui.OptionWindow import OptionWindow
+from gui.PassGenWindow import PassGenWindow
 from model.PasswordSafe import PasswordSafe
 from model.OptionLoader import OptionLoader
 from model.OptionWriter import OptionWriter
 from model.Option import Option
 import os
-from gui.OptionWindow import OptionWindow
 import sys
-from gui.AboutFrame import AboutFrame
-from gui.PassGenWindow import PassGenWindow
-from edit.EditingDomain import EditingDomain
-from gui.MessageWindow import MessageWindow
 
 class MainController(object):
     '''
