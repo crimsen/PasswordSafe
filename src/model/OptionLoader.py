@@ -7,8 +7,8 @@ Created on 16.04.2015
 from model.PasswordFileOption import PasswordFileOption
 from model.XmlReader import XmlReader
 import gnupg
+import logging
 import os
-import string
 import sys
 import xml.dom
 
@@ -107,7 +107,7 @@ class OptionLoader(object):
      
     
     def getaccounts(self):
-        print(self.accounts)
+        logging.info(self.accounts)
         return self.accounts
 
     def getList(self, liststring):

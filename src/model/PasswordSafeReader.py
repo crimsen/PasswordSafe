@@ -8,6 +8,7 @@ from model.Version2Reader import Version2Reader
 from model.XmlReader import XmlReader
 from model.XmlMapping import XmlMapping
 import datetime
+import logging
 import os
 import xml.dom.minidom
 
@@ -41,7 +42,7 @@ class PasswordSafeReader(object):
         retVal = 0
         dom = self.decryptFile(passwordFile.getFilename(), passPhrase)
         if None == dom:
-            print("decryption of %s failed" % passwordFile.getFilename())
+            logging.warning("decryption of %s failed" % passwordFile.getFilename())
             if passwordFile.isDefault:
                 raise Exception("decryption not possible")
         else:

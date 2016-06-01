@@ -13,6 +13,7 @@ from model.PasswordSafe import PasswordSafe
 from model.OptionLoader import OptionLoader
 from model.OptionWriter import OptionWriter
 from model.Option import Option
+import logging
 import os
 import sys
 
@@ -26,6 +27,7 @@ class MainController(object):
         '''
         Constructor
         '''
+        logging.basicConfig(level=logging.WARNING) #here logging.INFO or logging.DEBUG can be set
         self.option = Option( )
         self.searchOptionFile()
         self.editingDomain = EditingDomain()
@@ -50,7 +52,7 @@ class MainController(object):
         self.dirfile = os.path.dirname(self.optionfile)
         if not os.path.exists(self.dirfile):
             os.makedirs(self.dirfile)
-        print(str(self.dirfile)) 
+        logging.info(str(self.dirfile)) 
     
     def existingFile(self, filename):
         retVal = False
@@ -59,21 +61,21 @@ class MainController(object):
         return retVal   
     
     def __initGUI__(self):
-        print('init gui')
+        logging.info('init gui')
         self.mainWindow = MainWindow(self)
         if not self.existingFile(self.optionfile):
             self.pressOptions()
         else: self.loadoption()
         
     def pressLock(self):
-        print('locking screen')
+        logging.info('locking screen')
         self.settimezero()
         self.mainWindow.hideUnlockFrame()
         self.mainWindow.setlockframe()
         self.mainWindow.setAccount(self.option.getEmail())
     
     def pressmainUnlock(self, passphrase):
-        print('try to unlock screen')
+        logging.info('try to unlock screen')
         try:
             self.passsafe = PasswordSafe(self.option)
             self.passsafe.load(passphrase)
@@ -81,23 +83,23 @@ class MainController(object):
             self.editingDomain.setModel(self.passsafe)
             self.mainWindow.hideLockFrame()
             self.mainWindow.setunlockframe()
-            print('unlock complete')
+            logging.info('unlock complete')
             if 0 != self.option.gui.autolock:
                 self.startTimeControl()
             self.settimeback()
             self.warnOnFileVersion()
         except:
-            print(sys.exc_info())
+            logging.error(sys.exc_info())
             self.mainWindow.setlabelpassphrase()
             
     def pressOptions(self):
         self.settimeback()
-        print('open options')
+        logging.info('open options')
         self.optionwindow = OptionWindow(self.option, self)
         self.optionwindow.show()
         
     def pressOptionSave(self):
-        print('save options')
+        logging.info('save options')
         writer = OptionWriter()
         writer.write(self.option, self.optionfile)
         self.loadoption()
@@ -130,7 +132,7 @@ class MainController(object):
         self.passGenWindow = PassGenWindow(self, self.mainWindow)
     
     def loadoption(self):
-        print('loadoptions')
+        logging.info('loadoptions')
         self.optionloader = OptionLoader(self.optionfile, self)
         self.optionloader.loadOptions(self.optionfile, self.option)
         self.accounts = self.optionloader.getaccounts()
@@ -138,7 +140,7 @@ class MainController(object):
         self.mainWindow.setAccount(self.account)
     
     def loadPassOb(self, index):
-        print('load PasswordObject')
+        logging.info('load PasswordObject')
         if -1  != index:
             title = self.filter.getTitle(index)
             username = self.filter.getUsername(index)
@@ -179,7 +181,7 @@ class MainController(object):
         # a self.timecontrol was queued
         if 0 != self.option.gui.autolock:
             self.time -= 1
-            print(self.time)
+            logging.info(self.time)
             if self.time <= 0:
                 if self.time !=-1:
                     self.pressLock()

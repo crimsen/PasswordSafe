@@ -8,14 +8,15 @@ from gui.EmptyPage import EmptyPage
 from gui.EmptyPage import EmptyPageContext
 from gui.EmptyPage import EmptyPageController
 from gui.EmptyPage import EmptyPageView
+import gnupg
+import logging
+import re
 import sys
+import webbrowser
 if sys.hexversion >= 0x3000000:
     import tkinter as tk
 else:
     import Tkinter as tk
-import webbrowser
-import gnupg
-import re
 
 class AccountPage(EmptyPage):
     '''
@@ -69,7 +70,7 @@ class AccountPageView(EmptyPageView):
             currentIndex = accounts.index(model.getEmail())
             self.gpgBox.selection_set(currentIndex)
         except:
-            print(sys.exc_info())
+            logging.error(sys.exc_info())
 
 
 class AccountPageController(EmptyPageController):

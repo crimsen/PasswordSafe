@@ -10,6 +10,7 @@ from model.XmlMapping import XmlMapping
 from model.XmlWriter import XmlWriter
 from datetime import datetime
 import os
+import logging
 import shutil
 import xml.dom.minidom
 
@@ -157,10 +158,10 @@ class PasswordSafeWriter(object):
         filepart = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '-' + filepart
         backupFilename = os.path.join(directory, 'backup', filepart)
         self.assureDirectory(backupFilename)
-        print(backupFilename)
+        logging.info(backupFilename)
         
         shutil.copy(filename, backupFilename)
-        print ('backup completed')
+        logging.info('backup completed')
 
     def assureDirectory(self, filename):
         directory = os.path.dirname(filename)
