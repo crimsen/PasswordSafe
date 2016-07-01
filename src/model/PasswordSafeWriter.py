@@ -58,12 +58,18 @@ class PasswordSafeWriter(object):
                 elif 2 == safeVersion:
                     writer.writeSafeItem(doc, i)
         
-        datei = open(passwordFile.getFilename(), 'w')
         noneencrypt = doc.toprettyxml(' ','\n',encoding='UTF-8')
         encodeIds = [str(i) for i in passwordFile.getEncodeId()]
         encrypt = self.gpg.encrypt(noneencrypt, encodeIds, always_trust=True)
-        datei.write(str(encrypt))
-        datei.close()
+        encryptStr = str(encrypt)
+        #ecrypt.valid is not usable, it is always False
+        if ('encryption ok' != encrypt.status) or (0 == len(encryptStr)):
+            logging.error('unable to encrypt file: %s' % encrypt.status)
+            logging.error(encrypt.stderr)
+        else:
+            datei = open(passwordFile.getFilename(), 'w')
+            datei.write(str(encrypt))
+            datei.close()
 
     def writePasswordItem(self, doc, item):
         secretItem = item.getCurrentSecretObject()
