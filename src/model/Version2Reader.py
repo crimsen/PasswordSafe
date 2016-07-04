@@ -43,6 +43,7 @@ class Version2Reader(object):
         title = XmlReader.getStrAttribute(element, XmlMapping.title, '')
         password = XmlReader.getStrAttribute(element, XmlMapping.password, '')
         note = XmlReader.getStrAttribute(element, XmlMapping.note, '')
+        note = note.replace('&#10;', '\n')
         createDate = XmlReader.getDateAttribute(element, XmlMapping.createDate, None)
         endDate = XmlReader.getDateAttribute(element, XmlMapping.endDate, None)
         

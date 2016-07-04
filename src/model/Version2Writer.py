@@ -33,7 +33,10 @@ class Version2Writer(object):
         XmlWriter.setEnumAttribute(secretElement, XmlMapping.type, secretObjectEnum)
         XmlWriter.setStrAttribute(secretElement, XmlMapping.title, obj.getTitle())
         XmlWriter.setStrAttribute(secretElement, XmlMapping.password, obj.getPassword())
-        XmlWriter.setStrAttribute(secretElement, XmlMapping.note, obj.getNote())
+        note = obj.getNote()
+        if None != note:
+            note = note.replace('\n', '&#10;')
+        XmlWriter.setStrAttribute(secretElement, XmlMapping.note, note)
         XmlWriter.setDateAttribute(secretElement, XmlMapping.createDate, obj.getCreateDate())
         XmlWriter.setDateAttribute(secretElement, XmlMapping.endDate, obj.getEndDate())
         if SecretObjectEnum.password == secretObjectEnum:
