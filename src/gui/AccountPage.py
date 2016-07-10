@@ -67,8 +67,9 @@ class AccountPageView(EmptyPageView):
     def updateFromModel(self, model):
         try:
             accounts = self.gpgBox.get(0, 'end')
-            currentIndex = accounts.index(model.getEmail())
-            self.gpgBox.selection_set(currentIndex)
+            if None != model.getEmail():
+                currentIndex = accounts.index(model.getEmail())
+                self.gpgBox.selection_set(currentIndex)
         except:
             logging.error(sys.exc_info())
 

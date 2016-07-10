@@ -4,11 +4,11 @@ Created on 16.04.2015
 @author: timgroger
 '''
 
+from controller.Environment import Environment 
 from model.PasswordFileOption import PasswordFileOption
 from model.XmlReader import XmlReader
 import gnupg
 import logging
-import os
 import sys
 import xml.dom
 
@@ -90,9 +90,7 @@ class OptionLoader(object):
         '''
         # delete all files that are default, because we are updating
         option.files = [x for x in option.files if not x.isDefault]
-                
-        home = os.environ['HOME']
-        filename = home+'/Documents/.PasswordSafe/' + option.getEmail() + '/safe.xml'
+        filename = Environment().profileDir + '/' + option.getEmail() + '/safe.xml'
         passwordFileOption = PasswordFileOption(filename, [option.getEmail()], isDefault=True, needBackup=True)
         option.files.insert(0, passwordFileOption)
 

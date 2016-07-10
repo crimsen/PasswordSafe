@@ -2,8 +2,19 @@
 
 ## What does PasswordSafe do?##
 
-PasswordSafe is an easy (soon) to use piece of software that can store your passwords and logins.
-Best part is, they are PGP-encrypted and use your own keyfile, so no bad, bad person or government can get them without the password.
+PasswordSafe Tkinter based UI to store your passwords, logins, gpg-keys and
+smime-keys in a single file.
+The passwordfile is PGP-encrypted and use your selected PGP-key.
+
+Features are:
+- can store web logins
+- can store ascii-based GPG and SMime secret and public keys
+- stores additional information (i.e. notes) on secrets
+- keeps history when changing information on secrets
+- auto locks the user interface
+- easy searchable and selectable secrets
+- can handle multiple password files with multiple keys
+  (when configured in options manually)
 
 ## INSTALL INSTRUCTIONS##
 
@@ -15,26 +26,27 @@ We provide a script to install PasswordSafe:
 2.   switch into scripts directory
 3.   execute 
      ```
-     linux-installer.sh
+     ./linux-installer.sh --install
      ```
 4.   For help use
      ```
-     linuxinstaller.sh --usage
+     ./linux-installer.sh --usage
      ```
 
 ### Manual installation
 
 #### Dependencies
 
-* python 2.7
+* python
 * gnupg
 * python-gnupg
 * tk
 * python-tk
+* python-enum34 (when using python2)
 
 ##### Archlinux:
 
-	you need to have python2.7 installed as wenn as tk and python2.7-gnupg (available in aur)
+	you need python-gnupg (available in aur)
 
 ##### Other:
 

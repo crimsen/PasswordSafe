@@ -1,8 +1,8 @@
 #!/bin/sh -e
 
 # Installer script for PasswordSafe
-# Supports at the moment all linux distributions that use pacman or zypper
-# (Arch, openSUSE, Ubuntu etc).
+# Supports at the moment all linux distributions that use pacman, zypper and apt-get
+# (Arch, openSUSE, Ubuntu / Debian etc).
 
 # Name of the program
 NAME=PasswordSafe
@@ -16,7 +16,8 @@ DEFAULT_BIN_PATH="/usr/local/bin"
 # where to same settings etc.
 DEFAULT_PROFILE_PATH=".$NAME" #relative to home
 
-REQUIRED_PYTHON_PARSER=python2 #at the moment 2 (aka 2.7) maybe 3.x in the future
+# Password Safe is compatible with python 2.7 and python 3.4
+REQUIRED_PYTHON_PARSER=python
 
 usage()
 {
@@ -39,10 +40,11 @@ install_prerequisites()
     PM=$( command -v pacman || command -v zypper || command -v apt-get )
 
     # assume all arch systems have same prerequisites
-    if [ "$(expr match "$PM" '.*\(pacman\)')" == "pacman" ]; then
-        #echo "debian compatible system"
+    if $(test "$(expr match "$PM" '.*\(pacman\)')" = "pacman" ); then
+        #echo "archlinux compatible system"
+	# default python is python 3.5
         prerequisite_list="
-            python2
+            python
             tk
             gnupg
        "
@@ -53,8 +55,8 @@ install_prerequisites()
         done
 
         # only in AUR
-        aur_prerequisites="
-                python2.7-gnupg
+        scripting_prerequisites="
+                python-gnupg
             "
 
         for sp in ${scripting_prerequisites}
@@ -63,29 +65,33 @@ install_prerequisites()
         done
 
     # assume all zypper systems like openSUSE have same prerequisites
-    elif [ "$(expr match "$PM" '.*\(zypper\)')" == "zypper" ]; then
+    elif $(test "$(expr match "$PM" '.*\(zypper\)')" = "zypper" ); then
         #echo "openSUSE compatible system"
+	# default python is python 2.7
         prerequisite_list="
             python
             python-tk
             python-gnupg
+            python-enum34
         "
 
         for p in ${prerequisite_list}
         do
             sudo zypper in $p || exit 1
         done
-    elif [ "$(expr match "$PM" '.*\(apt-get\)')" == "apt-get" ]; then
-        #echo "Ubuntu compatible system"
+    elif $(test "$(expr match "$PM" '.*\(apt-get\)')" = "apt-get" ); then
+        #echo "Ubuntu / Debian compatible system"
         prerequisite_list="
             python
             python-tk
             python-gnupg
+            python-enum34
         "
 
-        for p in ${prerequisite_list}; do
-            sudo apt-get install $p || exit 1
-        done
+	sudo apt-get install ${prerequisite_list}
+#        for p in ${prerequisite_list}; do
+#            sudo apt-get install $p || exit 1
+#        done
     else
         echo
         echo "Incompatible System. Neither 'pacman' nor 'zypper' nor 'apt-get' found. Not possible to continue."
@@ -98,13 +104,13 @@ install_prerequisites()
 install_files()
 {
     cd ..
-    if [ -d "$DEFAULT_INSTALL_PATH/$NAME" ]; then
+    if $(test -d "$DEFAULT_INSTALL_PATH/$NAME" ); then
         sudo rm -r "$DEFAULT_INSTALL_PATH/$NAME"
     fi
     sudo mkdir -p "$DEFAULT_INSTALL_PATH/$NAME"
     sudo cp -r src/* "$DEFAULT_INSTALL_PATH/$NAME"
     cd "$DEFAULT_INSTALL_PATH/$NAME"
-    sudo sed -i "s,/Documents/.PasswordSafe,/$DEFAULT_PROFILE_PATH,g" controller/maincontroller.py
+    sudo sed -i "s,/Documents/.PasswordSafe,/$DEFAULT_PROFILE_PATH,g" controller/Environment.py
 }
 
 install_it()
@@ -119,11 +125,11 @@ install_it()
 
     echo "step 3) installing starter..."
     cd "$DEFAULT_BIN_PATH"
-    if [ -f "$NAME" ]; then
+    if $(test -f "$NAME" ); then
         rm "$NAME"
     fi
-    sudo sh -c "echo -e \"#!/bin/bash\n\" \
-                 \"$REQUIRED_PYTHON_PARSER $DEFAULT_INSTALL_PATH/$NAME/$NAME.py\n\" >> \"$NAME\""
+    sudo sh -c "echo \"#!/bin/bash\n\" \
+                 \"$REQUIRED_PYTHON_PARSER $DEFAULT_INSTALL_PATH/$NAME/$NAME.py\n\" > \"$NAME\""
     sudo chmod +x "$NAME"
     echo " $NAME installed."
 
@@ -140,12 +146,12 @@ uninstall_it()
     echo "Uninstalling of $NAME complete"
 }
 
-if [ $# -eq 1 -a "$1" == "--install" ]; then
+if $(test $# -eq 1 -a "$1" = "--install" ); then
     install_it
     exit
 fi
 
-if [ $# -eq 1 -a "$1" == "--uninstall" ]; then
+if $(test $# -eq 1 -a "$1" = "--uninstall" ); then
     uninstall_it
     exit
 fi

@@ -3,6 +3,7 @@ Created on 15.04.2015
 
 @author: crimsen
 '''
+from controller.Environment import Environment
 from edit.EditingDomain import EditingDomain
 from gui.AboutFrame import AboutFrame
 from gui.MainWindow import MainWindow
@@ -45,9 +46,8 @@ class MainController(object):
         Search Option-File
         If not exist create path
         '''
-        home = os.environ['HOME']
         
-        self.optionfile = home+'/Documents/.PasswordSafe/option.xml'
+        self.optionfile = Environment().profileDir + '/option.xml'
         
         self.dirfile = os.path.dirname(self.optionfile)
         if not os.path.exists(self.dirfile):
