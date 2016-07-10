@@ -5,6 +5,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="gui" eType="#//GuiOption"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="file" upperBound="-1" eType="#//PasswordFileOption"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="emailOld" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="warnOnFileVersionDone"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GuiOption">
     <eStructuralFeatures xsi:type="ecore:EReference" name="unlockFrame" eType="#//UnlockFrameOption"/>
@@ -14,6 +17,8 @@
         <details key="documentation" value="specifies whether the gui has to be locked automatically 60 seconds after the last user action"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsafeitemwindowoption"
+        eType="#//NewSafeItemWindowOption"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UnlockFrameOption">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filterEntry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -41,6 +46,10 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         transient="true" unsettable="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="2"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loadVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PasswordSafe">
     <eAnnotations source="http://www.obeo.fr/dsl/dnc/archetype">
@@ -72,5 +81,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="secretObjects" lowerBound="1"
         upperBound="-1" eType="#//SecretObject" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="passwordFile" eType="#//PasswordFileOption"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewSafeItemWindowOption">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="canChangeSafeItemType"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="safeItemType" eType="#//SecretObjectEnum"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SecretObjectEnum">
+    <eLiterals name="password" value="1"/>
+    <eLiterals name="smime" value="2"/>
+    <eLiterals name="gpg" value="3"/>
   </eClassifiers>
 </ecore:EPackage>
