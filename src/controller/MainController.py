@@ -135,7 +135,6 @@ class MainController(object):
         logging.info('loadoptions')
         self.optionloader = OptionLoader(self.optionfile, self)
         self.optionloader.loadOptions(self.optionfile, self.option)
-        self.accounts = self.optionloader.getaccounts()
         self.account = self.option.getEmail()
         self.mainWindow.setAccount(self.account)
     

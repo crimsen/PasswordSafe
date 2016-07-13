@@ -17,12 +17,12 @@ class PasswordSafeReader(object):
     classdocs
     '''
 
-    def __init__(self, option, gpg):
+    def __init__(self, option, encryption):
         '''
         Constructor
         '''
         self.option = option
-        self.gpg = gpg
+        self.encryption = encryption
     
     # passPhrase should not be stored, so it is used as parameter
     def read(self, passwordSafe, passPhrase):
@@ -121,7 +121,8 @@ class PasswordSafeReader(object):
     def decryptFile(self, filename, passPhrase):
         retVal = None
         datei = open(filename, "rb")
-        decrypt_data = self.gpg.decrypt_file(datei, passphrase=str(passPhrase), always_trust=True)
+        data = datei.read()
+        decrypt_data = self.encryption.decryptData(data, passPhrase)
         if decrypt_data.ok:
             decrypt = decrypt_data.data
             retVal = xml.dom.minidom.parseString(decrypt)

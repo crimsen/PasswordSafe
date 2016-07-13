@@ -4,13 +4,12 @@ Created on 09.05.2015
 @author: groegert
 '''
 
+from controller.Encryption import Encryption
 from gui.EmptyPage import EmptyPage
 from gui.EmptyPage import EmptyPageContext
 from gui.EmptyPage import EmptyPageController
 from gui.EmptyPage import EmptyPageView
-import gnupg
 import logging
-import re
 import sys
 import webbrowser
 if sys.hexversion >= 0x3000000:
@@ -90,16 +89,10 @@ class AccountPageController(EmptyPageController):
         self.loadGpgBox(accounts)
         
     def getUsableAccounts(self):
-        secretKeys = gnupg.GPG().list_keys(True)
-        uids = []
-        emails = []
-        
-        for keys in secretKeys:
-            uids += keys['uids']
-        
-        for account in uids:
-            emails.append(re.sub(r'.*<(.*)>',r'\1', account))
-        return emails
+        retVal = []
+        encryption = Encryption(self.context)
+        retVal = encryption.getSecretKeys()
+        return retVal
 
     def loadGpgBox(self, accounts):
         self.view.gpgBox.delete(0, 'end')

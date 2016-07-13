@@ -3,14 +3,13 @@ Created on 28.03.2015
 
 @author: crimsen
 '''
-
+from controller.Encryption import Encryption
 from model.CertificateObject import CertificateObject
 from model.PasswordObject import PasswordObject
 from model.PasswordSafeReader import PasswordSafeReader
 from model.PasswordSafeWriter import PasswordSafeWriter
 from model.SafeItem import SafeItem
 from model.SecretObjectEnum import SecretObjectEnum
-import gnupg
 
 class PasswordSafe(object):
     '''
@@ -21,7 +20,7 @@ class PasswordSafe(object):
     def __init__(self, option):
         self.passwordSafe = []
         self.option = option
-        self.gpg = gnupg.GPG()
+        self.encryption = Encryption(option)
 
     def createSafeItem(self, secretObjects, secretObjectEnum):
         retVal = SafeItem(secretObjects, secretObjectEnum)
@@ -62,14 +61,14 @@ class PasswordSafe(object):
         Load the xml-file
         Save the passwordobjects in RAM
         '''
-        passwordSafeReader = PasswordSafeReader(self.option, self.gpg)
+        passwordSafeReader = PasswordSafeReader(self.option, self.encryption)
         passwordSafeReader.read(self, passphrase)
 
     def save(self):
         '''
         Write the xml-file
         '''
-        passwordSafeWriter = PasswordSafeWriter(self.option, self.gpg)
+        passwordSafeWriter = PasswordSafeWriter(self.option, self.encryption)
         passwordSafeWriter.write(self)
         
         self.passsafesort()

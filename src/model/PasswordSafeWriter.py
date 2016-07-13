@@ -19,12 +19,12 @@ class PasswordSafeWriter(object):
     classdocs
     '''
 
-    def __init__(self, option, gpg):
+    def __init__(self, option, encryption):
         '''
         Constructor
         '''
         self.option = option
-        self.gpg = gpg
+        self.encryption = encryption
         self.xmlMapping = XmlMapping
     
     def write(self, passwordSafe):
@@ -60,7 +60,7 @@ class PasswordSafeWriter(object):
         
         noneencrypt = doc.toprettyxml(' ','\n',encoding='UTF-8')
         encodeIds = [str(i) for i in passwordFile.getEncodeId()]
-        encrypt = self.gpg.encrypt(noneencrypt, encodeIds, always_trust=True)
+        encrypt = self.encryption.encryptData(noneencrypt, encodeIds)
         encryptStr = str(encrypt)
         #ecrypt.valid is not usable, it is always False
         if ('encryption ok' != encrypt.status) or (0 == len(encryptStr)):
