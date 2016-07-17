@@ -3,6 +3,7 @@ Created on May 8, 2015
 
 @author: groegert
 '''
+from model.GpgOption import GpgOption
 from model.GuiOption import GuiOption
 
 class Option(object):
@@ -17,6 +18,7 @@ class Option(object):
         self.files = []
         self.warnOnFileVersionDone = False
         self.gui = GuiOption()
+        self.gpg = GpgOption()
     
     def getEmail(self):
         return self.email

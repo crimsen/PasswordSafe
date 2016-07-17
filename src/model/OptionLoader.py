@@ -37,6 +37,7 @@ class OptionLoader(object):
                 passwordFileOption = PasswordFileOption(filename, encodeId, isDefault=isDefault, needBackup=needBackup, version=version)
                 option.files.append(passwordFileOption)
             self.readGuiOption(elem, option.gui)
+            self.readGpgOption(elem, option.gpg)
         self.updateDefaultValues(option)
         self.controlEmailOld(option)
         
@@ -47,6 +48,10 @@ class OptionLoader(object):
     def readGuiOption(self, parent, gui):
         for element in parent.getElementsByTagName('gui'):
             gui.autolock = XmlReader.getIntAttribute(element, 'autolock', gui.autolock)
+
+    def readGpgOption(self, parent, gpg):
+        for element in parent.getElementsByTagName('gpg'):
+            gpg.binary = XmlReader.getStrAttribute(element, 'binary', None)
 
     def updateDefaultValues(self, option):
         '''

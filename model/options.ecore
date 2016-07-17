@@ -8,6 +8,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="emailOld" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="warnOnFileVersionDone"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gpg" eType="#//GpgOption"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GuiOption">
     <eStructuralFeatures xsi:type="ecore:EReference" name="unlockFrame" eType="#//UnlockFrameOption"/>
@@ -93,5 +94,8 @@
     <eLiterals name="password" value="1"/>
     <eLiterals name="smime" value="2"/>
     <eLiterals name="gpg" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GpgOption">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="binary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

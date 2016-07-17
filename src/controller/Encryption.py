@@ -19,7 +19,13 @@ class Encryption(object):
         Constructor
         '''
         self.option = option
-        self.gpg = gnupg.GPG()
+        args = {}
+        if hasattr(option, 'gpg'):
+            gpgoption = option.gpg
+            if hasattr(gpgoption, 'binary'):
+                if None != gpgoption.binary:
+                    args['gpgbinary'] = gpgoption.binary
+        self.gpg = gnupg.GPG(**args)
         
     def getSecretKeys(self):
         '''
