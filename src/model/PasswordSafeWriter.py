@@ -51,7 +51,7 @@ class PasswordSafeWriter(object):
             writer = Version2Writer()
         
         for i in passwordSafe.getSafe():
-            if ((i.getPasswordFile() == passwordFile) or 
+            if ((i.getPasswordFile().getFilename() == passwordFile.getFilename()) or 
                 ((i.getPasswordFile() == None) and passwordFile.isDefault)) :
                 if 1 == safeVersion:
                     self.writePasswordItem(doc, i)
