@@ -21,7 +21,7 @@ class MainWindow(object):
     
     def __init__(self, controller):
             
-        self.mainWindow = tk.Tk()
+        self.mainWindow = tk.Tk(className='PasswordSafe')
         self.mainWindow.title('Passwordsafe')
         self.mainWindow.geometry('900x500')
         

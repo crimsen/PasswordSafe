@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/python
 #version 1.4.0
 '''
 Created on 27.03.2015

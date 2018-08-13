@@ -9,7 +9,7 @@ class Environment(object):
     '''
     classdocs
     '''
-    profileDir = os.environ['HOME'] + '/Documents/.PasswordSafe'
+    profileDir = os.environ['HOME'] + '/.PasswordSafe'
 
 
     def __init__(self):
