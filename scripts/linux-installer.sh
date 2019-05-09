@@ -17,7 +17,7 @@ DEFAULT_BIN_PATH="/usr/local/bin"
 DEFAULT_PROFILE_PATH=".$NAME" #relative to home
 
 # Password Safe is compatible with python 2.7 and python 3.4
-REQUIRED_PYTHON_PARSER=python
+REQUIRED_PYTHON_PARSER=python3
 
 usage()
 {
@@ -82,10 +82,9 @@ install_prerequisites()
     elif $(test "$(expr match "$PM" '.*\(apt-get\)')" = "apt-get" ); then
         #echo "Ubuntu / Debian compatible system"
         prerequisite_list="
-            python
-            python-tk
-            python-gnupg
-            python-enum34
+            python3
+            python3-tk
+            python3-gnupg
         "
 
 	sudo apt-get install ${prerequisite_list}
@@ -109,6 +108,7 @@ install_files()
     fi
     sudo mkdir -p "$DEFAULT_INSTALL_PATH/$NAME"
     sudo cp -r src/* "$DEFAULT_INSTALL_PATH/$NAME"
+    sudo cp -r freedesktop/* /usr/share
     cd "$DEFAULT_INSTALL_PATH/$NAME"
     sudo sed -i "s,/Documents/.PasswordSafe,/$DEFAULT_PROFILE_PATH,g" controller/Environment.py
 }
@@ -143,6 +143,14 @@ uninstall_it()
     echo "Uninstalling program files"
     sudo rm -r "$DEFAULT_INSTALL_PATH/$NAME"
     sudo rm "$DEFAULT_BIN_PATH/$NAME"
+    echo "Uninstalling desktop files"
+    pushd ../freedesktop
+    for i in $(find . -type f); do
+	if [ -e /usr/share/"$i" ]; then
+	    sudo rm /usr/share/"$i"
+	fi
+	done
+    popd
     echo "Uninstalling of $NAME complete"
 }
 
