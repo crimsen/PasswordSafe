@@ -283,7 +283,7 @@ class CertificatePageController(EmptyPageController):
         fileName = filedialog.askopenfilename(initialfile=fileName)
         if 0 != len(fileName):
             fileStream = open(fileName, "rb")
-            key = fileStream.read()
+            key = fileStream.read().decode('utf-8')
             fileStream.close()
             retVal = (fileName, key)
         return retVal;
