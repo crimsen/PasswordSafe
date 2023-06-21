@@ -43,7 +43,6 @@ We provide a script to install PasswordSafe:
 * tk
 * python-tk
 * python-enum34 (when using python2)
-* tendo
 
 ##### Archlinux:
 
