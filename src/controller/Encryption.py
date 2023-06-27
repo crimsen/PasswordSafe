@@ -5,6 +5,7 @@ Created on Jul 13, 2016
 '''
 
 from model.Option import Option
+from model.EncryptionId import EncryptionId
 import gnupg
 import sys
 
@@ -27,7 +28,7 @@ class Encryption(object):
                     args['gpgbinary'] = gpgoption.binary
         self.gpg = gnupg.GPG(**args)
         
-    def getSecretKeys(self):
+    def getEncryptionIds(self):
         '''
         returns usable secret keys
         the keys are human readable strings that uniquely identifies the secret keys
@@ -47,31 +48,8 @@ class Encryption(object):
     def getGpgSecretKeys(self):
         retVal = []
         secretKeys = self.gpg.list_keys(True)
-        uids = []
-        emails = []
-    
-        for keys in secretKeys:
-            uids.append(keys['uids'])
-        
-        for account in uids:
-            for email in account:
-                if sys.hexversion < 0x3000000:
-                    email = email.encode('utf-8')
-                emailsplit = email.split(' ')
-                emails.append(emailsplit[len(emailsplit)-1])
-        retVal = self._cleanList(emails)
-        return retVal
-    def _cleanList(self, list):
-        accounts = []
-        for i in list:
-            accounts.append(self._cleanString(i))
-        return accounts
-        
-    def _cleanString(self, string): 
-        retVal = ''
-        for i in string:
-            if (i!='<') and (i!='>'):
-                retVal+=i
+        for key in secretKeys:
+            retVal.append( EncryptionId(key['keyid'], key['uids']))
         return retVal
 
 '''

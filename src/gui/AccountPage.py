@@ -39,6 +39,7 @@ class AccountPageContext(EmptyPageContext):
 
 class AccountPageView(EmptyPageView):
     def __init__(self, parent):
+        self.encryptionIds = []
         self.__buildFrame__(parent)
     def __buildFrame__(self, parent):
         self.frame = tk.Frame(master=parent)
@@ -59,18 +60,22 @@ class AccountPageView(EmptyPageView):
     def updateModel(self, model):
         emaillist = self.gpgBox.curselection()
         emailindex = emaillist[0]
-        email = self.gpgBox.get(emailindex)
+        email = self.encryptionIds[emailindex].id
         emailOld = model.getEmailOld()
         model.email = email
         model.emailOld = emailOld
     def updateFromModel(self, model):
         try:
-            accounts = self.gpgBox.get(0, 'end')
             if None != model.getEmail():
-                currentIndex = accounts.index(model.getEmail())
-                self.gpgBox.selection_set(currentIndex)
+                currentIndex = self.getIndexOfEncryptionId(self.encryptionIds, model.getEmail())
+                if None != currentIndex:
+                    self.gpgBox.selection_set(currentIndex)
         except:
             logging.error(sys.exc_info())
+    def getIndexOfEncryptionId(self, encryptionIds, myid):
+        g = ( i for i, e in enumerate( encryptionIds ) if e.id == myid )
+        retVal = next( g )
+        return retVal
 
 
 class AccountPageController(EmptyPageController):
@@ -85,17 +90,17 @@ class AccountPageController(EmptyPageController):
         webbrowser.open_new_tab('http://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-3.html#ss3.1')
 
     def updateFromContext(self, context):
-        accounts = self.getUsableAccounts()
-        self.loadGpgBox(accounts)
+        encryptionIds = self.getUsableEncryptionIds(context)
+        self.loadGpgBox(encryptionIds)
         
-    def getUsableAccounts(self):
-        retVal = []
-        encryption = Encryption(self.context)
-        retVal = encryption.getSecretKeys()
-        return retVal
+    def getUsableEncryptionIds(self, context):
+        encryption = Encryption(context)
+        self.encryptionIds = encryption.getEncryptionIds()
+        return self.encryptionIds
 
-    def loadGpgBox(self, accounts):
+    def loadGpgBox(self, encryptionIds):
+        self.view.encryptionIds = encryptionIds
         self.view.gpgBox.delete(0, 'end')
-        for email in accounts:
-            self.view.gpgBox.insert('end', email)
+        for encryptionId in encryptionIds:
+            self.view.gpgBox.insert('end', encryptionId.label)
 
